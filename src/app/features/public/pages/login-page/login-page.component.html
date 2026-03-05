@@ -1,0 +1,30 @@
+<section class="card">
+  <h1>Login</h1>
+  <p>Inicia sesión con JWT o usando tu cuenta de Google.</p>
+
+  <form (ngSubmit)="loginWithCredentials()">
+    <label for="email">Email</label>
+    <input id="email" name="email" type="email" [(ngModel)]="email" required />
+
+    <label for="password">Contraseña</label>
+    <input
+      id="password"
+      name="password"
+      type="password"
+      [(ngModel)]="password"
+      required
+    />
+
+    <button type="submit">Entrar con JWT</button>
+  </form>
+
+  <button type="button" class="google" (click)="loginWithGoogle()">
+    Entrar con Google
+  </button>
+
+  @if (error()) {
+    <p class="error">{{ error() }}</p>
+  }
+
+  <a routerLink="/inicio">Volver al inicio</a>
+</section>

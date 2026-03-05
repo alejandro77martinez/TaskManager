@@ -6,7 +6,7 @@
   },
   "newProjectRoot": "projects",
   "projects": {
-    "AdminTask": {
+    "TaskManager": {
       "projectType": "application",
       "schematics": {},
       "root": "",
@@ -56,10 +56,10 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
-              "buildTarget": "AdminTask:build:production"
+              "buildTarget": "TaskManager:build:production"
             },
             "development": {
-              "buildTarget": "AdminTask:build:development"
+              "buildTarget": "TaskManager:build:development"
             }
           },
           "defaultConfiguration": "development"
