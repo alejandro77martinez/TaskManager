@@ -1,6 +1,6 @@
 <main>
   <section class="bg-gray-50 dark:bg-gray-900">
-    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
+    <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto min-h-screen lg:py-0 -mt-10 md:mt-0">
       <a routerLink="/" class="flex items-center mb-6 text-4xl font-semibold text-gray-900 dark:text-white">
         <img class="w-16 h-16 mr-2" src="/iconAT.png" alt="logo" />
         TaskManager
@@ -35,15 +35,45 @@
               >
                 Password
               </label>
-              <input
-                type="password"
-                name="password"
-                id="password"
-                placeholder="••••••••"
-                class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                [(ngModel)]="password"
-                required
-              />
+              <div class="relative">
+                <input
+                  [type]="showPassword ? 'text' : 'password'"
+                  name="password"
+                  id="password"
+                  placeholder="••••••••"
+                  class="bg-gray-50 border border-gray-300 text-gray-900 rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 pr-11 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                  [(ngModel)]="password"
+                  required
+                />
+                <button
+                  type="button"
+                  class="absolute inset-y-0 right-0 flex items-center px-3 text-gray-500 dark:text-gray-400 cursor-pointer"
+                  (click)="togglePasswordVisibility()"
+                  [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+                >
+                  @if (showPassword) {
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M3 3l18 18M10.58 10.59A2 2 0 0 0 13.41 13.42M9.88 5.1A10.94 10.94 0 0 1 12 5c5 0 9.27 3.11 11 7a11.8 11.8 0 0 1-4.17 4.91M6.61 6.61A11.83 11.83 0 0 0 1 12a11.82 11.82 0 0 0 7.32 6.45"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  } @else {
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                      <path
+                        d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12Zm11 3a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      />
+                    </svg>
+                  }
+                </button>
+              </div>
             </div>
             <div class="flex items-center justify-between">
               <div class="flex items-start">

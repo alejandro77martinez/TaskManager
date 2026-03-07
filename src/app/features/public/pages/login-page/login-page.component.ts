@@ -19,6 +19,7 @@ export class LoginPageComponent {
 
   email = '';
   password = '';
+  showPassword = false;
 
   constructor() {
     if (this.authService.isAuthenticated()) {
@@ -27,8 +28,8 @@ export class LoginPageComponent {
     }
   }
 
-  loginWithCredentials(): void {
-    const ok = this.authService.loginWithCredentials(this.email, this.password);
+  async loginWithCredentials(): Promise<void> {
+    const ok = await this.authService.loginWithCredentials(this.email, this.password);
 
     if (!ok) {
       this.toastService.error('Enter a valid email and password.');
@@ -42,5 +43,9 @@ export class LoginPageComponent {
 
   loginWithGoogle(): void {
     this.authService.startGoogleLogin();
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
   }
 }

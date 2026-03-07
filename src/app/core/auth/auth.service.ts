@@ -1,9 +1,12 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
+import { environment } from '../../../environments/environment';
 
 interface AuthUser {
   email: string;
   provider: 'credentials' | 'google';
+  roles?: string[];
+  token: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -12,7 +15,7 @@ export class AuthService {
 
   private readonly tokenKey = 'auth_token';
   private readonly userKey = 'auth_user';
-  private readonly apiBase = '/api/auth';
+  private readonly apiBase = environment.authApiBaseUrl;
 
   private readonly tokenSignal = signal<string | null>(this.readToken());
   readonly user = signal<AuthUser | null>(this.readUser());
@@ -22,15 +25,19 @@ export class AuthService {
     return this.tokenSignal();
   }
 
-  loginWithCredentials(email: string, password: string): boolean {
+  async loginWithCredentials(email: string, password: string): Promise<boolean> {
+    let response = false;
     if (!email || !password) {
-      return false;
+      return response;
     }
 
-    // Demo token. Replace with backend JWT response.
-    const fakeJwt = this.createDemoJwt(email);
-    this.persistSession(fakeJwt, { email, provider: 'credentials' });
-    return true;
+    await this.loginBackend(email, password).then((user) => {
+      this.persistSession(user.token, user);
+      response = true;
+    }).catch(() => {
+     // Handle login error (e.g., show a toast message)
+    });
+    return response;
   }
 
   startGoogleLogin(): void {
@@ -38,7 +45,7 @@ export class AuthService {
   }
 
   completeGoogleCallback(token: string, email: string): void {
-    this.persistSession(token, { email, provider: 'google' });
+    // In a real application, you would verify the token with the backend and fetch user details.
   }
 
   logout(): void {
@@ -72,14 +79,17 @@ export class AuthService {
     }
   }
 
-  private createDemoJwt(email: string): string {
-    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
-    const payload = btoa(
-      JSON.stringify({
-        sub: email,
-        iat: Math.floor(Date.now() / 1000),
-      }),
-    );
-    return `${header}.${payload}.demo-signature`;
+  private loginBackend(email: string, password: string): Promise<AuthUser> {
+    const response = fetch(`${this.apiBase}/auth/login`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, password }),
+    });
+    return response.then((res) => {
+      if (!res.ok) {
+        throw new Error('Login failed');
+      }
+      return res.json() as Promise<AuthUser>;
+    });
   }
 }
