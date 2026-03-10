@@ -3,7 +3,7 @@ import { DOCUMENT } from '@angular/common';
 import { environment } from '../../../environments/environment';
 
 interface AuthUser {
-  email: string;
+  user: string;
   provider: 'credentials' | 'google';
   roles?: string[];
   token: string;
