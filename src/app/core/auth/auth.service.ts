@@ -1,6 +1,6 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Observable, catchError, map, of, switchMap, throwError } from 'rxjs';
+import { Observable, Subscription, catchError, interval, map, of, switchMap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { AuthUser, LoginData } from './auth.interfaces';
 import { Router } from '@angular/router';
@@ -12,6 +12,7 @@ export class AuthService {
   private readonly apiBase = environment.authApiBaseUrl;
   private readonly authUserSignal = signal<AuthUser | null>(null);
   private readonly authResolvedSignal = signal(false);
+  private refreshSessionSubscription: Subscription | null = null;
 
   readonly authUser = this.authUserSignal.asReadonly();
   readonly authResolved = this.authResolvedSignal.asReadonly();
@@ -38,6 +39,7 @@ export class AuthService {
       map((user) => {
         this.authUserSignal.set(user);
         this.authResolvedSignal.set(true);
+        this.refreshSession();
         return user;
       }),
       catchError(this.handleError)
@@ -59,6 +61,7 @@ export class AuthService {
   }
 
   logout(): void {
+    this.stopRefreshSession();
     this.authUserSignal.set(null);
     this.authResolvedSignal.set(true);
     this.http.post(this.apiBase+'/api/v1/auth/logout', {}, {
@@ -74,6 +77,36 @@ export class AuthService {
         }
       }
     );
+  }
+
+  private refreshSession(): void {
+    if (this.refreshSessionSubscription) {
+      return;
+    }
+
+    this.refreshSessionSubscription = interval(60_000).pipe(
+      switchMap(() =>
+        this.http.post(this.apiBase+"/api/v1/auth/refresh", null, {
+          responseType: 'text',
+          withCredentials: true // ✅ recibe la cookie
+        }).pipe(
+          catchError(this.handleError)
+        )
+      )
+    ).subscribe({
+      next: (res) => { console.log(res); },
+      error: (err) => {
+        this.stopRefreshSession();
+        this.authUserSignal.set(null);
+        this.authResolvedSignal.set(true);
+        console.log("Error al hacer refresh session: ", err);
+      }
+    });
+  }
+
+  private stopRefreshSession(): void {
+    this.refreshSessionSubscription?.unsubscribe();
+    this.refreshSessionSubscription = null;
   }
 
   private handleError(error: HttpErrorResponse) {

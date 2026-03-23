@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { catchError, firstValueFrom, map, Observable, throwError } from 'rxjs';
+import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { UserRegisterData, UserRegisterFormData } from './user.interfaces';
 
@@ -11,33 +11,27 @@ export class UserService {
 
   constructor(private http: HttpClient) {}
 
-  async sendUserRegister(userData: UserRegisterFormData): Promise<void> {
+  sendUserRegister(userData: UserRegisterFormData): Observable<void> {
     const userRegisterData: UserRegisterData = {
       name: userData.name,
       lastName: userData.lastname,
       email: userData.email,
       password: userData.password
     }
-    await this.register(userRegisterData);
-  }
-    
-  private async register(userData: UserRegisterData): Promise<void> {
-    try {
-      await firstValueFrom(
-        this.http.post(`${this.apiBase}/api/v1/auth/register`, userData, {
-          headers: { 'Content-Type': 'application/json' },
-        })
-      );
-    } catch (error) {
-      console.log('Registration failed:', error);
-      throw error;
-    }
+    return this.http.post<void>(this.apiBase + '/api/v1/user/register',userRegisterData)
+      .pipe (
+        catchError(this.handleError)
+      )
   }
 
   emailExist(userName: string): Observable<boolean> {
-    return this.http.post<boolean>(this.apiBase+'/api/v1/user/exist', userName).pipe(
-      catchError(this.handleError)
-    );
+    return this.http.post<boolean>(this.apiBase+'/api/v1/user/exist', userName)
+      .pipe(
+        map((res) => {
+          return res;
+        }),
+        catchError(this.handleError)
+      );
   }
 
   private handleError(error: HttpErrorResponse) {

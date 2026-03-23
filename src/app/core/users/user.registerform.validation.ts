@@ -49,6 +49,15 @@ export class RegisterFormValidationService {
     this.registerForm.termsAndConditions().reset();
   }
 
+  markAllFieldsAsTouched() {
+    this.registerForm.name().markAsTouched();
+    this.registerForm.lastname().markAsTouched();
+    this.registerForm.email().markAsTouched();
+    this.registerForm.password().markAsTouched();
+    this.registerForm.confirmPassword().markAsTouched();
+    this.registerForm.termsAndConditions().markAsTouched();
+  }
+
   getRegisterModel() {
     return this.registerModel;
   }

@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
@@ -25,6 +25,7 @@ export class LoginPageComponent {
   readonly loginModel = this.loginFormValidationService.getLoginModel();
   readonly loginForm = this.loginFormValidationService.getLoginForm();
   
+  isLoading       = signal<boolean>(false);
   showPassword = false;
 
   ngOnInit(): void {
@@ -33,10 +34,21 @@ export class LoginPageComponent {
 
   onSubmit(event: Event) {
     event.preventDefault();
+    this.isLoading.set(true);
     if (this.loginForm().invalid()) {
       this.toastService.error('Please fix the errors in the form before submitting.');
+      this.loginFormValidationService.markAllFieldsAsTouched();
+      this.isLoading.set(false);
       return;
     }
+    this.submitForm();
+  }
+
+  togglePasswordVisibility(): void {
+    this.showPassword = !this.showPassword;
+  }
+
+  private submitForm():void {
     submit(this.loginForm, {
       action: async () => {
         const credentials = this.loginModel();
@@ -45,18 +57,15 @@ export class LoginPageComponent {
             next: () => { 
               const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/home';
               this.toastService.success('Welcome back.');
+              this.isLoading.set(false);
               this.router.navigateByUrl(redirect);
             },
-            error: (err) => {     
-              console.log("Error: ", err)                      // error
+            error: (err) => { 
+              this.isLoading.set(false);
               this.toastService.error('Enter a valid email and password.');
             }}
           )
       },
     });
-  }
-
-  togglePasswordVisibility(): void {
-    this.showPassword = !this.showPassword;
   }
 }

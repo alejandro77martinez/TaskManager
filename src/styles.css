@@ -22,6 +22,11 @@
   --color-primary-950: #172554;
 }
 
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation-duration: .5s;
+}
+
 .my-button { 
   @apply 
     bg-primary-500 

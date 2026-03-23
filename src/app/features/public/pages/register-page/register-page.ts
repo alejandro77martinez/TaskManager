@@ -38,23 +38,32 @@ export class RegisterPage {
     this.emailTaken.set(false);
     if (this.registerForm().invalid()) {
       this.isLoading.set(false);
+      this.formValidationService.markAllFieldsAsTouched()
       this.toastService.error('Please fix the errors in the form before submitting.');
       return;
     }
-      submit(this.registerForm, {
-        action: async () => {
-          const registrationData: UserRegisterFormData = this.registerModel();
-          await this.userService.sendUserRegister(registrationData).then(() => {
-            this.isLoading.set(false);
-            this.toastService.success('Registration successful! You can now log in.');
-            this.router.navigateByUrl('/login');
-          }).catch(() => {
-            this.isLoading.set(false);
-            this.toastService.error('Registration failed. Please try again.');
-          });
-        },
-      });
+    this.userService.emailExist(this.registerModel().email).subscribe({
+      next: (res) => {
+        if (res) {
+          this.isLoading.set(false);
+          this.emailTaken.set(true);
+          this.toastService.error('El correo ya esta registrado.');
+          return;
+        }
+        this.submitForm();
+      },
+      error: (err) => { 
+        this.isLoading.set(false);
+        this.toastService.error('Ocurrio un error al registrar revisa tus datos.');
+      }
+    })
+    
+  }
 
+  clearEmailTakenError(): void {
+    if (this.emailTaken()) {
+      this.emailTaken.set(false);
+    }
   }
 
   togglePasswordVisibility(): void {
@@ -63,5 +72,24 @@ export class RegisterPage {
 
   togglePasswordVisibility2(): void {
     this.showPassword2 = !this.showPassword2;
+  }
+
+  private submitForm(): void {
+    submit(this.registerForm, {
+      action: async () => {
+        const registrationData: UserRegisterFormData = this.registerModel();
+        this.userService.sendUserRegister(registrationData).subscribe({
+          next: () => {
+            this.isLoading.set(false);
+            this.toastService.success('Usuario registrado existosamente!!');
+            this.router.navigateByUrl("/login");
+          },
+          error: (err) => { 
+            this.isLoading.set(false);
+            this.toastService.error('Ocurrio un error al registrar revisa tus datos.');
+          }
+        })
+      },
+    });
   }
 }

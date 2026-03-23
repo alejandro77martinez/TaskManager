@@ -24,6 +24,11 @@ export class LoginFormValidationService {
     this.loginForm.password().reset();
   }
 
+  markAllFieldsAsTouched() {
+    this.loginForm.email().markAsTouched();
+    this.loginForm.password().markAsTouched();
+  }
+
   getLoginModel() {
     return this.loginModel;
   }
