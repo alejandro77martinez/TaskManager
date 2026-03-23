@@ -84,7 +84,7 @@ export class AuthService {
       return;
     }
 
-    this.refreshSessionSubscription = interval(60_000).pipe(
+    this.refreshSessionSubscription = interval(540_000).pipe(
       switchMap(() =>
         this.http.post(this.apiBase+"/api/v1/auth/refresh", null, {
           responseType: 'text',
