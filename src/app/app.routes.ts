@@ -1,22 +1,17 @@
 import { Routes } from '@angular/router';
-import { authGuard } from './core/auth/auth.guard';
-import { guestGuard } from './core/auth/guest.guard';
+import { authGuard, guestGuard } from './core/auth/auth.guard';
+import { LandingPageComponent } from './features/public/pages/landing-page/landing-page.component';
+import { LoginPageComponent } from './features/public/pages/login-page/login-page.component';
 
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./features/public/pages/landing-page/landing-page.component').then(
-        (m) => m.LandingPageComponent,
-      ),
+    component: LandingPageComponent,
   },
   {
     path: 'login',
     canActivate: [guestGuard],
-    loadComponent: () =>
-      import('./features/public/pages/login-page/login-page.component').then(
-        (m) => m.LoginPageComponent,
-      ),
+    component: LoginPageComponent
   },
   {
     path: 'register',

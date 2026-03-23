@@ -1,15 +1,9 @@
 import { Injectable, signal } from '@angular/core';
-
-export type ToastType = 'success' | 'error' | 'info';
-
-export interface ToastMessage {
-  id: number;
-  message: string;
-  type: ToastType;
-}
+import { ToastMessage, ToastType } from './toast.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class ToastService {
+
   private counter = 0;
   private readonly toastsSignal = signal<ToastMessage[]>([]);
 

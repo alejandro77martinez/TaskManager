@@ -1,3 +1,6 @@
-
-<router-outlet />
-<app-toast />
+@if (showAuthLoader()) {
+  <app-load />
+} @else {
+  <router-outlet />
+  <app-toast />
+}
