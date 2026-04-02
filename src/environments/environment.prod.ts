@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  authApiBaseUrl: 'https://api.tu-dominio.com',
+  authApiBaseUrl: 'https://taskmanagerbackend.duckdns.org',
 };
