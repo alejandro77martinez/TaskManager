@@ -1,4 +1,612 @@
-<h1>Project component</h1>
-<p>
-  Este es el componente de Proyecto. Aquí puedes implementar la vista de detalles del proyecto.
-</p>
+<section class="space-y-8">
+  <div
+    class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 px-6 py-8 shadow-2xl sm:px-8"
+  >
+    <div class="absolute inset-y-0 right-0 w-1/3 bg-[radial-gradient(circle_at_top,_rgba(96,165,250,0.28),_transparent_58%)]"></div>
+    <div class="absolute -left-10 top-16 h-40 w-40 rounded-full bg-cyan-400/10 blur-3xl"></div>
+
+    <div class="relative flex flex-col gap-8">
+      <div class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
+        <div class="max-w-3xl">
+          <span
+            class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-primary-100 ring-1 ring-white/10"
+          >
+            Workspace de proyectos
+          </span>
+          <h1 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
+            Proyectos donde participas.
+          </h1>
+          <p class="mt-4 max-w-xl text-sm leading-6 text-slate-300 sm:text-base">
+            Reune el portafolio activo, visualiza proximas entregas y sigue las tareas clave.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          @for (signal of projectSignals(); track signal.label) {
+            <div class="rounded-2xl bg-white/10 px-4 py-3 ring-1 ring-white/10 backdrop-blur">
+              <p class="text-xs uppercase tracking-[0.18em] text-slate-300">{{ signal.label }}</p>
+              <p class="mt-1 text-2xl font-bold text-white">{{ signal.value }}</p>
+            </div>
+          }
+        </div>
+      </div>
+
+      <div class="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        @for (card of overviewCards(); track card.label) {
+          <article class="rounded-2xl bg-white/10 p-5 ring-1 ring-white/10 backdrop-blur">
+            <p class="text-xs font-semibold uppercase tracking-[0.22em] text-slate-300">
+              {{ card.label }}
+            </p>
+            <p class="mt-3 text-3xl font-black text-white">{{ card.value }}</p>
+            <p class="mt-2 text-sm leading-6 text-slate-300">{{ card.helper }}</p>
+          </article>
+        }
+      </div>
+    </div>
+  </div>
+
+  <section
+    class="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-6 shadow-2xl"
+  >
+    <div class="absolute inset-y-0 right-0 w-1/3 bg-[radial-gradient(circle_at_center,_rgba(59,130,246,0.22),_transparent_60%)]"></div>
+    <div class="absolute -right-12 top-10 h-44 w-44 rounded-full bg-cyan-400/10 blur-3xl"></div>
+
+    <div class="relative flex flex-col gap-5 border-b border-white/10 pb-6 xl:flex-row xl:items-end xl:justify-between">
+      <div class="max-w-2xl">
+        <h2 class="mt-2 text-2xl font-black tracking-tight text-white">
+          Creacion y detalles de proyectos activos para seguimiento y colaboracion inmediata.
+        </h2>
+        <p class="mt-3 text-sm leading-6 text-slate-300">
+          Resumen del estado del proyecto, la metodologia de trabajo, la fecha de
+          entrega y el equipo participante para lectura ejecutiva inmediata.
+        </p>
+      </div>
+
+      <button
+        type="button"
+        class="my-button inline-flex items-center justify-center gap-2 px-5 py-3 text-sm"
+        (click)="openCreateProjectPanel()"
+      >
+        <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path
+            d="M10 4a1 1 0 0 1 1 1v4h4a1 1 0 1 1 0 2h-4v4a1 1 0 1 1-2 0v-4H5a1 1 0 1 1 0-2h4V5a1 1 0 0 1 1-1Z"
+          />
+        </svg>
+        Crear nuevo proyecto
+      </button>
+    </div>
+
+    <div class="relative mt-6 grid gap-5 2xl:grid-cols-2">
+      @for (project of projects(); track project.id) {
+        <article
+          class="group rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg ring-1 ring-white/10 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-primary-300/40 hover:bg-white/20"
+        >
+          <div class="flex items-start justify-between gap-4">
+            <div class="min-w-0 flex-1">
+              <div class="flex flex-wrap gap-2">
+                <span
+                  class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                  [class]="getHealthClasses(project.health)"
+                >
+                  {{ project.health }}
+                </span>
+                <span
+                  class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                  [class]="getPriorityClasses(project.priority)"
+                >
+                  Prioridad {{ project.priority }}
+                </span>
+              </div>
+
+              <h3 class="mt-4 text-xl font-black tracking-tight text-white">
+                {{ project.name }}
+              </h3>
+              <p class="mt-3 text-sm leading-6 text-slate-300">
+                {{ project.summary }}
+              </p>
+            </div>
+
+            <div class="rounded-2xl bg-slate-950/40 px-4 py-3 text-right shadow-sm ring-1 ring-white/10">
+              <p class="text-3xl font-black text-white">{{ project.progress }}%</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">avance</p>
+            </div>
+          </div>
+
+          <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-white/10">
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Area</p>
+              <p class="mt-2 text-sm font-semibold text-white">{{ project.client }}</p>
+            </div>
+            <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-white/10">
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Rol</p>
+              <p class="mt-2 text-sm font-semibold text-white">{{ project.role }}</p>
+            </div>
+            <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-white/10">
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                Metodo
+              </p>
+              <p class="mt-2 text-sm font-semibold text-white">{{ project.methodology }}</p>
+            </div>
+            <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-white/10">
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                Entrega
+              </p>
+              <p class="mt-2 text-sm font-semibold text-white">
+                {{ formatDate(project.dueDate, true) }}
+              </p>
+            </div>
+          </div>
+
+          <div class="mt-5">
+            <div class="mb-2 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+              <span>Progreso del plan</span>
+              <span>{{ project.completedTasks }}/{{ project.totalTasks }} tareas</span>
+            </div>
+            <div class="h-2.5 rounded-full bg-white/10">
+              <div
+                class="h-2.5 rounded-full bg-gradient-to-r from-primary-600 via-sky-500 to-cyan-400 transition-all"
+                [style.width.%]="project.progress"
+              ></div>
+            </div>
+            <p class="mt-2 text-sm text-slate-400">{{ project.sprint }} activo para este frente.</p>
+          </div>
+
+          <div class="mt-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <div>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Equipo</p>
+              <div class="mt-2 flex items-center">
+                @for (member of project.teamMembers.slice(0, 3); track member) {
+                  <div
+                    class="-ml-2 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-slate-900 text-xs font-bold text-white first:ml-0"
+                    [attr.title]="member"
+                  >
+                    {{ getInitials(member) }}
+                  </div>
+                }
+                @if (project.teamMembers.length > 3) {
+                  <div
+                    class="-ml-2 flex h-10 w-10 items-center justify-center rounded-full border-2 border-white bg-primary-100 text-xs font-bold text-primary-700"
+                  >
+                    +{{ project.teamMembers.length - 3 }}
+                  </div>
+                }
+              </div>
+            </div>
+
+            <div class="flex flex-wrap gap-2 lg:justify-end">
+              @for (tag of project.tags; track tag) {
+                <span class="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+                  {{ tag }}
+                </span>
+              }
+            </div>
+          </div>
+        </article>
+      }
+    </div>
+  </section>
+
+  <section
+    class="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-6 shadow-2xl"
+  >
+    <div class="absolute inset-y-0 left-0 w-1/3 bg-[radial-gradient(circle_at_top,_rgba(34,197,94,0.18),_transparent_58%)]"></div>
+    <div class="absolute -right-10 bottom-0 h-48 w-48 rounded-full bg-primary-500/10 blur-3xl"></div>
+
+    <div class="relative">
+      <div class="flex flex-col gap-4 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
+        <div class="max-w-2xl">
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-primary-200">
+            Segunda seccion
+          </p>
+          <h2 class="mt-2 text-2xl font-black tracking-tight text-white">
+            Tareas en curso y pendientes para mover el trabajo con claridad.
+          </h2>
+          <p class="mt-3 text-sm leading-6 text-slate-300">
+            El foco operativo separa el trabajo activo del trabajo por iniciar para facilitar el
+            seguimiento diario sin ruido adicional.
+          </p>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          <div class="rounded-2xl bg-white/10 px-4 py-3 ring-1 ring-white/10 backdrop-blur">
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
+              Trabajo abierto
+            </p>
+            <p class="mt-1 text-2xl font-black text-white">
+              {{ inProgressTasks().length + pendingTasks().length }}
+            </p>
+          </div>
+
+          <div class="rounded-2xl bg-white/10 px-4 py-3 ring-1 ring-white/10 backdrop-blur">
+            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
+              Bloqueos visibles
+            </p>
+            <p class="mt-1 text-2xl font-black text-white">
+              {{ portfolioSummary().blockedTasks }}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-6 grid gap-5 lg:grid-cols-2">
+        <div class="rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg ring-1 ring-white/10 backdrop-blur">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-black text-white">En curso</h3>
+              <p class="text-sm text-slate-300">Trabajo ya tomado por el equipo.</p>
+            </div>
+            <span class="rounded-full bg-slate-950/40 px-3 py-1 text-sm font-semibold text-primary-100 ring-1 ring-white/10">
+              {{ inProgressTasks().length }}
+            </span>
+          </div>
+
+          <div class="mt-4 space-y-3">
+            @for (task of inProgressTasks(); track task.id) {
+              <article class="rounded-2xl bg-slate-950/40 p-4 shadow-sm ring-1 ring-white/10">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0 flex-1">
+                    <span
+                      class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                      [class]="getPriorityClasses(task.priority)"
+                    >
+                      {{ task.priority }}
+                    </span>
+                    <h4 class="mt-3 text-base font-bold text-white">{{ task.title }}</h4>
+                    <p class="mt-1 text-sm text-slate-400">{{ task.projectName }}</p>
+                  </div>
+                  <span
+                    class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                    [class]="getTaskStatusClasses(task.status)"
+                  >
+                    {{ task.status }}
+                  </span>
+                </div>
+
+                <div class="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
+                  <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
+                    {{ task.assignee }}
+                  </span>
+                  <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
+                    {{ formatDate(task.dueDate) }}
+                  </span>
+                  <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
+                    {{ task.effortPoints }} pts
+                  </span>
+                </div>
+
+                @if (task.blocked) {
+                  <p class="mt-3 rounded-2xl bg-amber-50 px-3 py-2 text-sm text-amber-700 ring-1 ring-amber-200">
+                    Esta tarea tiene una dependencia activa y necesita destrabe.
+                  </p>
+                }
+              </article>
+            } @empty {
+              <div class="rounded-2xl bg-slate-950/40 p-4 text-sm text-slate-400 ring-1 ring-white/10">
+                No hay tareas activas en este momento.
+              </div>
+            }
+          </div>
+        </div>
+
+        <div class="rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg ring-1 ring-white/10 backdrop-blur">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="text-lg font-black text-white">Pendientes</h3>
+              <p class="text-sm text-slate-300">Items listos para entrar al flujo.</p>
+            </div>
+            <span class="rounded-full bg-slate-950/40 px-3 py-1 text-sm font-semibold text-white ring-1 ring-white/10">
+              {{ pendingTasks().length }}
+            </span>
+          </div>
+
+          <div class="mt-4 space-y-3">
+            @for (task of pendingTasks(); track task.id) {
+              <article class="rounded-2xl bg-slate-950/40 p-4 shadow-sm ring-1 ring-white/10">
+                <div class="flex items-start justify-between gap-3">
+                  <div class="min-w-0 flex-1">
+                    <span
+                      class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                      [class]="getPriorityClasses(task.priority)"
+                    >
+                      {{ task.priority }}
+                    </span>
+                    <h4 class="mt-3 text-base font-bold text-white">{{ task.title }}</h4>
+                    <p class="mt-1 text-sm text-slate-400">{{ task.projectName }}</p>
+                  </div>
+                  <span
+                    class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+                    [class]="getTaskStatusClasses(task.status)"
+                  >
+                    {{ task.status }}
+                  </span>
+                </div>
+
+                <div class="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
+                  <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
+                    {{ task.assignee }}
+                  </span>
+                  <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
+                    {{ formatDate(task.dueDate) }}
+                  </span>
+                  <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
+                    {{ task.effortPoints }} pts
+                  </span>
+                </div>
+              </article>
+            } @empty {
+              <div class="rounded-2xl bg-slate-950/40 p-4 text-sm text-slate-400 ring-1 ring-white/10">
+                No hay tareas pendientes por arrancar.
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</section>
+
+@if (isCreatePanelOpen()) {
+  <div class="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-sm" (click)="closeCreateProjectPanel()"></div>
+
+  <aside
+    class="fixed inset-y-0 right-0 z-50 flex w-full max-w-xl flex-col overflow-y-auto bg-slate-100 shadow-2xl"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="create-project-title"
+  >
+    <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-6 text-white">
+      <div class="flex items-start justify-between">
+        <div>
+          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-primary-200">
+            Nuevo proyecto
+          </p>
+          <h2 id="create-project-title" class="mt-2 text-2xl font-black tracking-tight text-white">
+            Panel de alta rapida
+          </h2>
+          <p class="mt-2 text-sm leading-6 text-slate-300">
+            Completa datos base del proyecto para agregarlo al dashboard con una tarea inicial.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          class="rounded-2xl p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
+          (click)="closeCreateProjectPanel()"
+          aria-label="Cerrar panel"
+        >
+          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+            <path
+              d="M4.293 4.293a1 1 0 0 1 1.414 0L10 8.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L8.586 10 4.293 5.707a1 1 0 0 1 0-1.414Z"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <form #projectForm="ngForm" class="flex h-full flex-col" (ngSubmit)="createProject(projectForm)">
+      <div class="flex-1 space-y-6 p-6">
+        <div class="grid gap-5 sm:grid-cols-2">
+          <div class="sm:col-span-2">
+            <label for="project-name" class="mb-2 block text-sm font-medium text-slate-900">
+              Nombre del proyecto *
+            </label>
+            <input
+              id="project-name"
+              type="text"
+              name="name"
+              class="my-input"
+              placeholder="Ej. Plataforma de auditoria interna"
+              [(ngModel)]="newProjectDraft.name"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="project-client" class="mb-2 block text-sm font-medium text-slate-900">
+              Area o cliente *
+            </label>
+            <input
+              id="project-client"
+              type="text"
+              name="client"
+              class="my-input"
+              placeholder="Ej. Operaciones"
+              [(ngModel)]="newProjectDraft.client"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="project-role" class="mb-2 block text-sm font-medium text-slate-900">
+              Rol del usuario
+            </label>
+            <input
+              id="project-role"
+              type="text"
+              name="role"
+              class="my-input"
+              placeholder="Ej. Project Manager"
+              [(ngModel)]="newProjectDraft.role"
+            />
+          </div>
+
+          <div>
+            <label for="project-priority" class="mb-2 block text-sm font-medium text-slate-900">
+              Prioridad
+            </label>
+            <select
+              id="project-priority"
+              name="priority"
+              class="my-input"
+              [(ngModel)]="newProjectDraft.priority"
+            >
+              <option value="Alta">Alta</option>
+              <option value="Media">Media</option>
+              <option value="Baja">Baja</option>
+            </select>
+          </div>
+
+          <div>
+            <label for="project-methodology" class="mb-2 block text-sm font-medium text-slate-900">
+              Metodologia
+            </label>
+            <select
+              id="project-methodology"
+              name="methodology"
+              class="my-input"
+              [(ngModel)]="newProjectDraft.methodology"
+            >
+              <option value="Kanban">Kanban</option>
+              <option value="Scrum">Scrum</option>
+              <option value="Hibrido">Hibrido</option>
+            </select>
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="project-summary" class="mb-2 block text-sm font-medium text-slate-900">
+              Objetivo o resumen *
+            </label>
+            <textarea
+              id="project-summary"
+              name="summary"
+              class="my-input min-h-28"
+              placeholder="Describe el problema, el objetivo y el valor esperado del proyecto."
+              [(ngModel)]="newProjectDraft.summary"
+              required
+            ></textarea>
+          </div>
+
+          <div>
+            <label for="project-due-date" class="mb-2 block text-sm font-medium text-slate-900">
+              Fecha objetivo *
+            </label>
+            <input
+              id="project-due-date"
+              type="date"
+              name="dueDate"
+              class="my-input"
+              [(ngModel)]="newProjectDraft.dueDate"
+              required
+            />
+          </div>
+
+          <div>
+            <label for="project-tags" class="mb-2 block text-sm font-medium text-slate-900">
+              Tags
+            </label>
+            <input
+              id="project-tags"
+              type="text"
+              name="tags"
+              class="my-input"
+              placeholder="Kanban, Automatizacion, Cliente"
+              [(ngModel)]="newProjectDraft.tags"
+            />
+          </div>
+
+          <div class="sm:col-span-2">
+            <label for="project-team" class="mb-2 block text-sm font-medium text-slate-900">
+              Equipo participante
+            </label>
+            <textarea
+              id="project-team"
+              name="teamMembers"
+              class="my-input min-h-24"
+              placeholder="Ej. Sofia Torres, Marco Rojas, Elena Gil"
+              [(ngModel)]="newProjectDraft.teamMembers"
+            ></textarea>
+            <p class="mt-2 text-xs text-slate-500">
+              Separa nombres por coma para generar la lista de participantes.
+            </p>
+          </div>
+        </div>
+
+        <div class="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-5 text-white ring-1 ring-white/10 shadow-xl">
+          <div class="flex items-center justify-between gap-4">
+            <div>
+              <p class="text-sm font-semibold uppercase tracking-[0.22em] text-primary-200">
+                Vista previa
+              </p>
+              <h3 class="mt-2 text-lg font-black text-white">Como se veria el alta en el tablero</h3>
+            </div>
+            <span
+              class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
+              [class]="getPriorityClasses(newProjectDraft.priority)"
+            >
+              {{ newProjectDraft.priority }}
+            </span>
+          </div>
+
+          <div class="mt-4 space-y-4">
+            <div>
+              <p class="text-sm font-semibold text-white">
+                {{ newProjectDraft.name || 'Nombre pendiente de definir' }}
+              </p>
+              <p class="mt-1 text-sm text-slate-300">
+                {{ newProjectDraft.summary || 'El resumen del proyecto aparecera aqui.' }}
+              </p>
+            </div>
+
+            <div class="grid gap-3 sm:grid-cols-2">
+              <div class="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Area</p>
+                <p class="mt-2 text-sm font-semibold text-white">
+                  {{ newProjectDraft.client || 'Sin definir' }}
+                </p>
+              </div>
+              <div class="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
+                  Fecha
+                </p>
+                <p class="mt-2 text-sm font-semibold text-white">
+                  {{ formatDate(newProjectDraft.dueDate || null, true) }}
+                </p>
+              </div>
+            </div>
+
+            @if (previewCommaSeparatedValues(newProjectDraft.teamMembers).length > 0) {
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Equipo</p>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  @for (member of previewCommaSeparatedValues(newProjectDraft.teamMembers); track member) {
+                    <span class="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
+                      {{ member }}
+                    </span>
+                  }
+                </div>
+              </div>
+            }
+
+            @if (previewCommaSeparatedValues(newProjectDraft.tags).length > 0) {
+              <div>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Tags</p>
+                <div class="mt-2 flex flex-wrap gap-2">
+                  @for (tag of previewCommaSeparatedValues(newProjectDraft.tags); track tag) {
+                    <span class="rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-800">
+                      {{ tag }}
+                    </span>
+                  }
+                </div>
+              </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <div class="border-t border-slate-200 p-6">
+        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
+          <button
+            type="button"
+            class="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
+            (click)="closeCreateProjectPanel()"
+          >
+            Cancelar
+          </button>
+          <button type="submit" class="my-button px-5 py-3 text-sm" [disabled]="projectForm.invalid">
+            Guardar proyecto
+          </button>
+        </div>
+      </div>
+    </form>
+  </aside>
+}

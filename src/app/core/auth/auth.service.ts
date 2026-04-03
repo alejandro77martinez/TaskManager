@@ -99,7 +99,6 @@ export class AuthService {
         this.stopRefreshSession();
         this.authUserSignal.set(null);
         this.authResolvedSignal.set(true);
-        console.log("Error al hacer refresh session: ", err);
       }
     });
   }
