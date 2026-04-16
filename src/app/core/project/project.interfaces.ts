@@ -1,3 +1,5 @@
+import { UserRole, UserRoleRequest } from "../users/user.interfaces";
+
 export type ProjectPriority = 'Alta' | 'Media' | 'Baja';
 
 export type ProjectHealth = 'En foco' | 'En riesgo' | 'Descubrimiento';
@@ -11,7 +13,7 @@ export type ProjectTaskStatus =
   | 'Completada';
 
 export interface ProjectCard {
-  id: number;
+  id: string;
   name: string;
   client: string;
   role: string;
@@ -40,12 +42,21 @@ export interface ProjectTask {
   blocked: boolean;
 }
 
-export interface PortfolioSummary {
-  activeProjects: number;
-  avgProgress: number;
-  nextDeadline: string | null;
-  totalCollaborators: number;
-  blockedTasks: number;
+export interface ProjectRequest {
+  id?: string;
+  name: string;
+  client: string;
+  summary: string;
+  priority: ProjectPriority;
+  health: ProjectHealth;
+  progress: number;
+  methodology: ProjectMethodology;
+  createdDate: string;
+  startDate: string;
+  dueDate: string;
+  userCreated: UserRoleRequest;
+  teamMembers: UserRoleRequest[];
+  tags: string[];
 }
 
 export interface NewProjectDraft {
@@ -56,6 +67,5 @@ export interface NewProjectDraft {
   priority: ProjectPriority;
   methodology: ProjectMethodology;
   dueDate: string;
-  teamMembers: string;
   tags: string;
 }

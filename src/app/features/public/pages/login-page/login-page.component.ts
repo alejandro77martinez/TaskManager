@@ -55,10 +55,9 @@ export class LoginPageComponent {
         this.authService.login(credentials)
           .subscribe({
             next: () => { 
-              const redirect = this.route.snapshot.queryParamMap.get('redirect') || '/home';
               this.toastService.success('Welcome back.');
               this.isLoading.set(false);
-              this.router.navigateByUrl(redirect);
+              this.router.navigateByUrl("/home");
             },
             error: (err) => { 
               this.isLoading.set(false);

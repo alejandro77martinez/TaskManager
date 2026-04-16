@@ -99,6 +99,8 @@ export class AuthService {
         this.stopRefreshSession();
         this.authUserSignal.set(null);
         this.authResolvedSignal.set(true);
+        this.router.navigateByUrl('/login');
+        console.error('Error refreshing session:', err);
       }
     });
   }

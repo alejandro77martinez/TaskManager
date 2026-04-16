@@ -1,0 +1,82 @@
+<div class="relative overflow-x-auto bg-neutral-primary-soft shadow-xs rounded-base border border-default">
+  <table class="w-full text-sm text-left rtl:text-right text-body">
+    <thead class="text-sm text-white bg-gray-700 border-b rounded-base border-default">
+      <tr>
+        <th scope="col" class="px-6 py-3 font-medium">
+          Miembro
+        </th>
+        <th scope="col" class="px-6 py-3 font-medium">
+          Rol
+        </th>
+        <th scope="col" class="px-6 py-3 font-medium">
+          Accion
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (member of selectedMembers(); track member.id) {
+      <tr class="bg-neutral-primary border-b border-default">
+        <td class="px-4 py-2 flex items-center gap-2">
+          <img [src]="member.avatar" alt="{{ member.name }}" class="h-6 w-6 rounded-full object-cover" />
+          <div class="flex flex-col text-sm">
+            <span>{{ member.name }}</span>
+            <span class="text-slate-500">{{ member.email }}</span>
+          </div>
+        </td>
+        <td class="px-6 py-4">
+          <span
+            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+            {{ member.role }}
+          </span>
+        </td>
+        <td class="px-6 py-4">
+          <button type="button" class="my-button-danger px-2 py-1" (click)="removeTeamMember(member.id)">
+            <svg class="w-5 h-5 text-gray-800 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+              width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z" />
+            </svg>
+          </button>
+        </td>
+      </tr>
+      }
+    </tbody>
+  </table>
+</div>
+<div class="relative">
+  <div class="flex items-center gap-4 mt-4">
+    <div class="w-full">
+      <input id="member-team" class="my-input" placeholder="name@company.com" [value]="teamMembersInput().email"
+        (input)="onEmailInput($event)" (blur)="closeSuggestions()" />
+      @if (showSuggestions() && emailSuggestions().length > 0) {
+      <div
+        class="fixedtop-full left-0 right-0 mt-1 bg-white border border-slate-200 rounded-lg shadow-lg z-50 max-h-48 overflow-y-auto">
+        @for (suggestion of emailSuggestions(); track suggestion.email) {
+        <button type="button"
+          class="w-full px-4 py-2 text-left hover:bg-slate-100 transition border-b border-slate-100 last:border-b-0 flex flex-col"
+          (click)="selectEmailSuggestion(suggestion)" (mousedown)="$event.preventDefault()">
+          <span class="text-sm font-medium text-slate-900">{{ suggestion.email }}</span>
+        </button>
+        }
+      </div>
+      }
+    </div>
+    <div class="flex gap-2 w-full">
+      <input id="member-role" class="my-input" placeholder="Developer" [value]="teamMembersInput().role"
+        (input)="updateMemberRole($event)" />
+      <button type="button" class="my-button px-3 py-1 mt-2 text-sm text-primary-600 hover:text-primary-800 transition"
+        (click)="addTeamMember()">
+        <svg class="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"
+          width="24" height="24" fill="currentColor" viewBox="0 0 24 24">
+          <path fill-rule="evenodd"
+            d="M9 4a4 4 0 1 0 0 8 4 4 0 0 0 0-8Zm-2 9a4 4 0 0 0-4 4v1a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2v-1a4 4 0 0 0-4-4H7Zm8-1a1 1 0 0 1 1-1h1v-1a1 1 0 1 1 2 0v1h1a1 1 0 1 1 0 2h-1v1a1 1 0 1 1-2 0v-1h-1a1 1 0 0 1-1-1Z"
+            clip-rule="evenodd" />
+        </svg>
+      </button>
+    </div>
+  </div>
+</div>
+<p class="mt-2 text-xs text-slate-500">
+  Agregar los correos electrónicos para generar la lista de participantes. Empieza a escribir para obtener
+  sugerencias.
+</p>

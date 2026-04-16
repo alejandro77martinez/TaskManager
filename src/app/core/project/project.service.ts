@@ -1,86 +1,10 @@
-import { computed, Injectable, signal } from '@angular/core';
-import {
-  NewProjectDraft,
-  PortfolioSummary,
-  ProjectCard,
-  ProjectMethodology,
-  ProjectTask,
-} from './project.interfaces';
-
-const INITIAL_PROJECTS: ProjectCard[] = [
-  {
-    id: 101,
-    name: 'Portal de proveedores LATAM',
-    client: 'Operaciones',
-    role: 'Product Owner',
-    summary:
-      'Centraliza onboarding, aprobaciones y seguimiento de incidencias para partners regionales.',
-    priority: 'Alta',
-    health: 'En foco',
-    progress: 74,
-    dueDate: '2026-04-18',
-    methodology: 'Kanban',
-    sprint: 'Sprint 18',
-    completedTasks: 31,
-    totalTasks: 42,
-    teamMembers: ['Ana Ruiz', 'Diego Vera', 'Laura Soto', 'Ivan Perez'],
-    tags: ['B2B', 'Integraciones', 'Dashboard'],
-  },
-  {
-    id: 102,
-    name: 'App de inspeccion de campo',
-    client: 'Calidad',
-    role: 'UX Lead',
-    summary:
-      'Experiencia movil para capturar hallazgos, evidencia fotografica y checklist offline en planta.',
-    priority: 'Alta',
-    health: 'En foco',
-    progress: 58,
-    dueDate: '2026-04-25',
-    methodology: 'Hibrido',
-    sprint: 'Sprint 09',
-    completedTasks: 18,
-    totalTasks: 31,
-    teamMembers: ['Camila Mena', 'Juan Tapia', 'Marta Leon'],
-    tags: ['Mobile', 'Offline', 'QA'],
-  },
-  {
-    id: 103,
-    name: 'Migracion de reportes financieros',
-    client: 'Finanzas',
-    role: 'Analista funcional',
-    summary:
-      'Renueva reportes manuales hacia tableros con trazabilidad, conciliacion y alertas por excepcion.',
-    priority: 'Media',
-    health: 'En riesgo',
-    progress: 41,
-    dueDate: '2026-04-12',
-    methodology: 'Kanban',
-    sprint: 'Sprint 12',
-    completedTasks: 14,
-    totalTasks: 34,
-    teamMembers: ['Nora Gil', 'Sergio Paz', 'Elena Cruz', 'Tomas Diaz'],
-    tags: ['Data', 'BI', 'Cumplimiento'],
-  },
-  {
-    id: 104,
-    name: 'Centro de ayuda omnicanal',
-    client: 'Customer Care',
-    role: 'Delivery Manager',
-    summary:
-      'Unifica formularios, base de conocimiento y automatizaciones para reducir tiempo de respuesta.',
-    priority: 'Media',
-    health: 'Descubrimiento',
-    progress: 27,
-    dueDate: '2026-05-03',
-    methodology: 'Scrum',
-    sprint: 'Sprint 03',
-    completedTasks: 7,
-    totalTasks: 26,
-    teamMembers: ['Paula Rios', 'Miguel Solis', 'Lina Bravo'],
-    tags: ['Soporte', 'Bot', 'Autoservicio'],
-  },
-];
+import { computed, inject, Injectable, signal } from '@angular/core';
+import { ProjectCard, ProjectTask } from './project.interfaces';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { environment } from '../../../environments/environment';
+import { AuthService } from '../auth/auth.service';
+import { catchError, map, Observable, throwError } from 'rxjs';
+import { UserSearchEmailResult } from '../users/user.interfaces';
 
 const INITIAL_TASKS: ProjectTask[] = [
   {
@@ -186,97 +110,160 @@ const INITIAL_TASKS: ProjectTask[] = [
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
-  private readonly projectsSignal = signal<ProjectCard[]>(INITIAL_PROJECTS);
+
+  private readonly authService = inject(AuthService);
+  private readonly projectsSignal = signal<ProjectCard[]>([]);
+  private readonly membersSignal = signal<UserSearchEmailResult[]>([]);
   private readonly tasksSignal = signal<ProjectTask[]>(INITIAL_TASKS);
+  private readonly loadProjectsFromApi = signal(false);
+
+  private readonly apiBase = environment.authApiBaseUrl;
 
   readonly projects = this.projectsSignal.asReadonly();
+  readonly loadProjects = this.loadProjectsFromApi.asReadonly();
+
+  constructor(private http: HttpClient) {
+    this.getProjectsFromApi();
+  }
 
   readonly inProgressTasks = computed(() =>
     this.tasksSignal().filter((task) => task.status === 'En curso'),
   );
-
   readonly pendingTasks = computed(() =>
     this.tasksSignal().filter((task) => task.status === 'Pendiente'),
   );
 
-  readonly portfolioSummary = computed<PortfolioSummary>(() => {
+  readonly overviewCards = computed(() => {
+    const summary = this.portfolioSummary();
+    return [
+      {
+        label: 'Proyectos activos',
+        value: `${summary.activeProjects}`,
+        helper: 'Iniciativas con seguimiento visible desde esta vista.',
+      },
+      {
+        label: 'Avance promedio',
+        value: `${summary.avgProgress}%`,
+        helper: 'Progreso acumulado entre todos los frentes activos.',
+      },
+      {
+        label: 'Colaboradores',
+        value: `${summary.totalCollaborators}`,
+        helper: 'Personas distintas participando en el portafolio.',
+      },
+      {
+        label: 'Proxima entrega',
+        value: this.formatDate(summary.nextDeadline, true),
+        helper: 'Fecha mas cercana comprometida por el equipo.',
+      },
+    ];
+  });
+
+  readonly projectSignals = computed(() => {
+    const projects = this.projects();
+    const summary = this.portfolioSummary();
+
+    return [
+      {
+        label: 'Alta prioridad',
+        value: `${projects.filter((project) => project.priority === 'Alta').length}`,
+      },
+      {
+        label: 'En foco',
+        value: `${projects.filter((project) => project.health === 'En foco').length}`,
+      },
+      {
+        label: 'Bloqueos',
+        value: `${summary.blockedTasks}`,
+      },
+    ];
+  });
+
+  readonly portfolioSummary = computed(() => {
     const projects = this.projectsSignal();
     const tasks = this.tasksSignal();
+
+    const activeProjects = projects.length;
+    const avgProgress = activeProjects
+      ? Math.round(projects.reduce((sum, project) => sum + project.progress, 0) / activeProjects)
+      : 0;
     const totalCollaborators = new Set(projects.flatMap((project) => project.teamMembers)).size;
+    const nextDeadline = tasks
+      .filter((task) => task.status !== 'Completada')
+      .map((task) => task.dueDate)
+      .filter(Boolean)
+      .sort((a, b) => new Date(a).getTime() - new Date(b).getTime())[0] ?? null;
     const blockedTasks = tasks.filter((task) => task.blocked).length;
-    const nextDeadline = [...projects]
-      .sort((left, right) => this.toTimestamp(left.dueDate) - this.toTimestamp(right.dueDate))[0]
-      ?.dueDate;
-    const avgProgress = Math.round(
-      projects.reduce((accumulator, project) => accumulator + project.progress, 0) /
-        Math.max(projects.length, 1),
-    );
 
     return {
-      activeProjects: projects.length,
+      activeProjects,
       avgProgress,
-      nextDeadline: nextDeadline ?? null,
       totalCollaborators,
+      nextDeadline,
       blockedTasks,
     };
   });
 
-  createProject(draft: NewProjectDraft): void {
-    const teamMembers = this.splitCommaSeparatedValues(draft.teamMembers);
-    const tags = this.splitCommaSeparatedValues(draft.tags);
-    const nextProjectId = this.getNextId(this.projectsSignal().map((project) => project.id));
-    const nextTaskId = this.getNextId(this.tasksSignal().map((task) => task.id));
-    const methodology = draft.methodology || this.getDefaultMethodology();
-    const newProject: ProjectCard = {
-      id: nextProjectId,
-      name: draft.name.trim(),
-      client: draft.client.trim(),
-      role: draft.role.trim() || 'Colaborador principal',
-      summary: draft.summary.trim(),
-      priority: draft.priority,
-      health: 'Descubrimiento',
-      progress: 0,
-      dueDate: draft.dueDate,
-      methodology,
-      sprint: methodology === 'Kanban' ? 'Flujo inicial' : 'Sprint 00',
-      completedTasks: 0,
-      totalTasks: 4,
-      teamMembers: teamMembers.length ? teamMembers : ['Equipo por asignar'],
-      tags: tags.length ? tags : ['Nuevo proyecto'],
-    };
-
-    const kickoffTask: ProjectTask = {
-      id: nextTaskId,
-      title: `Definir alcance inicial de ${newProject.name}`,
-      projectName: newProject.name,
-      assignee: newProject.teamMembers[0],
-      dueDate: draft.dueDate,
-      status: 'Pendiente',
-      priority: newProject.priority,
-      effortPoints: 3,
-      blocked: false,
-    };
-
-    this.projectsSignal.update((projects) => [newProject, ...projects]);
-    this.tasksSignal.update((tasks) => [kickoffTask, ...tasks]);
+  getInitialsMember(id: string): string {
+    return this.membersSignal()
+      .find(member => member.id === id)?.name
+      .split(' ')
+      .map(n => n[0])
+      .join('') || '';
   }
 
-  private getDefaultMethodology(): ProjectMethodology {
-    return 'Kanban';
+  getProjectsFromApi(): void {
+    this.http.get<ProjectCard[]>(this.apiBase + '/api/v1/project/ofTheUser/' + this.getUserId()).subscribe({
+      next: (projects) => {
+        this.projectsSignal.set(projects);
+        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers)));
+        this.getMembersByIds(teamMenbersIds);
+      },
+      error: (err) => console.error('Error fetching projects:', err),
+    });
   }
 
-  private splitCommaSeparatedValues(value: string): string[] {
-    return value
-      .split(',')
-      .map((entry) => entry.trim())
-      .filter(Boolean);
+  formatDate(value: string | null, longFormat = false): string {
+    if (!value) {
+      return 'Sin fecha';
+    }
+    return new Intl.DateTimeFormat('es-ES', {
+      day: '2-digit',
+      month: 'short',
+      ...(longFormat ? { year: 'numeric' } : {}),
+    }).format(new Date(value));
   }
 
-  private getNextId(ids: number[]): number {
-    return Math.max(...ids, 0) + 1;
+  private getMembersByIds(ids: string[]): void {
+    this.http.post<UserSearchEmailResult[]>(this.apiBase + '/api/v1/user/search/team', ids).pipe(
+      catchError(this.handleError)
+    ).subscribe({
+      next: (members) => {
+        const currentMembers = this.membersSignal();
+        const updatedMembers = [...currentMembers, ...members.filter(member => !currentMembers.some(m => m.id === member.id))];
+        this.membersSignal.set(updatedMembers);
+        this.loadProjectsFromApi.set(true);
+      },
+      error: (err) => {
+        this.loadProjectsFromApi.set(true);
+        console.error('Error fetching members:', err)
+      },
+    });
   }
 
-  private toTimestamp(value: string): number {
-    return new Date(value).getTime();
+  private getUserId(): string {
+    return this.authService.authUser()?.id ?? '';
+  }
+
+  private handleError(error: HttpErrorResponse) {
+    let errorMessage = 'Error desconocido';
+    if (error.error instanceof ErrorEvent) {
+      // Error del lado del cliente
+      errorMessage = `Error: ${error.error.message}`;
+    } else {
+      // Error del lado del servidor
+      errorMessage = `Código: ${error.status} - Mensaje: ${error.message}`;
+    }
+    return throwError(() => new Error(errorMessage));
   }
 }

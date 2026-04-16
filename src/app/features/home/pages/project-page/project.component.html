@@ -114,11 +114,15 @@
 
           <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
             <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-white/10">
-              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Area</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                Cliente
+              </p>
               <p class="mt-2 text-sm font-semibold text-white">{{ project.client }}</p>
             </div>
             <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-white/10">
-              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Rol</p>
+              <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
+                Rol
+              </p>
               <p class="mt-2 text-sm font-semibold text-white">{{ project.role }}</p>
             </div>
             <div class="rounded-2xl bg-slate-950/40 p-4 ring-1 ring-white/10">
@@ -136,7 +140,7 @@
               </p>
             </div>
           </div>
-
+          <!-- Progreso del plan con barra y detalle de sprint activo 
           <div class="mt-5">
             <div class="mb-2 flex items-center justify-between text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">
               <span>Progreso del plan</span>
@@ -148,10 +152,10 @@
                 [style.width.%]="project.progress"
               ></div>
             </div>
-            <p class="mt-2 text-sm text-slate-400">{{ project.sprint }} activo para este frente.</p>
-          </div>
-
+          </div>-->
+    
           <div class="mt-5 flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
+            <!--
             <div>
               <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Equipo</p>
               <div class="mt-2 flex items-center">
@@ -172,7 +176,7 @@
                 }
               </div>
             </div>
-
+            -->
             <div class="flex flex-wrap gap-2 lg:justify-end">
               @for (tag of project.tags; track tag) {
                 <span class="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
@@ -345,268 +349,4 @@
   </section>
 </section>
 
-@if (isCreatePanelOpen()) {
-  <div class="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-sm" (click)="closeCreateProjectPanel()"></div>
-
-  <aside
-    class="fixed inset-y-0 right-0 z-50 flex w-full max-w-xl flex-col overflow-y-auto bg-slate-100 shadow-2xl"
-    role="dialog"
-    aria-modal="true"
-    aria-labelledby="create-project-title"
-  >
-    <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-6 text-white">
-      <div class="flex items-start justify-between">
-        <div>
-          <p class="text-sm font-semibold uppercase tracking-[0.22em] text-primary-200">
-            Nuevo proyecto
-          </p>
-          <h2 id="create-project-title" class="mt-2 text-2xl font-black tracking-tight text-white">
-            Panel de alta rapida
-          </h2>
-          <p class="mt-2 text-sm leading-6 text-slate-300">
-            Completa datos base del proyecto para agregarlo al dashboard con una tarea inicial.
-          </p>
-        </div>
-
-        <button
-          type="button"
-          class="rounded-2xl p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
-          (click)="closeCreateProjectPanel()"
-          aria-label="Cerrar panel"
-        >
-          <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-            <path
-              d="M4.293 4.293a1 1 0 0 1 1.414 0L10 8.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L8.586 10 4.293 5.707a1 1 0 0 1 0-1.414Z"
-            />
-          </svg>
-        </button>
-      </div>
-    </div>
-
-    <form #projectForm="ngForm" class="flex h-full flex-col" (ngSubmit)="createProject(projectForm)">
-      <div class="flex-1 space-y-6 p-6">
-        <div class="grid gap-5 sm:grid-cols-2">
-          <div class="sm:col-span-2">
-            <label for="project-name" class="mb-2 block text-sm font-medium text-slate-900">
-              Nombre del proyecto *
-            </label>
-            <input
-              id="project-name"
-              type="text"
-              name="name"
-              class="my-input"
-              placeholder="Ej. Plataforma de auditoria interna"
-              [(ngModel)]="newProjectDraft.name"
-              required
-            />
-          </div>
-
-          <div>
-            <label for="project-client" class="mb-2 block text-sm font-medium text-slate-900">
-              Area o cliente *
-            </label>
-            <input
-              id="project-client"
-              type="text"
-              name="client"
-              class="my-input"
-              placeholder="Ej. Operaciones"
-              [(ngModel)]="newProjectDraft.client"
-              required
-            />
-          </div>
-
-          <div>
-            <label for="project-role" class="mb-2 block text-sm font-medium text-slate-900">
-              Rol del usuario
-            </label>
-            <input
-              id="project-role"
-              type="text"
-              name="role"
-              class="my-input"
-              placeholder="Ej. Project Manager"
-              [(ngModel)]="newProjectDraft.role"
-            />
-          </div>
-
-          <div>
-            <label for="project-priority" class="mb-2 block text-sm font-medium text-slate-900">
-              Prioridad
-            </label>
-            <select
-              id="project-priority"
-              name="priority"
-              class="my-input"
-              [(ngModel)]="newProjectDraft.priority"
-            >
-              <option value="Alta">Alta</option>
-              <option value="Media">Media</option>
-              <option value="Baja">Baja</option>
-            </select>
-          </div>
-
-          <div>
-            <label for="project-methodology" class="mb-2 block text-sm font-medium text-slate-900">
-              Metodologia
-            </label>
-            <select
-              id="project-methodology"
-              name="methodology"
-              class="my-input"
-              [(ngModel)]="newProjectDraft.methodology"
-            >
-              <option value="Kanban">Kanban</option>
-              <option value="Scrum">Scrum</option>
-              <option value="Hibrido">Hibrido</option>
-            </select>
-          </div>
-
-          <div class="sm:col-span-2">
-            <label for="project-summary" class="mb-2 block text-sm font-medium text-slate-900">
-              Objetivo o resumen *
-            </label>
-            <textarea
-              id="project-summary"
-              name="summary"
-              class="my-input min-h-28"
-              placeholder="Describe el problema, el objetivo y el valor esperado del proyecto."
-              [(ngModel)]="newProjectDraft.summary"
-              required
-            ></textarea>
-          </div>
-
-          <div>
-            <label for="project-due-date" class="mb-2 block text-sm font-medium text-slate-900">
-              Fecha objetivo *
-            </label>
-            <input
-              id="project-due-date"
-              type="date"
-              name="dueDate"
-              class="my-input"
-              [(ngModel)]="newProjectDraft.dueDate"
-              required
-            />
-          </div>
-
-          <div>
-            <label for="project-tags" class="mb-2 block text-sm font-medium text-slate-900">
-              Tags
-            </label>
-            <input
-              id="project-tags"
-              type="text"
-              name="tags"
-              class="my-input"
-              placeholder="Kanban, Automatizacion, Cliente"
-              [(ngModel)]="newProjectDraft.tags"
-            />
-          </div>
-
-          <div class="sm:col-span-2">
-            <label for="project-team" class="mb-2 block text-sm font-medium text-slate-900">
-              Equipo participante
-            </label>
-            <textarea
-              id="project-team"
-              name="teamMembers"
-              class="my-input min-h-24"
-              placeholder="Ej. Sofia Torres, Marco Rojas, Elena Gil"
-              [(ngModel)]="newProjectDraft.teamMembers"
-            ></textarea>
-            <p class="mt-2 text-xs text-slate-500">
-              Separa nombres por coma para generar la lista de participantes.
-            </p>
-          </div>
-        </div>
-
-        <div class="rounded-3xl bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-5 text-white ring-1 ring-white/10 shadow-xl">
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <p class="text-sm font-semibold uppercase tracking-[0.22em] text-primary-200">
-                Vista previa
-              </p>
-              <h3 class="mt-2 text-lg font-black text-white">Como se veria el alta en el tablero</h3>
-            </div>
-            <span
-              class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
-              [class]="getPriorityClasses(newProjectDraft.priority)"
-            >
-              {{ newProjectDraft.priority }}
-            </span>
-          </div>
-
-          <div class="mt-4 space-y-4">
-            <div>
-              <p class="text-sm font-semibold text-white">
-                {{ newProjectDraft.name || 'Nombre pendiente de definir' }}
-              </p>
-              <p class="mt-1 text-sm text-slate-300">
-                {{ newProjectDraft.summary || 'El resumen del proyecto aparecera aqui.' }}
-              </p>
-            </div>
-
-            <div class="grid gap-3 sm:grid-cols-2">
-              <div class="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Area</p>
-                <p class="mt-2 text-sm font-semibold text-white">
-                  {{ newProjectDraft.client || 'Sin definir' }}
-                </p>
-              </div>
-              <div class="rounded-2xl bg-white/10 p-4 ring-1 ring-white/10">
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
-                  Fecha
-                </p>
-                <p class="mt-2 text-sm font-semibold text-white">
-                  {{ formatDate(newProjectDraft.dueDate || null, true) }}
-                </p>
-              </div>
-            </div>
-
-            @if (previewCommaSeparatedValues(newProjectDraft.teamMembers).length > 0) {
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Equipo</p>
-                <div class="mt-2 flex flex-wrap gap-2">
-                  @for (member of previewCommaSeparatedValues(newProjectDraft.teamMembers); track member) {
-                    <span class="rounded-full bg-slate-900 px-3 py-1 text-xs font-semibold text-white">
-                      {{ member }}
-                    </span>
-                  }
-                </div>
-              </div>
-            }
-
-            @if (previewCommaSeparatedValues(newProjectDraft.tags).length > 0) {
-              <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">Tags</p>
-                <div class="mt-2 flex flex-wrap gap-2">
-                  @for (tag of previewCommaSeparatedValues(newProjectDraft.tags); track tag) {
-                    <span class="rounded-full bg-primary-100 px-3 py-1 text-xs font-semibold text-primary-800">
-                      {{ tag }}
-                    </span>
-                  }
-                </div>
-              </div>
-            }
-          </div>
-        </div>
-      </div>
-
-      <div class="border-t border-slate-200 p-6">
-        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-end">
-          <button
-            type="button"
-            class="rounded-2xl border border-slate-200 px-4 py-3 text-sm font-semibold text-slate-700 transition hover:bg-slate-100"
-            (click)="closeCreateProjectPanel()"
-          >
-            Cancelar
-          </button>
-          <button type="submit" class="my-button px-5 py-3 text-sm" [disabled]="projectForm.invalid">
-            Guardar proyecto
-          </button>
-        </div>
-      </div>
-    </form>
-  </aside>
-}
+<app-new-project-form></app-new-project-form>

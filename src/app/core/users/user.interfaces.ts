@@ -13,3 +13,23 @@ export interface UserRegisterData {
   email: string;
   password: string;
 }
+
+export interface UserSearchEmailResult {
+  id: string;
+  email: string;
+  name: string;
+  avatar: string;
+}
+
+export interface UserRole {
+  id: string;
+  name: string;
+  email: string;
+  avatar: string;
+  role: string;
+}
+
+export interface UserRoleRequest {
+  userId: string;
+  role: string;
+}

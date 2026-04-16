@@ -1,121 +1,32 @@
-import { AfterViewInit, Component, computed, inject, signal } from '@angular/core';
-import { FormsModule, NgForm } from '@angular/forms';
+import { AfterViewInit, Component, inject } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { initFlowbite } from 'flowbite';
-import {
-  NewProjectDraft,
-  ProjectHealth,
-  ProjectPriority,
-  ProjectTaskStatus,
-} from '../../../../core/project/project.interfaces';
+import { ProjectHealth, ProjectPriority, ProjectTaskStatus } from '../../../../core/project/project.interfaces';
 import { ProjectService } from '../../../../core/project/project.service';
+import { NewProjectFormComponent } from './components/new-project-form/form.component';
+import { ProjectCreateService } from '../../../../core/project/project.create.service';
 
 @Component({
   selector: 'app-project',
-  imports: [FormsModule],
+  imports: [FormsModule, NewProjectFormComponent],
   templateUrl: './project.component.html',
 })
 export class ProjectComponent implements AfterViewInit {
+  
   private readonly projectService = inject(ProjectService);
+  private readonly projectCreateService = inject(ProjectCreateService);
 
   readonly projects = this.projectService.projects;
   readonly inProgressTasks = this.projectService.inProgressTasks;
   readonly pendingTasks = this.projectService.pendingTasks;
+  readonly overviewCards = this.projectService.overviewCards;
+  readonly projectSignals = this.projectService.projectSignals;
   readonly portfolioSummary = this.projectService.portfolioSummary;
-  readonly isCreatePanelOpen = signal(false);
-
-  newProjectDraft: NewProjectDraft = this.createEmptyProjectDraft();
-
-  readonly overviewCards = computed(() => {
-    const summary = this.portfolioSummary();
-
-    return [
-      {
-        label: 'Proyectos activos',
-        value: `${summary.activeProjects}`,
-        helper: 'Iniciativas con seguimiento visible desde esta vista.',
-      },
-      {
-        label: 'Avance promedio',
-        value: `${summary.avgProgress}%`,
-        helper: 'Progreso acumulado entre todos los frentes activos.',
-      },
-      {
-        label: 'Colaboradores',
-        value: `${summary.totalCollaborators}`,
-        helper: 'Personas distintas participando en el portafolio.',
-      },
-      {
-        label: 'Proxima entrega',
-        value: this.formatDate(summary.nextDeadline, true),
-        helper: 'Fecha mas cercana comprometida por el equipo.',
-      },
-    ];
-  });
-
-  readonly projectSignals = computed(() => {
-    const projects = this.projects();
-    const summary = this.portfolioSummary();
-
-    return [
-      {
-        label: 'Alta prioridad',
-        value: `${projects.filter((project) => project.priority === 'Alta').length}`,
-      },
-      {
-        label: 'En foco',
-        value: `${projects.filter((project) => project.health === 'En foco').length}`,
-      },
-      {
-        label: 'Bloqueos',
-        value: `${summary.blockedTasks}`,
-      },
-    ];
-  });
+  readonly formatDate = this.projectService.formatDate;
+  readonly openCreateProjectPanel = this.projectCreateService.openCreateProjectPanel;
 
   ngAfterViewInit(): void {
     initFlowbite();
-  }
-
-  openCreateProjectPanel(): void {
-    this.isCreatePanelOpen.set(true);
-  }
-
-  closeCreateProjectPanel(): void {
-    this.isCreatePanelOpen.set(false);
-  }
-
-  createProject(form: NgForm): void {
-    if (form.invalid) {
-      form.control.markAllAsTouched();
-      return;
-    }
-
-    this.projectService.createProject(this.newProjectDraft);
-    this.newProjectDraft = this.createEmptyProjectDraft();
-    form.resetForm(this.newProjectDraft);
-    this.closeCreateProjectPanel();
-    setTimeout(() => initFlowbite());
-  }
-
-  formatDate(value: string | null, longFormat = false): string {
-    if (!value) {
-      return 'Sin fecha';
-    }
-
-    return new Intl.DateTimeFormat('es-ES', {
-      day: '2-digit',
-      month: 'short',
-      ...(longFormat ? { year: 'numeric' } : {}),
-    }).format(new Date(value));
-  }
-
-  getInitials(name: string): string {
-    return name
-      .split(' ')
-      .filter(Boolean)
-      .slice(0, 2)
-      .map((segment) => segment[0]?.toUpperCase() ?? '')
-      .join('');
   }
 
   getHealthClasses(health: ProjectHealth): string {
@@ -161,17 +72,7 @@ export class ProjectComponent implements AfterViewInit {
       .slice(0, 4);
   }
 
-  private createEmptyProjectDraft(): NewProjectDraft {
-    return {
-      name: '',
-      client: '',
-      role: '',
-      summary: '',
-      priority: 'Media',
-      methodology: 'Kanban',
-      dueDate: '',
-      teamMembers: '',
-      tags: '',
-    };
+  getInitials(member: string): string {
+    return this.projectService.getInitialsMember(member);
   }
 }

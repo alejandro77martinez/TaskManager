@@ -42,6 +42,21 @@
     active:bg-primary-800
 }
 
+.my-button-danger { 
+  @apply 
+    bg-red-500 
+    text-white 
+    font-semibold 
+    rounded-lg 
+    cursor-pointer 
+    hover:bg-red-600 
+    focus:ring-4 
+    focus:outline-2 
+    focus:outline-offset-2 
+    focus:outline-primary-400 
+    active:bg-red-800
+}
+
 .my-input {
   @apply
     bg-gray-50 
