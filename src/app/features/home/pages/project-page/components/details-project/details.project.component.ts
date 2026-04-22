@@ -1,10 +1,11 @@
 import { Component, inject, signal } from "@angular/core";
 import { ToastService } from "../../../../../../core/toast/toast.service";
 import { FormsModule } from "@angular/forms";
-import { FormField } from "@angular/forms/signals";
+import { FormField, submit } from "@angular/forms/signals";
 import { CommonModule } from "@angular/common";
 import { TeamTableComponent } from "../team-table/team.table.component";
 import { ProjectDetailsService } from "../../../../../../core/project/project.details.service";
+import { ProjectTeamTableService } from "../../../../../../core/project/project.team.table.service";
 
 @Component({
   selector: 'app-details-project',
@@ -15,13 +16,28 @@ export class DetailsProjectComponent {
   
   private readonly toastService = inject(ToastService);
   private readonly projectDetailsService = inject(ProjectDetailsService);
+  private readonly projectTeamTableService = inject(ProjectTeamTableService)
 
   readonly projectDetailsForm = this.projectDetailsService.detailValidationService.getProjectDetailsForm();
   readonly projectDetailsModel = this.projectDetailsService.detailValidationService.getProjectDetailsModel();
+  readonly isEditing = this.projectDetailsService.isEditMode;
   readonly isDetailsPanelOpen = this.projectDetailsService.isDetailsPanelOpen;
-  readonly isLoading = this.projectDetailsService.isLoading; 
-  readonly closeDetailsProjectPanel = () => {
+  readonly isLoading = this.projectDetailsService.isLoading;
+  readonly tagsInput = this.projectDetailsService.tagsInput;
+  
+  activateEditMode() {
+    this.projectDetailsService.setEditMode(true)
+    this.projectTeamTableService.setIsEditMode(true)
+  }
+
+  tagsInputSet(valInput: string) {
+    this.projectDetailsService.tagsInputSet(valInput);
+  }
+
+  closeDetailsProjectPanel() {
     this.projectDetailsService.closeDetailsProjectPanel();
+    this.projectDetailsService.setEditMode(false)
+    this.projectTeamTableService.setIsEditMode(false)
   };  
 
   onSubmit(event: Event) {
@@ -37,9 +53,24 @@ export class DetailsProjectComponent {
   }
 
   private submitForm(): void {
-    // Implement form submission logic here, e.g., call a service to update project details
-    this.projectDetailsService.setLoading(false);
-    this.toastService.success("Project details updated successfully.");
+    submit(this.projectDetailsForm, {
+      action: async () => {
+        const projectData = this.projectDetailsModel();
+        const teamMembers = this.projectTeamTableService.selectedMembers();
+        this.projectDetailsService.updateProject(projectData, teamMembers).subscribe({
+          next: () => {
+            this.toastService.success('Project update successfully.');
+            this.projectDetailsService.closeDetailsProjectPanel();
+            this.projectDetailsService.setLoading(false);
+            this.projectDetailsService.setEditMode(false)
+          },
+          error: (err) => {
+            console.error('Error creating project:', err.error ?? err);
+            this.toastService.error('An error occurred while creating the project. Please try again.');
+            this.projectDetailsService.setLoading(false);
+          }
+        });
+      }
+    });
   }
-
 }

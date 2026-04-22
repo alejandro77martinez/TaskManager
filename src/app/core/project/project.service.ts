@@ -1,9 +1,9 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { ProjectCard, ProjectTask } from './project.interfaces';
+import { ProjectCard, ProjectHealth, ProjectPriority, ProjectTask, ProjectTaskStatus } from './project.interfaces';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
-import { catchError, map, Observable, throwError } from 'rxjs';
+import { catchError, throwError } from 'rxjs';
 import { UserSearchEmailResult } from '../users/user.interfaces';
 
 const INITIAL_TASKS: ProjectTask[] = [
@@ -116,7 +116,6 @@ export class ProjectService {
   private readonly membersSignal = signal<UserSearchEmailResult[]>([]);
   private readonly tasksSignal = signal<ProjectTask[]>(INITIAL_TASKS);
   private readonly loadProjectsFromApi = signal(false);
-
   private readonly apiBase = environment.authApiBaseUrl;
 
   readonly projects = this.projectsSignal.asReadonly();
@@ -212,17 +211,6 @@ export class ProjectService {
       .join('') || '';
   }
 
-  getProjectsFromApi(): void {
-    this.http.get<ProjectCard[]>(this.apiBase + '/api/v1/project/ofTheUser/' + this.getUserId()).subscribe({
-      next: (projects) => {
-        this.projectsSignal.set(projects);
-        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers)));
-        this.getMembersByIds(teamMenbersIds);
-      },
-      error: (err) => console.error('Error fetching projects:', err),
-    });
-  }
-
   formatDate(value: string | null, longFormat = false): string {
     if (!value) {
       return 'Sin fecha';
@@ -234,6 +222,60 @@ export class ProjectService {
     }).format(new Date(value));
   }
 
+  getHealthClasses(health: ProjectHealth): string {
+    switch (health) {
+      case 'En foco':
+        return 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200';
+      case 'En riesgo':
+        return 'bg-amber-100 text-amber-700 ring-1 ring-amber-200';
+      default:
+        return 'bg-sky-100 text-sky-700 ring-1 ring-sky-200';
+    }
+  }
+  
+  getPriorityClasses(priority: ProjectPriority): string {
+    switch (priority) {
+      case 'Alta':
+        return 'bg-rose-100 text-rose-700 ring-1 ring-rose-200';
+      case 'Media':
+        return 'bg-amber-100 text-amber-700 ring-1 ring-amber-200';
+      default:
+        return 'bg-slate-100 text-slate-700 ring-1 ring-slate-200';
+    }
+  }
+
+  getTaskStatusClasses(status: ProjectTaskStatus): string {
+    switch (status) {
+      case 'En curso':
+        return 'bg-primary-100 text-primary-700 ring-1 ring-primary-200';
+      case 'Pendiente':
+        return 'bg-slate-100 text-slate-700 ring-1 ring-slate-200';
+      case 'En revision':
+        return 'bg-violet-100 text-violet-700 ring-1 ring-violet-200';
+      default:
+        return 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200';
+    }
+  }
+
+  previewCommaSeparatedValues(value: string): string[] {
+    return value
+      .split(',')
+      .map((entry) => entry.trim())
+      .filter(Boolean)
+      .slice(0, 4);
+  }
+
+  getProjectsFromApi(): void {
+    this.http.get<ProjectCard[]>(this.apiBase + '/api/v1/project/ofTheUser/' + this.getUserId()).subscribe({
+      next: (projects) => {
+        this.projectsSignal.set(projects);
+        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers)));
+        this.getMembersByIds(teamMenbersIds);
+      },
+      error: (err) => console.error('Error fetching projects:', err),
+    });
+  }
+  
   private getMembersByIds(ids: string[]): void {
     this.http.post<UserSearchEmailResult[]>(this.apiBase + '/api/v1/user/search/team', ids).pipe(
       catchError(this.handleError)

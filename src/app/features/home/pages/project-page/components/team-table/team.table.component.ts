@@ -14,6 +14,7 @@ export class TeamTableComponent {
   readonly teamMembersInput = this.projectTeamTableService.teamMembersInput;
   readonly emailSuggestions = this.projectTeamTableService.emailSuggestions;
   readonly showSuggestions = this.projectTeamTableService.showSuggestions;
+  readonly isEditing = this.projectTeamTableService.isEditMode;
 
   removeTeamMember(memberId: string): void {
     this.projectTeamTableService.removeTeamMember(memberId);
@@ -33,6 +34,10 @@ export class TeamTableComponent {
 
   closeSuggestions(): void {
     this.projectTeamTableService.closeSuggestions();
+  }
+
+  editModeActivate() {
+    this.projectTeamTableService.setIsEditMode(true)
   }
 
   selectEmailSuggestion(suggestion: UserSearchEmailResult): void {

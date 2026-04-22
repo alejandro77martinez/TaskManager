@@ -32,7 +32,7 @@
     bg-primary-500 
     text-white 
     font-semibold 
-    rounded-lg 
+    rounded-xl 
     cursor-pointer 
     hover:bg-primary-600 
     focus:ring-4 
@@ -40,6 +40,23 @@
     focus:outline-offset-2 
     focus:outline-primary-400 
     active:bg-primary-800
+}
+
+.my-button-cancel {
+  @apply
+    bg-white 
+    border 
+    border-slate-600
+    text-slate-700
+    rounded-xl 
+    cursor-pointer 
+    hover:bg-slate-300 
+    hover:text-slate-900
+    focus:ring-4 
+    focus:outline-2 
+    focus:outline-offset-2 
+    focus:outline-slate-300 
+    active:bg-slate-300
 }
 
 .my-button-danger { 

@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { LoginFormValidationService } from '../../../../core/auth/auth.loginform.validation';
 import { FooterComponent } from '../../../../shared/ui/footer/footer.component';
@@ -18,7 +18,6 @@ export class LoginPageComponent {
 
   private readonly authService = inject(AuthService);
   private readonly router = inject(Router);
-  private readonly route = inject(ActivatedRoute);
   private readonly toastService = inject(ToastService);
   private readonly loginFormValidationService = inject(LoginFormValidationService);
 

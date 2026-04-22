@@ -36,6 +36,10 @@ export class ProjectDetailsValidationService {
     required(schemaPath.userCreated.role, {message: 'User role is required'});
   });
 
+  formDisable(){
+    this.projectDetailsForm().disabled()
+  }
+
   resetFormDetails() {
     this.projectDetailsModel.set(this.initialValuesProjectDetails);
     this.projectDetailsForm.name().reset();

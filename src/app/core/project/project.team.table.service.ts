@@ -14,8 +14,10 @@ export class ProjectTeamTableService {
   private readonly teamMembersInputSignal = signal<UserRole>({ id: '', name: '', email: '', avatar: '', role: '' });
   private readonly emailSuggestionsSignal = signal<UserSearchEmailResult[]>([]);
   private readonly showSuggestionsSignal = signal(false);
+  private readonly isEditModeSignal = signal(false);
   private readonly searchSubject = new Subject<string>();
 
+  readonly isEditMode = this.isEditModeSignal.asReadonly(); 
   readonly selectedMembers = this.selectedMembersSignal.asReadonly();
   readonly teamMembersInput = this.teamMembersInputSignal.asReadonly();
   readonly emailSuggestions = this.emailSuggestionsSignal.asReadonly();
@@ -96,6 +98,10 @@ export class ProjectTeamTableService {
   removeTeamMember(memberId: string): void {
     const updatedMembers = this.selectedMembersSignal().filter(member => member.id !== memberId);
     this.selectedMembersSignal.set(updatedMembers);
+  }
+
+  setIsEditMode(val: boolean){
+    this.isEditModeSignal.set(val)
   }
 
   private setupEmailSearch(): void {

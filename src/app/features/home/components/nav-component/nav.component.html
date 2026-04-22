@@ -1,13 +1,13 @@
-<nav class="bg-white border-b border-gray-200 px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
+<nav class="bg-white border-b border-gray-200 px-1 md:px-4 py-2.5 dark:bg-gray-800 dark:border-gray-700 fixed left-0 right-0 top-0 z-50">
   <div class="flex flex-wrap justify-between items-center">
-    <div class="flex justify-start items-center">
+    <div class="flex justify-start items-center gap-1">
       <button
         #drawerToggleButton
         type="button"
         aria-controls="drawer-navigation"
         [attr.aria-expanded]="drawer.isDesktop() || drawer.isOpen()"
         (click)="toggleDrawer(drawerToggleButton)"
-        class="p-2 mr-2 text-gray-600 rounded-lg cursor-pointer md:hidden hover:text-gray-900 hover:bg-gray-100 focus:bg-gray-100 dark:focus:bg-gray-700 focus:ring-2 focus:ring-gray-100 dark:focus:ring-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white">
+        class="p-2 cursor-pointer md:hidden text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
         <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg">
           <path fill-rule="evenodd"
@@ -22,8 +22,8 @@
         </svg>
         <span class="sr-only">Toggle sidebar</span>
       </button>
-      <a routerLink="/" class="flex items-center justify-between mr-4">
-        <img src="/iconAT.png" class="mr-3 h-8" alt="TaskManager Logo" />
+      <a routerLink="/" class="flex items-center justify-between">
+        <img src="/iconAT.png" class="mr-1 h-8" alt="TaskManager Logo" />
         <span class="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">TaskManager</span>
       </a>
       <form action="#" method="GET" class="hidden md:block md:pl-2">
@@ -43,10 +43,10 @@
         </div>
       </form>
     </div>
-    <div class="flex items-center lg:order-2">
+    <div class="flex items-center lg:order-2 gap-1">
       <button type="button" #drawerToggleButtonAlt aria-controls="drawer-navigation"
         [attr.aria-expanded]="drawer.isDesktop() || drawer.isOpen()" (click)="toggleDrawer(drawerToggleButtonAlt)"
-        class="p-2 mr-1 text-gray-500 rounded-lg md:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
+        class="p-2 text-gray-500 rounded-lg md:hidden hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
         <span class="sr-only">Toggle search</span>
         <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
           xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -57,7 +57,7 @@
       </button>
       <!-- Notifications -->
       <button type="button" data-dropdown-toggle="notification-dropdown"
-        class="p-2 mr-1 cursor-pointer text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
+        class="p-2 cursor-pointer text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600">
         <span class="sr-only">View notifications</span>
         <!-- Bell icon -->
         <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
@@ -69,10 +69,10 @@
       </button>
       <!-- Dropdown menu -->
       <div
-        class="hidden overflow-hidden z-50 my-4 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:divide-gray-600 dark:bg-gray-700 rounded-xl"
+        class="hidden overflow-hidden z-50 max-w-sm text-base list-none bg-white rounded divide-y divide-gray-100 shadow-lg dark:divide-gray-600 dark:bg-gray-700 rounded-xl"
         id="notification-dropdown">
         <div
-          class="block py-2 px-4 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
+          class="block p-2 text-base font-medium text-center text-gray-700 bg-gray-50 dark:bg-gray-600 dark:text-gray-300">
           Notifications
         </div>
         <div>
@@ -228,7 +228,7 @@
       <!-- User -->
 
       <button type="button"
-        class="flex cursor-pointer mx-3 text-sm bg-gray-800 border border-white p-1 hover:bg-gray-700 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+        class="flex cursor-pointer mx-1 md:mx-3 text-sm bg-gray-800 border border-white p-1 hover:bg-gray-700 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
         id="user-menu-button" aria-expanded="false" data-dropdown-toggle="dropdown">
         <span class="sr-only">Open user menu</span>
         <img class="w-8 h-8 rounded-full" src="/user.png" alt="user photo" />

@@ -5,13 +5,15 @@ import { catchError, map, Observable, throwError } from "rxjs";
 import { UserRole } from "../users/user.interfaces";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { AuthService } from "../auth/auth.service";
-import { environment } from "../../../environments/environment.prod";
+import { environment } from "../../../environments/environment";
+import { ProjectService } from "./project.service";
 
 @Injectable({ providedIn: 'root' })
 export class ProjectCreateService {
 
   readonly validateFormService = inject(CreateProjectFormValidationService);
   private readonly authService = inject(AuthService);
+  private readonly projectService = inject(ProjectService);
 
   private readonly isCreatePanelOpenSignal = signal(false);
   private readonly isLoadingSignal = signal<boolean>(false);
@@ -56,6 +58,7 @@ export class ProjectCreateService {
     })
       .pipe(
         map((res) => {
+          this.projectService.getProjectsFromApi();
           return "Project created successfully";
         }),
         catchError(this.handleError)

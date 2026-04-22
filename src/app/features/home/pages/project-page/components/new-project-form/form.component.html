@@ -1,9 +1,9 @@
 @if (isCreatePanelOpen()) {
 <div class="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-sm" (click)="closeCreateProjectPanel()"></div>
 
-<aside class="fixed inset-y-0 right-0 z-50 flex w-full max-w-xl flex-col overflow-y-auto bg-slate-100 shadow-2xl"
+<aside class="fixed inset-y-0 right-0 z-50 flex w-full sm:max-w-xl max-w-full flex-col overflow-x-hidden bg-slate-100 shadow-2xl"
   role="dialog" aria-modal="true" aria-labelledby="create-project-title">
-  <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-6 text-white">
+  <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-4 text-white">
     <div class="flex items-start justify-between">
       <div>
         <p class="text-sm font-semibold uppercase tracking-[0.22em] text-primary-200">
@@ -27,9 +27,9 @@
     </div>
   </div>
 
-  <form class="flex h-full flex-col" (submit)="onSubmit($event)">
-    <div class="flex-1 space-y-6 p-6">
-      <div class="grid gap-4 sm:grid-cols-2">
+  <form class="flex h-full flex-col max-w-full" (submit)="onSubmit($event)">
+    <div class="flex-1 space-y-6 p-4 max-w-full">
+      <div class="grid gap-4 sm:grid-cols-2 max-w-full">
         <div class="sm:col-span-2">
           <label for="project-name" class="mb-2 block text-sm font-medium text-slate-900">
             Nombre del proyecto *
@@ -135,11 +135,13 @@
             [formField]="projectForm.tags" />
         </div>
 
-        <div class="sm:col-span-2">
+        <div class="sm:col-span-2 flex flex-col max-w-full overflow-x-auto">
           <label for="project-team" class="mb-2 block text-sm font-medium text-slate-900">
             Equipo participante
           </label>
-          <app-team-table></app-team-table>
+          <div class="overflow-x-auto w-full max-w-full">
+            <app-team-table></app-team-table>
+          </div>
         </div>
       </div>
     </div>
