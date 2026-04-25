@@ -7,6 +7,7 @@ import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { AuthService } from "../auth/auth.service";
 import { environment } from "../../../environments/environment";
 import { ProjectService } from "./project.service";
+import { ProjectTeamTableService } from "./project.team.table.service";
 
 @Injectable({ providedIn: 'root' })
 export class ProjectCreateService {
@@ -14,6 +15,7 @@ export class ProjectCreateService {
   readonly validateFormService = inject(CreateProjectFormValidationService);
   private readonly authService = inject(AuthService);
   private readonly projectService = inject(ProjectService);
+  private readonly projectTeamTableService = inject(ProjectTeamTableService)
 
   private readonly isCreatePanelOpenSignal = signal(false);
   private readonly isLoadingSignal = signal<boolean>(false);
@@ -29,9 +31,15 @@ export class ProjectCreateService {
   }
   openCreateProjectPanel(): void {
     this.isCreatePanelOpenSignal.set(true);
+    this.projectTeamTableService.setSelectedMembers([]);
+    this.projectTeamTableService.setIsEditMode(true);
+    this.projectTeamTableService.cleanInputMember();
   }
   closeCreateProjectPanel(): void {
     this.isCreatePanelOpenSignal.set(false);
+    this.projectTeamTableService.setSelectedMembers([]);
+    this.projectTeamTableService.setIsEditMode(false);
+    this.projectTeamTableService.cleanInputMember();
   }
   createProject(draft: NewProjectDraft, teamMembers: UserRole[]): Observable<String> {
     const tags = this.splitCommaSeparatedValues(draft.tags);

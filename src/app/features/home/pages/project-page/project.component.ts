@@ -45,4 +45,8 @@ export class ProjectComponent implements AfterViewInit {
   getInitials(member: string): string {
     return this.projectService.getInitialsMember(member);
   }
+
+  getNameMember(member: string): string {
+    return this.projectService.getNameMember(member);
+  }
 }

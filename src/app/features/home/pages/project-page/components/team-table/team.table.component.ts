@@ -36,10 +36,6 @@ export class TeamTableComponent {
     this.projectTeamTableService.closeSuggestions();
   }
 
-  editModeActivate() {
-    this.projectTeamTableService.setIsEditMode(true)
-  }
-
   selectEmailSuggestion(suggestion: UserSearchEmailResult): void {
     this.projectTeamTableService.selectEmailSuggestion(suggestion);
   }

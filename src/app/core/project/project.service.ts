@@ -210,6 +210,11 @@ export class ProjectService {
       .map(n => n[0])
       .join('') || '';
   }
+  
+  getNameMember(id:string): string {
+    return this.membersSignal()
+      .find(member => member.id === id)?.name || '';
+  }
 
   formatDate(value: string | null, longFormat = false): string {
     if (!value) {

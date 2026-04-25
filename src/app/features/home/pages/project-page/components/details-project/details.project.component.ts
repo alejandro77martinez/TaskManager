@@ -1,4 +1,4 @@
-import { Component, inject, signal } from "@angular/core";
+import { Component, inject } from "@angular/core";
 import { ToastService } from "../../../../../../core/toast/toast.service";
 import { FormsModule } from "@angular/forms";
 import { FormField, submit } from "@angular/forms/signals";
@@ -24,6 +24,28 @@ export class DetailsProjectComponent {
   readonly isDetailsPanelOpen = this.projectDetailsService.isDetailsPanelOpen;
   readonly isLoading = this.projectDetailsService.isLoading;
   readonly tagsInput = this.projectDetailsService.tagsInput;
+  readonly isModalOpen = this.projectDetailsService.isModalOpen;
+
+  openModal() { 
+    this.projectDetailsService.setIsModalOpen(true); 
+  }
+
+  closeModal() { 
+    this.projectDetailsService.setIsModalOpen(false); 
+  }
+
+  confirmarDeletion(idProject: string) {
+    this.projectDetailsService.removeProject(idProject).subscribe({
+      next: () => {
+        this.toastService.success("Project deleted successfully.");
+        this.closeDetailsProjectPanel();
+      },
+      error: (err) => {
+        console.error('Error deleting project:', err.error ?? err);
+        this.toastService.error("An error occurred while deleting the project. Please try again.");
+      }
+    });
+  }
   
   activateEditMode() {
     this.projectDetailsService.setEditMode(true)
@@ -62,11 +84,12 @@ export class DetailsProjectComponent {
             this.toastService.success('Project update successfully.');
             this.projectDetailsService.closeDetailsProjectPanel();
             this.projectDetailsService.setLoading(false);
-            this.projectDetailsService.setEditMode(false)
+            this.projectDetailsService.setEditMode(false);
+            this.projectTeamTableService.setIsEditMode(false)
           },
           error: (err) => {
-            console.error('Error creating project:', err.error ?? err);
-            this.toastService.error('An error occurred while creating the project. Please try again.');
+            console.error('Error update project:', err.error ?? err);
+            this.toastService.error('An error occurred while updated the project. Please try again.');
             this.projectDetailsService.setLoading(false);
           }
         });

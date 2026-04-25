@@ -19,12 +19,14 @@ export class ProjectDetailsService {
   private readonly isLoadingSignal = signal(false);
   private readonly isEditModeSignal = signal(false);
   private readonly tagsInputSignal = signal('');
+  private readonly isModalOpenSignal = signal(false);
   private readonly apiBase = environment.authApiBaseUrl;
 
   readonly tagsInput = this.tagsInputSignal.asReadonly();
   readonly isDetailsPanelOpen = this.isDetailsPanelOpenSignal.asReadonly();
   readonly isLoading = this.isLoadingSignal.asReadonly();
   readonly isEditMode = this.isEditModeSignal.asReadonly();
+  readonly isModalOpen = this.isModalOpenSignal.asReadonly();
 
   constructor(private http: HttpClient) { }
 
@@ -34,9 +36,14 @@ export class ProjectDetailsService {
   setLoading(loading: boolean) {
     this.isLoadingSignal.set(loading);
   }
+  setIsModalOpen(isOpen: boolean) {
+    this.isModalOpenSignal.set(isOpen);
+  }
   openDetailsProjectPanel(projectId: string): void {
     this.getProjectById(projectId);
     this.isDetailsPanelOpenSignal.set(true);
+    this.teamTableService.setIsEditMode(false)
+    this.teamTableService.cleanInputMember();
   }
   closeDetailsProjectPanel(): void {
     this.isDetailsPanelOpenSignal.set(false);
@@ -44,6 +51,20 @@ export class ProjectDetailsService {
 
   tagsInputSet(tags: string) {
     this.tagsInputSignal.set(tags)
+  }
+
+  removeProject(projectId: string): Observable<String> {
+    return this.http.delete(this.apiBase + '/api/v1/project/' + projectId, {
+      withCredentials: true
+    })
+      .pipe(
+        map((res) => {
+          //Borrar aqui tareas del proyecto eliminado usando TaskService
+          this.projectService.getProjectsFromApi();
+          return "Project deleted successfully";
+        }),
+        catchError(this.handleError)
+      );
   }
 
   updateProject(projectData: ProjectRequest, teamMembers: UserRole[]): Observable<String> {

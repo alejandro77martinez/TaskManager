@@ -1,9 +1,9 @@
 @if (drawer.isOpen() && !drawer.isDesktop()) {
-  <div class="fixed inset-0 z-30 bg-gray-900/50 md:hidden" aria-hidden="true" (click)="closeDrawer()"></div>
+  <div class="fixed inset-0 z-20 bg-gray-900/50 md:hidden" aria-hidden="true" (click)="closeDrawer()"></div>
 }
 
 <aside
-  class="fixed top-0 left-0 z-40 w-50 h-screen pt-14 transition-transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700"
+  class="fixed top-0 left-0 z-30 w-50 h-screen pt-14 transition-transform bg-white border-r border-gray-200 dark:bg-gray-800 dark:border-gray-700"
   [class.-translate-x-full]="!drawer.isDesktop() && !drawer.isOpen()"
   [class.translate-x-0]="drawer.isDesktop() || drawer.isOpen()"
   [attr.inert]="drawer.isDesktop() || drawer.isOpen() ? null : ''"

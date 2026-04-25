@@ -9,7 +9,6 @@ import { SideComponent } from '../../components/side-component/side.component';
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
-  styleUrl: './home-page.component.css',
   imports: [FooterComponent, NavComponent, SideComponent, RouterOutlet]
 })
 export class HomePageComponent implements AfterViewInit {

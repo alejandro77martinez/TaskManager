@@ -74,6 +74,12 @@ export class ProjectTeamTableService {
     this.showSuggestionsSignal.set(false);
   }
 
+  cleanInputMember(): void {
+    this.teamMembersInputSignal.set({ id: '', name: '', email: '', avatar: '', role: '' });
+    this.emailSuggestionsSignal.set([]);
+    this.showSuggestionsSignal.set(false);
+  }
+
   addTeamMember(): void {
     const email = this.teamMembersInput().email.trim();
     const role = this.teamMembersInput().role.trim();
