@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { catchError, map, Observable, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { UserRegisterData, UserRegisterFormData } from './user.interfaces';
+import { UserRegisterData, UserRegisterFormData, UserRole, UserRoleRequest, UserSearchEmailResult } from './user.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class UserService {
@@ -32,6 +32,36 @@ export class UserService {
         }),
         catchError(this.handleError)
       );
+  }
+
+  searchUsersByEmail(email: string): Observable<UserSearchEmailResult[]> {
+    return this.http.get<UserSearchEmailResult[]>(
+      this.apiBase + '/api/v1/user/search/email/' + email
+    ).pipe(
+      catchError(this.handleError)
+    );
+  }
+  
+  searchTeamById(team: UserRoleRequest[]): Observable<UserRole[]> {
+    const arrayIds:string[] = team.map(member => member.userId);
+    return this.http.post<UserSearchEmailResult[]>(
+      this.apiBase + '/api/v1/user/search/team',
+      arrayIds
+    ).pipe(
+      map((results) => {
+        return results.map(result => {
+          const role = team.find(member => member.userId === result.id)?.role || '';
+          return {
+            id: result.id,
+            name: result.name,
+            email: result.email,
+            avatar: result.avatar,
+            role
+          } as UserRole;
+        });
+      }),
+      catchError(this.handleError)
+    );
   }
 
   private handleError(error: HttpErrorResponse) {
