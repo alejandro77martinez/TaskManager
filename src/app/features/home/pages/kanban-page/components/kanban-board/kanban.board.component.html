@@ -1,0 +1,58 @@
+<section class="flex flex-col gap-6 my-6">
+  @for (project of projects(); track project.id) {
+  <article class="group rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg ring-1 ring-white/10 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-primary-300/40 hover:bg-white/20">  
+    <div class="flex justify-between">
+      <h1 class="text-2xl font-bold text-white">{{ project.name }}</h1>
+      <button class="px-4 py-2 my-button">
+        Crear tarea
+      </button>
+    </div>
+    <div class="flex gap-4 overflow-x-auto mt-4">
+      <div class="min-w-[250px] bg-slate-950/40 rounded-lg p-4">
+        <h2 class="text-lg font-semibold mb-3 text-white">Por hacer</h2>
+        <div class="flex flex-col gap-3">
+          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+            Tarea 1
+          </div>
+          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+            Tarea 2
+          </div>
+        </div>
+      </div>
+      <div class="min-w-[250px] bg-slate-950/40 rounded-lg p-4">
+        <h2 class="text-lg font-semibold mb-3 text-white">En progreso</h2>
+        <div class="flex flex-col gap-3">
+          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+            Tarea 3
+          </div>
+          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+            Tarea 4
+          </div>
+        </div>
+      </div>
+      <div class="min-w-[250px] bg-slate-950/40 rounded-lg p-4">
+        <h2 class="text-lg font-semibold mb-3 text-white">Pruebas</h2>
+        <div class="flex flex-col gap-3">
+          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+            Tarea 5
+          </div>
+          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+            Tarea 6
+          </div>
+        </div>
+      </div>
+      <div class="min-w-[250px] bg-slate-950/40 rounded-lg p-4">
+        <h2 class="text-lg font-semibold mb-3 text-white">Completadas</h2>
+        <div class="flex flex-col gap-3">
+          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+            Tarea 7
+          </div>
+          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+            Tarea 8
+          </div>
+        </div>
+      </div>
+    </div>
+  </article>
+  }
+</section>
