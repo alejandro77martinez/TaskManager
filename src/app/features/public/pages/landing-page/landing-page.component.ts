@@ -7,7 +7,6 @@ import { FooterComponent } from '../../../../shared/ui/footer/footer.component';
   selector: 'app-landing-page',
   imports: [RouterLink, FooterComponent],
   templateUrl: './landing-page.component.html',
-  styleUrl: './landing-page.component.css',
 })
 export class LandingPageComponent implements AfterViewInit {
   ngAfterViewInit(): void {

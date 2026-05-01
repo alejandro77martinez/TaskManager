@@ -11,7 +11,6 @@ import { FormField, submit } from '@angular/forms/signals';
   selector: 'app-login-page',
   imports: [FormsModule, RouterLink, FooterComponent, FormField],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent {

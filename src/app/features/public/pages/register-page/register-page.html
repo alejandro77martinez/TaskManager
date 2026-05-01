@@ -1,19 +1,19 @@
 <main>
   <section class="bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900">
     <div class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
-      <a routerLink="/" class="flex items-center mb-6 text-3xl font-semibold text-gray-900 dark:text-white">
+      <a routerLink="/" class="flex items-center mb-6 text-3xl font-semibold text-white">
         <img class="w-14 h-14 mr-2" src="/iconAT.png" alt="logo">
         <span>TaskManager</span>
       </a>
-      <div class="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-2xl xl:p-0 dark:bg-gray-800 dark:border-gray-700">
+      <div class="w-full rounded-lg shadow border md:mt-0 sm:max-w-2xl xl:p-0 bg-gray-800 border-gray-700">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <h1 class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
+          <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
             Create an account
           </h1>
           <form class="space-y-4 md:space-y-6" (submit)="onSubmit($event)">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
               <div>
-                <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                <label for="name" class="block mb-2 text-sm font-medium text-white">Name</label>
                 <input type="text" [formField]="registerForm.name" id="name" class="my-input" placeholder="Rick">
                 @if (registerForm.name().touched() && registerForm.name().invalid()) {
                 <ul class="list-disc text-xs text-red-600 dark:text-red-500 mt-1 ml-4">
@@ -24,7 +24,7 @@
                 }
               </div>
               <div>
-                <label for="lastname" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last
+                <label for="lastname" class="block mb-2 text-sm font-medium text-white">Last
                   Name</label>
                 <input type="text" [formField]="registerForm.lastname" id="lastname" class="my-input"
                   placeholder="Sanchez">
@@ -37,7 +37,7 @@
                 }
               </div>
               <div>
-                <label for="email" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your
+                <label for="email" class="block mb-2 text-sm font-medium text-white">Your
                   email</label>
                 <input type="email" [formField]="registerForm.email" id="email" class="my-input"
                   placeholder="name@company.com" (focus)="clearEmailTakenError()" (input)="clearEmailTakenError()">
@@ -56,7 +56,7 @@
               </div>
               <div>
                 <label for="password"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  class="block mb-2 text-sm font-medium text-white">
                   Password
                 </label>
                 <div class="relative">
@@ -101,7 +101,7 @@
               </div>
               <div>
                 <label for="confirm-password"
-                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  class="block mb-2 text-sm font-medium text-white">
                   Confirm password
                 </label>
                 <div class="relative">
@@ -151,9 +151,9 @@
                       class="my-input-checkbox">
                   </div>
                   <div class="ml-3 text-sm">
-                    <label for="terms" class="font-light text-gray-500 dark:text-gray-300">
+                    <label for="terms" class="font-light text-gray-300">
                       I accept the
-                      <a class="font-medium text-primary-600 hover:underline dark:text-primary-500"
+                      <a class="font-medium hover:underline text-primary-500"
                         routerLink="/about/terms">
                         Terms and Conditions
                       </a>
@@ -182,9 +182,9 @@
                 Create an account
               </button>
             }
-            <p class="text-sm font-light text-gray-500 dark:text-gray-400">
+            <p class="text-sm font-light text-gray-300">
               Already have an account?
-              <a routerLink="/login" class="font-medium text-primary-600 hover:underline dark:text-primary-500">
+              <a routerLink="/login" class="font-medium text-primary-500 hover:underline">
                 Login here
               </a>
             </p>
