@@ -1,10 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterLink, RouterOutlet } from '@angular/router';
+import { FooterComponent } from "../../../../shared/ui/footer/footer.component";
+import { initFlowbite } from 'flowbite';
 
 @Component({
   selector: 'app-about-page',
-  imports: [RouterOutlet],
+  imports: [RouterOutlet, RouterLink, FooterComponent],
   templateUrl: './about-page.html',
-  styleUrl: './about-page.css',
 })
-export class AboutPage {}
+export class AboutPage {
+  
+  ngOnInit(): void {
+    initFlowbite();
+  }
+}
