@@ -34,7 +34,7 @@ export class LoginPageComponent {
     event.preventDefault();
     this.isLoading.set(true);
     if (this.loginForm().invalid()) {
-      this.toastService.error('Please fix the errors in the form before submitting.');
+      this.toastService.error('Por favor, corrija los errores del formulario antes de iniciar sesión');
       this.loginFormValidationService.markAllFieldsAsTouched();
       this.isLoading.set(false);
       return;
@@ -52,14 +52,14 @@ export class LoginPageComponent {
         const credentials = this.loginModel();
         this.authService.login(credentials)
           .subscribe({
-            next: () => { 
-              this.toastService.success('Welcome back.');
+            next: (user) => { 
+              this.toastService.success('Bienvenid@ de vuelta ' + user.name + '!');
               this.isLoading.set(false);
               this.router.navigateByUrl("/home");
             },
             error: (err) => { 
               this.isLoading.set(false);
-              this.toastService.error('Enter a valid email and password.');
+              this.toastService.error('Introduce un correo electrónico y una contraseña válidos');
             }}
           )
       },

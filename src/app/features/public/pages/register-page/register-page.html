@@ -7,13 +7,15 @@
       </a>
       <div class="w-full rounded-lg shadow border md:mt-0 sm:max-w-2xl xl:p-0 bg-gray-800 border-gray-700">
         <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-          <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white">
-            Create an account
+          <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-white text-center">
+            Crear una cuenta
           </h1>
           <form class="space-y-4 md:space-y-6" (submit)="onSubmit($event)">
             <div class="grid gap-6 mb-6 md:grid-cols-2">
               <div>
-                <label for="name" class="block mb-2 text-sm font-medium text-white">Name</label>
+                <label for="name" class="block mb-2 text-sm font-medium text-white">
+                  Nombre
+                </label>
                 <input type="text" [formField]="registerForm.name" id="name" class="my-input" placeholder="Rick">
                 @if (registerForm.name().touched() && registerForm.name().invalid()) {
                 <ul class="list-disc text-xs text-red-600 dark:text-red-500 mt-1 ml-4">
@@ -24,8 +26,9 @@
                 }
               </div>
               <div>
-                <label for="lastname" class="block mb-2 text-sm font-medium text-white">Last
-                  Name</label>
+                <label for="lastname" class="block mb-2 text-sm font-medium text-white">
+                  Apellido
+                </label>
                 <input type="text" [formField]="registerForm.lastname" id="lastname" class="my-input"
                   placeholder="Sanchez">
                 @if (registerForm.lastname().touched() && registerForm.lastname().invalid()) {
@@ -37,8 +40,9 @@
                 }
               </div>
               <div>
-                <label for="email" class="block mb-2 text-sm font-medium text-white">Your
-                  email</label>
+                <label for="email" class="block mb-2 text-sm font-medium text-white">
+                  Correo electrónico
+                </label>
                 <input type="email" [formField]="registerForm.email" id="email" class="my-input"
                   placeholder="name@company.com" (focus)="clearEmailTakenError()" (input)="clearEmailTakenError()">
                 @if (registerForm.email().touched() && registerForm.email().invalid()) {
@@ -55,9 +59,8 @@
                 }
               </div>
               <div>
-                <label for="password"
-                  class="block mb-2 text-sm font-medium text-white">
-                  Password
+                <label for="password" class="block mb-2 text-sm font-medium text-white">
+                  Contraseña
                 </label>
                 <div class="relative">
                   <input [type]="showPassword ? 'text' : 'password'" [formField]="registerForm.password" id="password" class="my-input"
@@ -100,9 +103,8 @@
                 }
               </div>
               <div>
-                <label for="confirm-password"
-                  class="block mb-2 text-sm font-medium text-white">
-                  Confirm password
+                <label for="confirm-password" class="block mb-2 text-sm font-medium text-white">
+                  Confirmar contraseña
                 </label>
                 <div class="relative">
                    <input [type]="showPassword2 ? 'text' : 'password'" id="confirm-password" class="my-input"
@@ -152,10 +154,10 @@
                   </div>
                   <div class="ml-3 text-sm">
                     <label for="terms" class="font-light text-gray-300">
-                      I accept the
+                      Acepto los
                       <a class="font-medium hover:underline text-primary-500"
                         routerLink="/about/terms">
-                        Terms and Conditions
+                        Términos y Condiciones
                       </a>
                     </label>
                   </div>
@@ -179,13 +181,13 @@
               </button>
             } @else {
               <button type="submit" class="my-button px-4 py-2.5 w-full">
-                Create an account
+                Crear cuenta
               </button>
             }
             <p class="text-sm font-light text-gray-300">
-              Already have an account?
+              ¿Ya tienes una cuenta?
               <a routerLink="/login" class="font-medium text-primary-500 hover:underline">
-                Login here
+                Inicia sesión aquí
               </a>
             </p>
           </form>

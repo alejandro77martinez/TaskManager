@@ -5,6 +5,7 @@ import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { catchError, throwError } from 'rxjs';
 import { UserSearchEmailResult } from '../users/user.interfaces';
+import { TaskService } from '../task/task.service';
 
 const INITIAL_TASKS: ProjectTask[] = [
   {
@@ -112,6 +113,7 @@ const INITIAL_TASKS: ProjectTask[] = [
 export class ProjectService {
 
   private readonly authService = inject(AuthService);
+  private readonly taskService = inject(TaskService);
   private readonly projectsSignal = signal<ProjectCard[]>([]);
   private readonly membersSignal = signal<UserSearchEmailResult[]>([]);
   private readonly tasksSignal = signal<ProjectTask[]>(INITIAL_TASKS);
@@ -275,7 +277,9 @@ export class ProjectService {
       next: (projects) => {
         this.projectsSignal.set(projects);
         const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers)));
+        const projectsIds = projects.map(p => p.id);
         this.getMembersByIds(teamMenbersIds);
+        this.taskService.getTaskByProjectsIds(projectsIds);
       },
       error: (err) => console.error('Error fetching projects:', err),
     });

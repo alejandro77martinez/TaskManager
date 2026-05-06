@@ -1,55 +1,54 @@
 <section class="flex flex-col gap-6 my-6">
-  @for (project of projects(); track project.id) {
-  <article class="group rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg ring-1 ring-white/10 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-primary-300/40 hover:bg-white/20">  
-    <div class="flex justify-between">
-      <h1 class="text-2xl font-bold text-white">{{ project.name }}</h1>
-      <button class="px-4 py-2 my-button">
+  @for (project of tasksForProject(); track project.projectId) {
+  <article class="group rounded-2xl overflow-x-auto border border-white/10 bg-white/10 px-2 py-2 shadow-lg ring-1 ring-white/10 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-primary-300/40 hover:bg-white/20">  
+    <div class="flex justify-between px-1 min-w-[800px]">
+      <h1 class="text-2xl font-bold text-white">{{ getNameProject(project.projectId) }}</h1>
+      <button class="flex gap-2 px-3 py-1.5 my-button">
+        <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 12h14m-7 7V5"/>
+        </svg>
         Crear tarea
       </button>
     </div>
-    <div class="flex gap-4 overflow-x-auto mt-4">
-      <div class="min-w-[250px] bg-slate-950/40 rounded-lg p-4">
-        <h2 class="text-lg font-semibold mb-3 text-white">Por hacer</h2>
-        <div class="flex flex-col gap-3">
-          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
-            Tarea 1
-          </div>
-          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
-            Tarea 2
-          </div>
+    <div class="columns-4 gap-2 mt-2 min-w-[800px]">
+      <div class="bg-slate-950/40 rounded-xl p-2">
+        <h2 class="text-lg font-semibold mb-2 text-white">Por hacer</h2>
+        <div class="flex h-[200px] overflow-y-auto flex-col gap-2">
+          @for (task of getTasksCreadas(project.projectId); track task.id) {
+            <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+              {{ task.title }}
+            </div>
+          }
         </div>
       </div>
-      <div class="min-w-[250px] bg-slate-950/40 rounded-lg p-4">
-        <h2 class="text-lg font-semibold mb-3 text-white">En progreso</h2>
-        <div class="flex flex-col gap-3">
-          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
-            Tarea 3
-          </div>
-          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
-            Tarea 4
-          </div>
+      <div class="bg-slate-950/40 rounded-xl p-2">
+        <h2 class="text-lg font-semibold mb-2 text-white">En progreso</h2>
+        <div class="flex h-[200px] overflow-y-auto flex-col gap-2">
+          @for (task of getTasksEnCurso(project.projectId); track task.id) {
+            <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+              {{ task.title }}
+            </div>
+          }
         </div>
       </div>
-      <div class="min-w-[250px] bg-slate-950/40 rounded-lg p-4">
-        <h2 class="text-lg font-semibold mb-3 text-white">Pruebas</h2>
-        <div class="flex flex-col gap-3">
-          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
-            Tarea 5
-          </div>
-          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
-            Tarea 6
-          </div>
+      <div class="bg-slate-950/40 rounded-xl p-2">
+        <h2 class="text-lg font-semibold mb-2 text-white">Pruebas</h2>
+        <div class="flex h-[200px] overflow-y-auto flex-col gap-2">
+          @for (task of getTasksEnRevision(project.projectId); track task.id) {
+            <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+              {{ task.title }}
+            </div>
+          }
         </div>
       </div>
-      <div class="min-w-[250px] bg-slate-950/40 rounded-lg p-4">
-        <h2 class="text-lg font-semibold mb-3 text-white">Completadas</h2>
-        <div class="flex flex-col gap-3">
-          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
-            Tarea 7
-          </div>
-          <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
-            Tarea 8
-          </div>
+      <div class="bg-slate-950/40 rounded-xl p-2">
+        <h2 class="text-lg font-semibold mb-2 text-white">Completadas</h2>
+        <div class="flex h-[200px] overflow-y-auto flex-col gap-2">
+          @for (task of getTasksCompletadas(project.projectId); track task.id) {
+            <div class="bg-white/10 rounded-md p-3 text-sm text-gray-300">
+              {{ task.title }}
+            </div>
+          }
         </div>
       </div>
     </div>

@@ -1,6 +1,5 @@
 export type TaskStatus =
   | 'Creada'
-  | 'Pendiente'
   | 'En curso'
   | 'En revision'
   | 'Completada';
@@ -8,17 +7,26 @@ export type TaskStatus =
 export type TaskPriority =
   | 'Baja'
   | 'Media'
-  | 'Alta'
-  | 'Urgente';
+  | 'Alta';
 
 export interface TaskCard {
   id: number;
   title: string;
-  projectName: string;
-  assignee: string;
-  dueDate: string;
+  description: string;
+  type: string;
   status: TaskStatus;
+  projectId: string;
+  assigneeId: string;
+  subTasks: string[];
+  dueDate: string;
+  createdDate: string;
+  startDate: string;
   priority: TaskPriority;
   effortPoints: number;
   blocked: boolean;
+}
+
+export interface TaskForProject {
+  projectId: string;
+  tasks: TaskCard[];
 }

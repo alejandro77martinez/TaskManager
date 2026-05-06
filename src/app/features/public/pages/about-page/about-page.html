@@ -1,22 +1,26 @@
 <header class="fixed left-0 right-0 top-0 z-50 bg-gray-800">
-  <nav class="px-5 py-3 mx-auto flex items-center justify-between">
-    <a href="/" class="flex items-center gap-2 text-2xl font-bold text-white">
+  <nav class="px-4 py-3 mx-auto flex items-center justify-between max-w-[1500px]">
+    <a routerLink="/" class="flex items-center gap-2 text-2xl font-bold text-white">
       <img src="/iconAT.png" class="h-12" alt="TaskManager Logo" />
-      <span class="">TaskManager</span>
+      TaskManager
     </a>
-    <div class="flex items-center space-x-6 hidden lg:flex">
-      <a routerLink="/about/info" class="my-button-cancel px-4 py-2 text-sm">About</a>
-      <a routerLink="/about/privacy" class="my-button-cancel px-4 py-2 text-sm">Privacy Policy</a>
-      <a routerLink="/about/terms" class="my-button-cancel px-4 py-2 text-sm">Terms and Conditions</a>
+    <div class="items-center space-x-3 hidden lg:flex">
+      <a routerLink="/about/info" class="my-button-cancel px-4 py-2 text-sm">Acerca de</a>
+      <a routerLink="/about/privacy" class="my-button-cancel px-4 py-2 text-sm">Politica de privacidad</a>
+      <a routerLink="/about/terms" class="my-button-cancel px-4 py-2 text-sm">Terminos y condiciones</a>
     </div>
-    <div class="flex gap-4 hidden lg:flex">
+    <div class="flex gap-3 hidden lg:flex">
       <a routerLink="/login" class="my-button inline-flex items-center justify-center text-sm px-4 py-2">
-        Sign in
-        <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+        Iniciar Sesión
+        <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
       </a>
       <a routerLink="/register" class="my-button inline-flex items-center justify-center text-sm px-4 py-2">
-        Register
-        <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+        Registro
+        <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+        </svg>
       </a>
     </div>
     <div class="lg:hidden">
@@ -28,23 +32,27 @@
       <div id="dropdown-2" class="z-10 bg-gray-800 rounded-base shadow-lg w-full block hidden divide-y divide-default-medium">
         <div class="flex flex-col gap-4 p-4 text-sm text-body font-medium" aria-labelledby="dropdownWebsite">
           <a routerLink="/about/info" class="my-button-cancel px-4 py-2 text-center">
-            About
+            Acerca de
           </a>
           <a routerLink="/about/privacy" class="my-button-cancel px-4 py-2 text-center">
-            Privacy Policy
+            Politica de privacidad
           </a>
           <a routerLink="/about/terms" class="my-button-cancel px-4 py-2 text-center">
-            Terms and Conditions
+            Terminos y condiciones
           </a>
         </div>
         <div class="flex flex-col gap-4 p-4">
           <a routerLink="/login" class="my-button inline-flex items-center justify-center px-4 py-2">
-            Sign in
-            <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            Iniciar Sesión
+            <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
           </a>
           <a routerLink="/register" class="my-button inline-flex items-center justify-center px-4 py-2">
-            Register
-            <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
+            Registro
+            <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path>
+            </svg>
           </a>
         </div>
       </div>
