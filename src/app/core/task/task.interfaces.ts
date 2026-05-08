@@ -10,7 +10,7 @@ export type TaskPriority =
   | 'Alta';
 
 export interface TaskCard {
-  id: number;
+  id: string;
   title: string;
   description: string;
   type: string;

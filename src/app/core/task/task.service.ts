@@ -1,16 +1,20 @@
-import { Injectable, signal } from "@angular/core";
+import { inject, Injectable, signal } from "@angular/core";
 import { environment } from "../../../environments/environment";
-import { TaskCard, TaskForProject } from "./task.interfaces";
+import { TaskCard, TaskForProject, TaskPriority } from "./task.interfaces";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
 import { catchError, throwError } from "rxjs";
+import { ToastService } from "../toast/toast.service";
 
 @Injectable({ providedIn: 'root' })
 export class TaskService {
 
+  private readonly toastService = inject(ToastService);
   private readonly apiBaseUrl = environment.authApiBaseUrl;
   private readonly tasksForProjectSiganl = signal<TaskForProject[]>([]);
+  private readonly taskToBlockSignal = signal<TaskCard>({} as TaskCard);
 
   readonly tasksForProject = this.tasksForProjectSiganl.asReadonly();
+  readonly taskToBlock = this.taskToBlockSignal.asReadonly();
 
   constructor(private http: HttpClient) {}
   
@@ -29,6 +33,80 @@ export class TaskService {
         console.error('Error fetching tasks:', err)
       },
     });
+  }
+
+  setTaskToBlock(task: TaskCard): void {
+    this.taskToBlockSignal.set(task);
+  }
+
+  updateTaskStatus(projectId: string, taskId: string, newState: string): void {
+    this.http.put<TaskCard>(this.apiBaseUrl + `/api/v1/task/${taskId}/status/${newState}`, {}).pipe(
+      catchError(this.handleError)
+    ).subscribe({
+      next: () => {
+        //update task in signal
+        const currentTasksForProject = this.tasksForProjectSiganl();
+        const updatedTasksForProject = currentTasksForProject.map(taskForProject => {
+          if (taskForProject.projectId === projectId) {
+            return {
+              ...taskForProject,
+              tasks: taskForProject.tasks.map(task => 
+                task.id === taskId ? { ...task, status: newState as TaskCard['status'] } : task
+              )
+            };
+          }
+          return taskForProject;
+        });
+        this.tasksForProjectSiganl.set(updatedTasksForProject);
+        if (newState === 'Completada') {
+          this.toastService.success('Tarea marcada como completada');
+        } else {
+          this.toastService.info(`Tarea actualizada a estado: ${newState}`);
+        }
+      },
+      error: (err) => {
+        console.error('Error updating task status:', err);
+      },
+    });
+  }
+
+  updateTaskBlockUnblock(projectId: string, taskId: string, blocked: boolean): void {
+    this.http.put(this.apiBaseUrl + `/api/v1/task/${taskId}/blocked/${!blocked}`, {}).pipe(
+      catchError(this.handleError)
+    ).subscribe({
+      next: () => {
+        //update task in signal
+        const currentTasksForProject = this.tasksForProjectSiganl();
+        const updatedTasksForProject = currentTasksForProject.map(taskForProject => {
+          if (taskForProject.projectId === projectId) {
+            return {
+              ...taskForProject,
+              tasks: taskForProject.tasks.map(task => 
+                task.id === taskId ? { ...task, blocked: !blocked } : task
+              )
+            };
+          }
+          return taskForProject;
+        });
+        this.tasksForProjectSiganl.set(updatedTasksForProject);
+        const action = blocked ? 'desbloqueada' : 'bloqueada';
+        this.toastService.show('info',`Tarea ${action} exitosamente`);
+      },
+      error: (err) => {
+        console.error('Error updating task blocked status:', err);
+      },
+    });
+  }
+
+  getPriorityClasses(priority: TaskPriority): string {
+    switch (priority) {
+      case 'Alta':
+        return 'bg-rose-100 text-rose-700 ring-1 ring-rose-200';
+      case 'Media':
+        return 'bg-amber-100 text-amber-700 ring-1 ring-amber-200';
+      default:
+        return 'bg-slate-100 text-slate-700 ring-1 ring-slate-200';
+    }
   }
 
   private handleError(error: HttpErrorResponse) {

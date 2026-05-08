@@ -1,17 +1,44 @@
 import { Component, inject } from "@angular/core";
 import { ProjectService } from "../../../../../../core/project/project.service";
 import { TaskService } from "../../../../../../core/task/task.service";
+import { initFlowbite } from "flowbite";
+import { TaskCard } from "../../../../../../core/task/task.interfaces";
 
 @Component({
   selector: "app-kanban-board",
   templateUrl: "./kanban.board.component.html",
 })
 export class KanbanBoardComponent {
-  
+
   private readonly projectService = inject(ProjectService);
   private readonly taskService = inject(TaskService);
 
   readonly tasksForProject = this.taskService.tasksForProject;
+  readonly getPriorityClasses = this.taskService.getPriorityClasses;
+
+  ngAfterViewInit(): void {
+    initFlowbite();
+  }
+
+  updateTaksBlockUnblock(projectId: string, taskId: string, blocked: boolean): void {
+    this.taskService.updateTaskBlockUnblock(projectId, taskId, blocked);
+  }
+  
+  setTaskToBlock(task: TaskCard): void {
+    this.taskService.setTaskToBlock(task);
+  }
+
+  getTaskToBlock(): TaskCard {
+    return this.taskService.taskToBlock();
+  }
+
+  updateTaskStatus(projectId: string, taskId: string, newState: string) {
+    this.taskService.updateTaskStatus(projectId, taskId, newState);
+  }
+
+  updateTaskBlockUnblock(projectId: string, taskId: string, blocked: boolean) {
+    this.taskService.updateTaskBlockUnblock(projectId, taskId, blocked);
+  }
 
   getNameProject(projectId: string): string {
     const project = this.projectService.projects().find(p => p.id === projectId);
@@ -36,5 +63,18 @@ export class KanbanBoardComponent {
   getTasksCreadas(projectId: string) {
     const projectTasks = this.tasksForProject().find(p => p.projectId === projectId);
     return projectTasks ? projectTasks.tasks.filter(t => t.status === 'Creada') : [];
+  }
+
+  formatDate(dateString: string): string {
+    return this.projectService.formatDate(dateString);
+  }
+
+  getNameMember(member: string): string {
+    return this.projectService.getNameMember(member);
+  }
+
+  getParentTaskTitle(task: string, idproject: string): string {
+    const parentTask = this.tasksForProject().find(p => p.projectId === idproject)?.tasks.find(t => t.subTasks?.includes(task));
+    return parentTask ? parentTask.title : '';
   }
 }
