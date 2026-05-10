@@ -109,3 +109,11 @@
     focus:ring-primary-600 
     focus:ring-offset-gray-800
 }
+
+.my-input:disabled {
+  @apply 
+    cursor-not-allowed  
+    hover:bg-gray-600 
+    focus:ring-0 
+    focus:outline-none 
+}

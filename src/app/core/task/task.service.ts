@@ -17,7 +17,23 @@ export class TaskService {
   readonly taskToBlock = this.taskToBlockSignal.asReadonly();
 
   constructor(private http: HttpClient) {}
-  
+ 
+  addTaskToProject(projectId: string, task: TaskCard): void {
+    const currentTasksForProject = this.tasksForProjectSiganl();
+    const projectIndex = currentTasksForProject.findIndex(p => p.projectId === projectId);
+    if (projectIndex !== -1) {
+      const updatedProjectTasks = [...currentTasksForProject[projectIndex].tasks, task];
+      const updatedTasksForProject = [
+        ...currentTasksForProject.slice(0, projectIndex),
+        { projectId, tasks: updatedProjectTasks },
+        ...currentTasksForProject.slice(projectIndex + 1)
+      ];
+      this.tasksForProjectSiganl.set(updatedTasksForProject);
+    } else {
+      this.tasksForProjectSiganl.set([...currentTasksForProject, { projectId, tasks: [task] }]);
+    }
+  }
+
   getTaskByProjectsIds(ids: string[]): void {
     this.http.post<TaskCard[]>(this.apiBaseUrl + '/api/v1/task/byprojects', ids).pipe(
       catchError(this.handleError)

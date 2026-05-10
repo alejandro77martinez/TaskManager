@@ -116,10 +116,12 @@ export class ProjectService {
   private readonly taskService = inject(TaskService);
   private readonly projectsSignal = signal<ProjectCard[]>([]);
   private readonly membersSignal = signal<UserSearchEmailResult[]>([]);
+  private readonly currentProjectIdSignal = signal<string>('');
   private readonly tasksSignal = signal<ProjectTask[]>(INITIAL_TASKS);
   private readonly loadProjectsFromApi = signal(false);
   private readonly apiBase = environment.authApiBaseUrl;
 
+  readonly currentProjectId = this.currentProjectIdSignal.asReadonly();
   readonly projects = this.projectsSignal.asReadonly();
   readonly loadProjects = this.loadProjectsFromApi.asReadonly();
 
@@ -127,9 +129,28 @@ export class ProjectService {
     this.getProjectsFromApi();
   }
 
+  setCurrentProjectId(id: string) {
+    this.currentProjectIdSignal.set(id);
+  }
+
+  getMembersOfCurrentProject() {
+    const currentProject = this.projectsSignal().find(project => project.id === this.currentProjectIdSignal());
+    if (!currentProject) {
+      return [];
+    }
+    const memberIds = currentProject.teamMembers.concat(this.getUserId());
+    return memberIds.map(memberId => this.membersSignal().find(member => member.id === memberId)).filter(Boolean) as UserSearchEmailResult[];
+  }
+
+  getNameCurrentProject() {
+    const currentProject = this.projectsSignal().find(project => project.id === this.currentProjectIdSignal());
+    return currentProject ? currentProject.name : '';
+  }
+
   readonly inProgressTasks = computed(() =>
     this.tasksSignal().filter((task) => task.status === 'En curso'),
   );
+
   readonly pendingTasks = computed(() =>
     this.tasksSignal().filter((task) => task.status === 'Pendiente'),
   );
@@ -276,7 +297,7 @@ export class ProjectService {
     this.http.get<ProjectCard[]>(this.apiBase + '/api/v1/project/ofTheUser/' + this.getUserId()).subscribe({
       next: (projects) => {
         this.projectsSignal.set(projects);
-        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers)));
+        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers))).concat(this.getUserId());
         const projectsIds = projects.map(p => p.id);
         this.getMembersByIds(teamMenbersIds);
         this.taskService.getTaskByProjectsIds(projectsIds);

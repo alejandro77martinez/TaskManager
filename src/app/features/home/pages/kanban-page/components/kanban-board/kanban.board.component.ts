@@ -3,6 +3,7 @@ import { ProjectService } from "../../../../../../core/project/project.service";
 import { TaskService } from "../../../../../../core/task/task.service";
 import { initFlowbite } from "flowbite";
 import { TaskCard } from "../../../../../../core/task/task.interfaces";
+import { CreateTaskService } from "../../../../../../core/task/task.create.service";
 
 @Component({
   selector: "app-kanban-board",
@@ -12,12 +13,18 @@ export class KanbanBoardComponent {
 
   private readonly projectService = inject(ProjectService);
   private readonly taskService = inject(TaskService);
+  private readonly createTaskService = inject(CreateTaskService);
 
   readonly tasksForProject = this.taskService.tasksForProject;
   readonly getPriorityClasses = this.taskService.getPriorityClasses;
 
   ngAfterViewInit(): void {
     initFlowbite();
+  }
+
+  openCreateTaskPanel(idProject: string) {
+    this.projectService.setCurrentProjectId(idProject);
+    this.createTaskService.openCreateTaskPanel();
   }
 
   updateTaksBlockUnblock(projectId: string, taskId: string, blocked: boolean): void {
@@ -73,8 +80,8 @@ export class KanbanBoardComponent {
     return this.projectService.getNameMember(member);
   }
 
-  getParentTaskTitle(task: string, idproject: string): string {
-    const parentTask = this.tasksForProject().find(p => p.projectId === idproject)?.tasks.find(t => t.subTasks?.includes(task));
+  getParentTaskTitle(idParentTask: string, idproject: string): string {
+    const parentTask = this.tasksForProject().find(p => p.projectId === idproject)?.tasks.find(t => t.id === idParentTask);
     return parentTask ? parentTask.title : '';
   }
 }

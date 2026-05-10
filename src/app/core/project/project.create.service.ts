@@ -29,18 +29,21 @@ export class ProjectCreateService {
   setLoading(loading: boolean) {
     this.isLoadingSignal.set(loading);
   }
+  
   openCreateProjectPanel(): void {
     this.isCreatePanelOpenSignal.set(true);
     this.projectTeamTableService.setSelectedMembers([]);
     this.projectTeamTableService.setIsEditMode(true);
     this.projectTeamTableService.cleanInputMember();
   }
+
   closeCreateProjectPanel(): void {
     this.isCreatePanelOpenSignal.set(false);
     this.projectTeamTableService.setSelectedMembers([]);
     this.projectTeamTableService.setIsEditMode(false);
     this.projectTeamTableService.cleanInputMember();
   }
+
   createProject(draft: NewProjectDraft, teamMembers: UserRole[]): Observable<String> {
     const tags = this.splitCommaSeparatedValues(draft.tags);
     const newProject: ProjectRequest = {
@@ -60,8 +63,9 @@ export class ProjectCreateService {
     };
     return this.CreateProjectRequest(newProject);
   }
+
   private CreateProjectRequest(projectData: ProjectRequest): Observable<String> {
-    return this.http.post<ProjectRequest>(this.apiBase + '/api/v1/project', projectData, {
+    return this.http.post<ProjectRequest>(this.apiBase + '/api/v1/project/', projectData, {
       withCredentials: true
     })
       .pipe(
@@ -72,15 +76,18 @@ export class ProjectCreateService {
         catchError(this.handleError)
       );
   }
+
   private splitCommaSeparatedValues(value: string): string[] {
     return value
       .split(',')
       .map((entry) => entry.trim())
       .filter(Boolean);
   }
+
   private getUserId(): string {
     return this.authService.authUser()?.id ?? '';
   }
+
   private handleError(error: HttpErrorResponse) {
     let errorMessage = 'Error desconocido';
     if (error.error instanceof ErrorEvent) {

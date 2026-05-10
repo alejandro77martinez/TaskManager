@@ -2,9 +2,10 @@
   @for (project of tasksForProject(); track project.projectId) {
   <article
     class="group rounded-2xl overflow-x-auto border border-white/10 bg-white/10 px-2 py-2 shadow-lg ring-1 ring-white/10 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-primary-300/40 hover:bg-white/20">
-    <div class="flex justify-between px-1 py-1 min-w-[800px]">
+    <div class="flex px-1 py-1 min-w-[1100px] justify-between">
       <h1 class="text-2xl font-bold text-white underline">{{ getNameProject(project.projectId) }}</h1>
-      <button class="flex gap-2 px-3 py-1.5 my-button">
+      <button class="flex gap-2 px-3 py-1.5 my-button"
+        (click)="openCreateTaskPanel(project.projectId)">
         <svg class="w-6 h-6 text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
           fill="none" viewBox="0 0 24 24">
           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -13,7 +14,7 @@
         Crear tarea
       </button>
     </div>
-    <div class="columns-4 gap-2 mt-2 min-w-[800px]">
+    <div class="columns-4 gap-2 mt-2 min-w-[1100px]">
       <div class="bg-slate-950/40 rounded-xl p-2">
         <h2 class="text-lg font-semibold mb-2 text-white">Por hacer</h2>
         <div class="flex h-[340px] overflow-y-auto flex-col gap-2">
@@ -33,15 +34,15 @@
                 </svg>
               </button>
             </div>
-            <div>
+            <div class="flex flex-col gap-1">
               <span class="font-medium text-white">
                 {{ task.title }}
               </span>
               <span class="text-sm text-gray-400">
-                {{ getParentTaskTitle(task.id, project.projectId) }}
+                {{ getParentTaskTitle(task.parentTaskId, project.projectId) }}
               </span>
             </div>
-            <div class="flex justify-between">
+            <div class="flex justify-between gap-2">
               <span class="rounded-full bg-white/10 px-2 ring-1 text-xs ring-white/10">
                 {{ getNameMember(task.assigneeId) }}
               </span>
@@ -114,10 +115,10 @@
                 {{ task.title }}
               </span>
               <span class="text-sm text-gray-400">
-                {{ getParentTaskTitle(task.id, project.projectId) }}
+                {{ getParentTaskTitle(task.parentTaskId, project.projectId) }}
               </span>
             </div>
-            <div class="flex justify-between">
+            <div class="flex justify-between gap-2">
               <span class="rounded-full bg-white/10 px-2 ring-1 text-xs ring-white/10">
                 {{ getNameMember(task.assigneeId) }}
               </span>
@@ -190,10 +191,10 @@
                 {{ task.title }}
               </span>
               <span class="text-sm text-gray-400">
-                {{ getParentTaskTitle(task.id, project.projectId) }}
+                {{ getParentTaskTitle(task.parentTaskId, project.projectId) }}
               </span>
             </div>
-            <div class="flex justify-between">
+            <div class="flex justify-between gap-2">
               <span class="rounded-full bg-white/10 px-2 ring-1 text-xs ring-white/10">
                 {{ getNameMember(task.assigneeId) }}
               </span>
@@ -266,10 +267,10 @@
                 {{ task.title }}
               </span>
               <span class="text-sm text-gray-400">
-                {{ getParentTaskTitle(task.id, project.projectId) }}
+                {{ getParentTaskTitle(task.parentTaskId, project.projectId) }}
               </span>
             </div>
-            <div class="flex justify-between">
+            <div class="flex justify-between gap-2">
               <span class="rounded-full bg-white/10 px-2 ring-1 text-xs ring-white/10">
                 {{ getNameMember(task.assigneeId) }}
               </span>

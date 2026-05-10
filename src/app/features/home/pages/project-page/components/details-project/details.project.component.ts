@@ -10,7 +10,7 @@ import { ProjectTeamTableService } from "../../../../../../core/project/project.
 @Component({
   selector: 'app-details-project',
   templateUrl: './details.project.component.html',
-  imports: [FormsModule, FormField, CommonModule, TeamTableComponent]
+  imports: [FormsModule, FormField, TeamTableComponent]
 })
 export class DetailsProjectComponent {
   
