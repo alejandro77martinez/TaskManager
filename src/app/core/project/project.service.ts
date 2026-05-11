@@ -6,6 +6,7 @@ import { AuthService } from '../auth/auth.service';
 import { catchError, throwError } from 'rxjs';
 import { UserSearchEmailResult } from '../users/user.interfaces';
 import { TaskService } from '../task/task.service';
+import { TaskCard } from '../task/task.interfaces';
 
 const INITIAL_TASKS: ProjectTask[] = [
   {
@@ -117,7 +118,7 @@ export class ProjectService {
   private readonly projectsSignal = signal<ProjectCard[]>([]);
   private readonly membersSignal = signal<UserSearchEmailResult[]>([]);
   private readonly currentProjectIdSignal = signal<string>('');
-  private readonly tasksSignal = signal<ProjectTask[]>(INITIAL_TASKS);
+  private readonly tasksSignal = signal<TaskCard[]>(this.taskService.getAllTask());
   private readonly loadProjectsFromApi = signal(false);
   private readonly apiBase = environment.authApiBaseUrl;
 
@@ -152,7 +153,7 @@ export class ProjectService {
   );
 
   readonly pendingTasks = computed(() =>
-    this.tasksSignal().filter((task) => task.status === 'Pendiente'),
+    this.tasksSignal().filter((task) => task.blocked),
   );
 
   readonly overviewCards = computed(() => {
@@ -239,6 +240,11 @@ export class ProjectService {
       .find(member => member.id === id)?.name || '';
   }
 
+  getNameProject(id:string): string {
+    return this.projectsSignal()
+      .find(p => p.id === id)?.name || "";
+  }
+
   formatDate(value: string | null, longFormat = false): string {
     if (!value) {
       return 'Sin fecha';
@@ -269,19 +275,6 @@ export class ProjectService {
         return 'bg-amber-100 text-amber-700 ring-1 ring-amber-200';
       default:
         return 'bg-slate-100 text-slate-700 ring-1 ring-slate-200';
-    }
-  }
-
-  getTaskStatusClasses(status: ProjectTaskStatus): string {
-    switch (status) {
-      case 'En curso':
-        return 'bg-primary-100 text-primary-700 ring-1 ring-primary-200';
-      case 'Pendiente':
-        return 'bg-slate-100 text-slate-700 ring-1 ring-slate-200';
-      case 'En revision':
-        return 'bg-violet-100 text-violet-700 ring-1 ring-violet-200';
-      default:
-        return 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200';
     }
   }
 

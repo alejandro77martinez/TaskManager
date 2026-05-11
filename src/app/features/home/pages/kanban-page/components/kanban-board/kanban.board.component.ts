@@ -17,9 +17,19 @@ export class KanbanBoardComponent {
 
   readonly tasksForProject = this.taskService.tasksForProject;
   readonly getPriorityClasses = this.taskService.getPriorityClasses;
+  readonly showBlockTaksModal = this.taskService.showBlockTaskModal;
 
   ngAfterViewInit(): void {
     initFlowbite();
+  }
+
+  openBlockTaskModal(task: TaskCard) {
+    this.taskService.setTaskToBlock(task);
+    this.taskService.setShowBlockTaskModal(true);
+  }
+
+  closeBlockTaskModal() {
+    this.taskService.setShowBlockTaskModal(false);
   }
 
   openCreateTaskPanel(idProject: string) {
@@ -29,10 +39,6 @@ export class KanbanBoardComponent {
 
   updateTaksBlockUnblock(projectId: string, taskId: string, blocked: boolean): void {
     this.taskService.updateTaskBlockUnblock(projectId, taskId, blocked);
-  }
-  
-  setTaskToBlock(task: TaskCard): void {
-    this.taskService.setTaskToBlock(task);
   }
 
   getTaskToBlock(): TaskCard {

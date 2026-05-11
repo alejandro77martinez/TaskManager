@@ -17,7 +17,7 @@ export class ProjectCreateService {
   private readonly projectService = inject(ProjectService);
   private readonly projectTeamTableService = inject(ProjectTeamTableService)
 
-  private readonly isCreatePanelOpenSignal = signal(false);
+  private readonly isCreatePanelOpenSignal = signal<boolean>(false);
   private readonly isLoadingSignal = signal<boolean>(false);
   private readonly apiBase = environment.authApiBaseUrl;
 
