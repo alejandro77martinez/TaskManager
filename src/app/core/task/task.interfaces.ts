@@ -30,6 +30,7 @@ export interface TaskCard {
   priority: TaskPriority;
   effortPoints: number;
   blocked: boolean;
+  isSubtask: boolean;
 }
 
 export interface TaskRequest {

@@ -16,7 +16,7 @@ export class CreateTaskComponent {
   private readonly createTaskService = inject(CreateTaskService);
   private readonly projectService = inject(ProjectService);
 
-  readonly createTaskForm = this.createTaskService.taskCreateValidationService.getCrerateTaskForm();
+  readonly createTaskForm = this.createTaskService.taskCreateValidationService.getCreateTaskForm();
   readonly createTaskModel = this.createTaskService.taskCreateValidationService.getCreateTaskModel();
   readonly isCreateTaskPanelOpen = this.createTaskService.isCreateTaskPanelOpen;
   readonly isLoading = this.createTaskService.isLoading;
@@ -34,7 +34,7 @@ export class CreateTaskComponent {
   }
 
   getTaskofProject() {
-    return this.createTaskService.getTasksForCurrentProject(this.projectService.currentProjectId());
+    return this.createTaskService.taskService.getTasksForCurrentProject(this.projectService.currentProjectId());
   }
   
   onSubmit(event: Event) {

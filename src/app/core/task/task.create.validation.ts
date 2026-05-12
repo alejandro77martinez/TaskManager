@@ -22,9 +22,9 @@ export class TaskCreateValidationService {
     isSubtask: false
   };
 
-  private readonly projectModel = signal<TaskRequest>(this.initialValues);
+  private readonly taskModel = signal<TaskRequest>(this.initialValues);
 
-  private readonly projectForm = form(this.projectModel, (schemaPath) => {
+  private readonly taskForm = form(this.taskModel, (schemaPath) => {
     required(schemaPath.title, {message: 'Titulo de tarea es requerido'});
     required(schemaPath.description, {message: 'Descripcion de tarea es requerida'});
     required(schemaPath.type, {message: 'Tipo de tarea es requerido'});
@@ -35,31 +35,32 @@ export class TaskCreateValidationService {
   });
 
   resetForm() {
-    this.projectModel.set({ ...this.initialValues });
-    this.projectForm.title().reset();
-    this.projectForm.description().reset();
-    this.projectForm.type().reset();
-    this.projectForm.assigneeId().reset();
-    this.projectForm.dueDate().reset();
-    this.projectForm.priority().reset();
-    this.projectForm.effortPoints().reset();
+    this.taskModel.set({ ...this.initialValues });
+    this.taskForm.title().reset();
+    this.taskForm.description().reset();
+    this.taskForm.type().reset();
+    this.taskForm.assigneeId().reset();
+    this.taskForm.dueDate().reset();
+    this.taskForm.priority().reset();
+    this.taskForm.effortPoints().reset();
   }
 
   markAllFieldsAsTouched() {
-    this.projectForm.title().markAsTouched();
-    this.projectForm.description().markAsTouched();
-    this.projectForm.type().markAsTouched();
-    this.projectForm.assigneeId().markAsTouched();
-    this.projectForm.dueDate().markAsTouched();
-    this.projectForm.priority().markAsTouched();
-    this.projectForm.effortPoints().markAsTouched();
+    this.taskForm.title().markAsTouched();
+    this.taskForm.description().markAsTouched();
+    this.taskForm.type().markAsTouched();
+    this.taskForm.assigneeId().markAsTouched();
+    this.taskForm.dueDate().markAsTouched();
+    this.taskForm.priority().markAsTouched();
+    this.taskForm.effortPoints().markAsTouched();
   }
 
   getCreateTaskModel() {
-    return this.projectModel;
+    return this.taskModel;
   }
 
-  getCrerateTaskForm() {
-    return this.projectForm;
+  getCreateTaskForm() {
+    return this.taskForm;
   }
+
 }

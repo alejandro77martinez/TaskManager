@@ -8,108 +8,6 @@ import { UserSearchEmailResult } from '../users/user.interfaces';
 import { TaskService } from '../task/task.service';
 import { TaskCard } from '../task/task.interfaces';
 
-const INITIAL_TASKS: ProjectTask[] = [
-  {
-    id: 201,
-    title: 'Ajustar permisos por tipo de proveedor',
-    projectName: 'Portal de proveedores LATAM',
-    assignee: 'Ana Ruiz',
-    dueDate: '2026-04-04',
-    status: 'En curso',
-    priority: 'Alta',
-    effortPoints: 5,
-    blocked: false,
-  },
-  {
-    id: 202,
-    title: 'Disenar tablero de incidencias de campo',
-    projectName: 'App de inspeccion de campo',
-    assignee: 'Camila Mena',
-    dueDate: '2026-04-06',
-    status: 'En curso',
-    priority: 'Media',
-    effortPoints: 3,
-    blocked: false,
-  },
-  {
-    id: 203,
-    title: 'Validar conciliacion de egresos historicos',
-    projectName: 'Migracion de reportes financieros',
-    assignee: 'Sergio Paz',
-    dueDate: '2026-04-07',
-    status: 'En revision',
-    priority: 'Alta',
-    effortPoints: 8,
-    blocked: true,
-  },
-  {
-    id: 204,
-    title: 'Configurar automatizacion de respuestas frecuentes',
-    projectName: 'Centro de ayuda omnicanal',
-    assignee: 'Paula Rios',
-    dueDate: '2026-04-10',
-    status: 'En curso',
-    priority: 'Media',
-    effortPoints: 5,
-    blocked: false,
-  },
-  {
-    id: 205,
-    title: 'Refinar backlog de inspecciones offline',
-    projectName: 'App de inspeccion de campo',
-    assignee: 'Juan Tapia',
-    dueDate: '2026-04-08',
-    status: 'Pendiente',
-    priority: 'Alta',
-    effortPoints: 5,
-    blocked: false,
-  },
-  {
-    id: 206,
-    title: 'Crear guideline de permisos por rol',
-    projectName: 'Portal de proveedores LATAM',
-    assignee: 'Laura Soto',
-    dueDate: '2026-04-09',
-    status: 'Pendiente',
-    priority: 'Media',
-    effortPoints: 3,
-    blocked: false,
-  },
-  {
-    id: 207,
-    title: 'Preparar demo ejecutiva de avance Q2',
-    projectName: 'Centro de ayuda omnicanal',
-    assignee: 'Miguel Solis',
-    dueDate: '2026-04-11',
-    status: 'Pendiente',
-    priority: 'Baja',
-    effortPoints: 2,
-    blocked: false,
-  },
-  {
-    id: 208,
-    title: 'Cerrar pruebas UAT de facturas recurrentes',
-    projectName: 'Migracion de reportes financieros',
-    assignee: 'Nora Gil',
-    dueDate: '2026-04-01',
-    status: 'Completada',
-    priority: 'Alta',
-    effortPoints: 8,
-    blocked: false,
-  },
-  {
-    id: 209,
-    title: 'Unificar estados de ticket en help center',
-    projectName: 'Centro de ayuda omnicanal',
-    assignee: 'Lina Bravo',
-    dueDate: '2026-03-30',
-    status: 'Completada',
-    priority: 'Media',
-    effortPoints: 5,
-    blocked: false,
-  },
-];
-
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
 
@@ -118,7 +16,6 @@ export class ProjectService {
   private readonly projectsSignal = signal<ProjectCard[]>([]);
   private readonly membersSignal = signal<UserSearchEmailResult[]>([]);
   private readonly currentProjectIdSignal = signal<string>('');
-  private readonly tasksSignal = signal<TaskCard[]>(this.taskService.getAllTask());
   private readonly loadProjectsFromApi = signal(false);
   private readonly apiBase = environment.authApiBaseUrl;
 
@@ -148,13 +45,13 @@ export class ProjectService {
     return currentProject ? currentProject.name : '';
   }
 
-  readonly inProgressTasks = computed(() =>
-    this.tasksSignal().filter((task) => task.status === 'En curso'),
-  );
+  inProgressTasks(): TaskCard[] {
+    return this.taskService.getAllTask().filter((task) => task.status === 'En curso')
+  }
 
-  readonly pendingTasks = computed(() =>
-    this.tasksSignal().filter((task) => task.blocked),
-  );
+  blockedTasks(): TaskCard[] {
+    return this.taskService.getAllTask().filter((task) => task.blocked)
+  }
 
   readonly overviewCards = computed(() => {
     const summary = this.portfolioSummary();
@@ -204,7 +101,7 @@ export class ProjectService {
 
   readonly portfolioSummary = computed(() => {
     const projects = this.projectsSignal();
-    const tasks = this.tasksSignal();
+    const tasks = this.taskService.getAllTask();
 
     const activeProjects = projects.length;
     const avgProgress = activeProjects

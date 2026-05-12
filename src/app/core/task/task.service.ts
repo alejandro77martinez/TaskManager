@@ -24,20 +24,25 @@ export class TaskService {
     this.showBlockTaskModalSignal.set(show);
   }
 
-  addTaskToProject(projectId: string, task: TaskCard): void {
-    const currentTasksForProject = this.tasksForProjectSiganl();
-    const projectIndex = currentTasksForProject.findIndex(p => p.projectId === projectId);
-    if (projectIndex !== -1) {
-      const updatedProjectTasks = [...currentTasksForProject[projectIndex].tasks, task];
-      const updatedTasksForProject = [
-        ...currentTasksForProject.slice(0, projectIndex),
-        { projectId, tasks: updatedProjectTasks },
-        ...currentTasksForProject.slice(projectIndex + 1)
-      ];
-      this.tasksForProjectSiganl.set(updatedTasksForProject);
-    } else {
-      this.tasksForProjectSiganl.set([...currentTasksForProject, { projectId, tasks: [task] }]);
-    }
+  addTask(projectId: string, newTask: TaskCard): void {
+    const updateTask: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
+      return p.projectId === projectId ? {...p, tasks: [...p.tasks, newTask]} : p
+    })
+    this.tasksForProjectSiganl.set(updateTask)
+  }
+
+  deleteTaks(projectId: string, taskId: string) {
+    const updateTask: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
+      return p.projectId === projectId ? {...p, tasks: p.tasks.filter(t => t.id !== taskId)} : p
+    })
+    this.tasksForProjectSiganl.set(updateTask)
+  }
+
+  updateTask(projectId: string, task: TaskCard) {
+    const updateTask: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
+      return p.projectId === projectId ? {...p, tasks: p.tasks.map(t => t.id === task.id ? task : t)} : p
+    })
+    this.tasksForProjectSiganl.set(updateTask)
   }
 
   getTaskByProjectsIds(ids: string[]): void {
@@ -119,6 +124,10 @@ export class TaskService {
         console.error('Error updating task blocked status:', err);
       },
     });
+  }
+
+  getTasksForCurrentProject(projectId: string) {
+    return this.tasksForProject().find(taskForProject => taskForProject.projectId === projectId)?.tasks || [];
   }
 
   getPriorityClasses(priority: TaskPriority): string {

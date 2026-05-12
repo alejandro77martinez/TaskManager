@@ -7,6 +7,7 @@ import { ProjectCreateService } from '../../../../core/project/project.create.se
 import { ProjectDetailsService } from '../../../../core/project/project.details.service';
 import { DetailsProjectComponent } from './components/details-project/details.project.component';
 import { TaskService } from '../../../../core/task/task.service';
+import { TaskCard } from '../../../../core/task/task.interfaces';
 
 @Component({
   selector: 'app-project',
@@ -21,8 +22,6 @@ export class ProjectComponent implements AfterViewInit {
   private readonly projectDetailsService = inject(ProjectDetailsService);
 
   readonly projects = this.projectService.projects;
-  readonly inProgressTasks = this.projectService.inProgressTasks;
-  readonly pendingTasks = this.projectService.pendingTasks;
   readonly overviewCards = this.projectService.overviewCards;
   readonly projectSignals = this.projectService.projectSignals;
   readonly portfolioSummary = this.projectService.portfolioSummary;
@@ -54,5 +53,13 @@ export class ProjectComponent implements AfterViewInit {
 
   getNameProject(projectId: string): string {
     return this.projectService.getNameProject(projectId);
+  }
+  
+  getInProgressTasks(): TaskCard[] {
+    return this.projectService.inProgressTasks()
+  }
+
+  getPendingTasks(): TaskCard[] {
+    return this.projectService.blockedTasks()
   }
 }

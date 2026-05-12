@@ -4,6 +4,7 @@ import { TaskService } from "../../../../../../core/task/task.service";
 import { initFlowbite } from "flowbite";
 import { TaskCard } from "../../../../../../core/task/task.interfaces";
 import { CreateTaskService } from "../../../../../../core/task/task.create.service";
+import { TaskDetailsService } from "../../../../../../core/task/task.details.service";
 
 @Component({
   selector: "app-kanban-board",
@@ -14,6 +15,7 @@ export class KanbanBoardComponent {
   private readonly projectService = inject(ProjectService);
   private readonly taskService = inject(TaskService);
   private readonly createTaskService = inject(CreateTaskService);
+  private readonly taskDetailsService = inject(TaskDetailsService);
 
   readonly tasksForProject = this.taskService.tasksForProject;
   readonly getPriorityClasses = this.taskService.getPriorityClasses;
@@ -35,6 +37,12 @@ export class KanbanBoardComponent {
   openCreateTaskPanel(idProject: string) {
     this.projectService.setCurrentProjectId(idProject);
     this.createTaskService.openCreateTaskPanel();
+  }
+
+  openTaskDetailsPanel(idProject: string, task: TaskCard) {
+    this.projectService.setCurrentProjectId(idProject);
+    this.taskDetailsService.openDetailsPanel(task);
+    console.log("abrir panel detalles de tares con id project: " + idProject + " y tarea: " + task.title )
   }
 
   updateTaksBlockUnblock(projectId: string, taskId: string, blocked: boolean): void {

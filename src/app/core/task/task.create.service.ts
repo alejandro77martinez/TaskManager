@@ -10,7 +10,7 @@ import { catchError, map, Observable, throwError } from "rxjs";
 export class CreateTaskService {
 
   readonly taskCreateValidationService = inject(TaskCreateValidationService);
-  private readonly taskService = inject(TaskService);
+  readonly taskService = inject(TaskService);
 
   private readonly isCreateTaskPanelOpenSignal = signal<boolean>(false);
   private readonly isLoadingSignal = signal<boolean>(false);
@@ -34,17 +34,13 @@ export class CreateTaskService {
     this.isCreateTaskPanelOpenSignal.set(false);
   }
 
-  getTasksForCurrentProject(projectId: string) {
-    return this.taskService.tasksForProject().find(taskForProject => taskForProject.projectId === projectId)?.tasks || [];
-  }
-
   createTask(taskData: TaskRequest): Observable<string> {
     const { isSubtask , ...rest} = taskData;
     return this.http.post<TaskCard>(this.apiBase + "/api/v1/task/", rest, {
       withCredentials: true
     }).pipe(
       map((res) => {
-        this.taskService.addTaskToProject(taskData.projectId, res);
+        this.taskService.addTask(taskData.projectId, res);
         return "Task creada exitosamente";
       }),
       catchError(this.handleError)
