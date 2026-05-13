@@ -42,7 +42,7 @@ export class KanbanBoardComponent {
   openTaskDetailsPanel(idProject: string, task: TaskCard) {
     this.projectService.setCurrentProjectId(idProject);
     this.taskDetailsService.openDetailsPanel(task);
-    console.log("abrir panel detalles de tares con id project: " + idProject + " y tarea: " + task.title )
+    console.log("abrir panel detalles de tares con id project: " + idProject + " y tarea: " + task.type )
   }
 
   updateTaksBlockUnblock(projectId: string, taskId: string, blocked: boolean): void {

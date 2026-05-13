@@ -26,7 +26,12 @@ export class TaskDetailsService {
   constructor(private http: HttpClient) { }
 
   openDetailsPanel(task: TaskCard) {
-    this.taskDetailsValidationService.setTaskDetailsModel(task)
+    const restTask = {
+      ...task,
+      dueDate: this.toInputDate(task.dueDate),
+      isSubtask: task.parentTaskId !== "" ? true : false
+    }
+    this.taskDetailsValidationService.setTaskDetailsModel(restTask)
     this.isDetailsPanelOpenSignal.set(true)
   }
 
@@ -47,7 +52,11 @@ export class TaskDetailsService {
   }
 
   updateTask(task: TaskCard): Observable<string> {
-    const { isSubtask, id, ...rest} = task;
+    const task2 = { ...task,
+      parentTaskId: task.isSubtask ? task.parentTaskId : "",
+    };
+    const { isSubtask, id, ...rest} = task2;
+    console.log("Objeto enviado: ", rest)
     return this.http.put<TaskCard>(this.apiBase + '/api/v1/task/' + task.id, rest, {
       withCredentials: true
     })
@@ -60,17 +69,22 @@ export class TaskDetailsService {
       );
   }
 
-  deletedTask(task: TaskCard): Observable<string> {
-    return this.http.delete(this.apiBase + '/api/v1/task/' + task.id, {
+  deletedTask(projectId: string, taskId: string): Observable<string> {
+    return this.http.delete(this.apiBase + '/api/v1/task/' + taskId, {
       withCredentials: true
     })
       .pipe(
         map((res) => {
-          this.taskService.deleteTaks(task.projectId, task.id)
+          this.taskService.deleteTaks(projectId, taskId)
           return "Tarea eliminada correctamente";
         }),
         catchError(this.handleError)
       );
+  }
+
+   private toInputDate(value: string): string {
+    // Si viene como ISO: "2024-03-15T00:00:00.000Z"
+    return new Date(value).toISOString().split('T')[0];
   }
 
   private handleError(error: HttpErrorResponse) {

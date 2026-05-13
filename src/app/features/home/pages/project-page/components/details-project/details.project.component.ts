@@ -2,7 +2,6 @@ import { Component, inject } from "@angular/core";
 import { ToastService } from "../../../../../../core/toast/toast.service";
 import { FormsModule } from "@angular/forms";
 import { FormField, submit } from "@angular/forms/signals";
-import { CommonModule } from "@angular/common";
 import { TeamTableComponent } from "../team-table/team.table.component";
 import { ProjectDetailsService } from "../../../../../../core/project/project.details.service";
 import { ProjectTeamTableService } from "../../../../../../core/project/project.team.table.service";
@@ -37,7 +36,7 @@ export class DetailsProjectComponent {
   confirmarDeletion(idProject: string) {
     this.projectDetailsService.removeProject(idProject).subscribe({
       next: () => {
-        this.toastService.success("Project deleted successfully.");
+        this.toastService.success("Proyecto eliminado existosamente.");
         this.closeDetailsProjectPanel();
       },
       error: (err) => {
@@ -48,6 +47,7 @@ export class DetailsProjectComponent {
   }
   
   activateEditMode() {
+    this.toastService.info("Ahora es posible editar los datos")
     this.projectDetailsService.setEditMode(true)
     this.projectTeamTableService.setIsEditMode(true)
   }

@@ -4,6 +4,7 @@ import { FormField } from "@angular/forms/signals";
 import { ToastService } from "../../../../../../core/toast/toast.service";
 import { TaskDetailsService } from "../../../../../../core/task/task.details.service";
 import { ProjectService } from "../../../../../../core/project/project.service";
+import { TaskCard } from "../../../../../../core/task/task.interfaces";
 
 @Component({
   selector: "app-task-details",
@@ -20,6 +21,21 @@ export class TaskDetailsComponent {
   readonly taskDetailsModel = this.taskDetailsService.taskDetailsValidationService.getTaskDetailsModel();
   readonly isTaskDetailsPanelOpen = this.taskDetailsService.isDetailsPanelOpen;
   readonly isLoading = this.taskDetailsService.isLoading;
+  readonly isModalOpen = this.taskDetailsService.isModalOpen;
+  readonly isEditMode = this.taskDetailsService.isEditMode;
+
+  activateEditMode() {
+    this.taskDetailsService.setEditMode(true)
+    this.toastService.info("Ahora es posible editar los datos")
+  }
+
+  openModal() { 
+    this.taskDetailsService.setModalOpen(true); 
+  }
+
+  closeModal() { 
+    this.taskDetailsService.setModalOpen(false); 
+  }
 
   getNameCurrentProject() {
     return this.projectService.getNameCurrentProject();
@@ -31,10 +47,24 @@ export class TaskDetailsComponent {
 
   closeTaskDetailsPanel() {
     this.taskDetailsService.closeDetailsPanel();
+    this.taskDetailsService.setEditMode(false)
   }
 
   getTaskofProject() {
     return this.taskDetailsService.taskService.getTasksForCurrentProject(this.projectService.currentProjectId());
+  }
+
+  confirmarDeletion(projectId: string, taskId: string) {
+    this.taskDetailsService.deletedTask(projectId, taskId).subscribe({
+      next: () => {
+        this.toastService.success("Tarea eliminada existosamente.");
+        this.closeTaskDetailsPanel();
+      },
+      error: (err) => {
+        console.error('Error deleting project:', err.error ?? err);
+        this.toastService.error("An error occurred while deleting the project. Please try again.");
+      }
+    });
   }
 
   onSubmit(event: Event) {
@@ -50,10 +80,7 @@ export class TaskDetailsComponent {
   }
 
   private submitForm() {
-    const taskData = {...this.taskDetailsModel(), 
-      projectId: this.projectService.currentProjectId(),
-      parentTaskId: this.taskDetailsForm.isSubtask().value() ? this.taskDetailsForm.parentTaskId().value() : "",
-    };
+    const taskData = this.taskDetailsModel()
     this.taskDetailsService.updateTask(taskData).subscribe({
       next: (res) => {
         this.toastService.success(res);

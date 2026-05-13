@@ -117,3 +117,11 @@
     focus:ring-0 
     focus:outline-none 
 }
+
+.my-input-checkbox:disabled {
+  @apply
+    cursor-not-allowed  
+    hover:bg-gray-600 
+    focus:ring-0 
+    focus:outline-none 
+}
