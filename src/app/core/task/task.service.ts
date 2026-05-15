@@ -31,7 +31,7 @@ export class TaskService {
     this.tasksForProjectSiganl.set(updateTask)
   }
 
-  deleteTaks(projectId: string, taskId: string) {
+  deleteTask(projectId: string, taskId: string) {
     const updateTask: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
       return p.projectId === projectId ? {...p, tasks: p.tasks.filter(t => t.id !== taskId)} : p
     })

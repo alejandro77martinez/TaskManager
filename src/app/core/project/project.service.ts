@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { ProjectCard, ProjectHealth, ProjectPriority, ProjectTask, ProjectTaskStatus } from './project.interfaces';
+import { ProjectCard, ProjectHealth, ProjectPriority } from './project.interfaces';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
@@ -36,7 +36,7 @@ export class ProjectService {
     if (!currentProject) {
       return [];
     }
-    const memberIds = currentProject.teamMembers.concat(this.getUserId());
+    const memberIds = Array.from(new Set(currentProject.teamMembers.concat(currentProject.creator)));
     return memberIds.map(memberId => this.membersSignal().find(member => member.id === memberId)).filter(Boolean) as UserSearchEmailResult[];
   }
 
@@ -187,7 +187,7 @@ export class ProjectService {
     this.http.get<ProjectCard[]>(this.apiBase + '/api/v1/project/ofTheUser/' + this.getUserId()).subscribe({
       next: (projects) => {
         this.projectsSignal.set(projects);
-        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers))).concat(this.getUserId());
+        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers).concat(projects.map(p => p.creator))));
         const projectsIds = projects.map(p => p.id);
         this.getMembersByIds(teamMenbersIds);
         this.taskService.getTaskByProjectsIds(projectsIds);

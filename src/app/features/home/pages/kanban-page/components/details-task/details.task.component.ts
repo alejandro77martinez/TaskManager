@@ -45,6 +45,10 @@ export class TaskDetailsComponent {
     return this.projectService.getMembersOfCurrentProject();
   }
 
+  getSubTask(parentId: string): TaskCard[] {
+    return this.taskDetailsService.getSubTasks(parentId)
+  }
+
   closeTaskDetailsPanel() {
     this.taskDetailsService.closeDetailsPanel();
     this.taskDetailsService.setEditMode(false)

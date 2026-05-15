@@ -36,11 +36,12 @@ export class CreateTaskService {
 
   createTask(taskData: TaskRequest): Observable<string> {
     const { isSubtask , ...rest} = taskData;
-    return this.http.post<TaskCard>(this.apiBase + "/api/v1/task/", rest, {
+    console.log("Tarea a crear: ", rest)
+    return this.http.post(this.apiBase + "/api/v1/task/", rest, {
       withCredentials: true
     }).pipe(
       map((res) => {
-        this.taskService.addTask(taskData.projectId, res);
+        this.taskService.addTask(taskData.projectId, res as TaskCard);
         return "Task creada exitosamente";
       }),
       catchError(this.handleError)

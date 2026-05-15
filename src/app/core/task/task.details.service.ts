@@ -51,12 +51,18 @@ export class TaskDetailsService {
     this.isModalOpenSignal.set(state)
   }
 
+  getSubTasks(parentTaskId: string): TaskCard[] {
+    const directSubtasks = this.taskService.getAllTask().filter(t => t.parentTaskId === parentTaskId);
+    if (directSubtasks.length === 0) return [];
+    const nestedSubtasks = directSubtasks.flatMap(t => this.getSubTasks(t.id));
+    return [...directSubtasks, ...nestedSubtasks];
+  }
+
   updateTask(task: TaskCard): Observable<string> {
     const task2 = { ...task,
       parentTaskId: task.isSubtask ? task.parentTaskId : "",
     };
     const { isSubtask, id, ...rest} = task2;
-    console.log("Objeto enviado: ", rest)
     return this.http.put<TaskCard>(this.apiBase + '/api/v1/task/' + task.id, rest, {
       withCredentials: true
     })
@@ -75,7 +81,7 @@ export class TaskDetailsService {
     })
       .pipe(
         map((res) => {
-          this.taskService.deleteTaks(projectId, taskId)
+          this.taskService.deleteTask(projectId, taskId)
           return "Tarea eliminada correctamente";
         }),
         catchError(this.handleError)

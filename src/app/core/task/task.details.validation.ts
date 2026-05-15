@@ -36,7 +36,6 @@ export class TaskDetailsValidationService {
       if (!value) {
         return [];
       }
-      console.log("Fecha a validar: ", value)
       const today = new Date();
       today.setHours(0, 0, 0, 0);
       const selectedDate = new Date(value);

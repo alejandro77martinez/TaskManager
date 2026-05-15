@@ -30,6 +30,9 @@ export class ProjectDetailsService {
 
   constructor(private http: HttpClient) { }
 
+  getNameCreator(id: string): string {
+    return this.projectService.getNameMember(id)
+  }
   setEditMode(editMode: boolean) {
     this.isEditModeSignal.set(editMode);
   }

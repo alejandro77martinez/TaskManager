@@ -52,6 +52,10 @@ export class DetailsProjectComponent {
     this.projectTeamTableService.setIsEditMode(true)
   }
 
+  getNameCreator(id: string): string {
+    return this.projectDetailsService.getNameCreator(id)
+  }
+
   tagsInputSet(valInput: string) {
     this.projectDetailsService.tagsInputSet(valInput);
   }
