@@ -85,7 +85,7 @@ export class ProjectTeamTableService {
     const role = this.teamMembersInput().role.trim();
     const userId = this.teamMembersInput().id.trim();
     if (!email || !role) {
-      this.toastService.error("Please provide both email and role.");
+      this.toastService.error("Ingrese un email y un rol por favor.");
       return;
     }
     if (!userId) {
@@ -93,17 +93,18 @@ export class ProjectTeamTableService {
       return;
     }
     if (this.selectedMembers().some(member => member.email === email)) {
-      this.toastService.info("Email already added to the team members.");
+      this.toastService.info("Email ya esta registrado como miembro.");
       return;
     }
     this.selectedMembersSignal.update(members => [...members, { ...this.teamMembersInput() }]);
     this.teamMembersInputSignal.set({ id: '', name: '', email: '', avatar: '', role: '' });
-    this.toastService.success("Team member added successfully.");
+    this.toastService.success("Miembro agregado al equipo existosamente.");
   }
 
   removeTeamMember(memberId: string): void {
     const updatedMembers = this.selectedMembersSignal().filter(member => member.id !== memberId);
     this.selectedMembersSignal.set(updatedMembers);
+    this.toastService.info("Miembro eliminado correctamente")
   }
 
   setIsEditMode(val: boolean){

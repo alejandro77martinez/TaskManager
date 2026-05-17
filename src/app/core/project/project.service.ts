@@ -105,7 +105,7 @@ export class ProjectService {
 
     const activeProjects = projects.length;
     const avgProgress = activeProjects
-      ? Math.round(projects.reduce((sum, project) => sum + project.progress, 0) / activeProjects)
+      ? Math.round(projects.reduce((sum, project) => sum + this.taskService.getAdvance(project.id), 0) / activeProjects)
       : 0;
     const totalCollaborators = new Set(projects.flatMap((project) => project.teamMembers)).size;
     const nextDeadline = tasks
@@ -194,6 +194,11 @@ export class ProjectService {
       },
       error: (err) => console.error('Error fetching projects:', err),
     });
+  }
+
+  deletedProject(projectId: string) {
+    const updatedProjects = this.projectsSignal().filter(p => p.id !== projectId)
+    this.projectsSignal.set(updatedProjects)
   }
   
   private getMembersByIds(ids: string[]): void {

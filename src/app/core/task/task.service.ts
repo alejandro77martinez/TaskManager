@@ -2,7 +2,7 @@ import { inject, Injectable, signal } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { TaskCard, TaskForProject, TaskPriority, TaskStatus } from "./task.interfaces";
 import { HttpClient, HttpErrorResponse } from "@angular/common/http";
-import { catchError, throwError } from "rxjs";
+import { catchError, map, Observable, throwError } from "rxjs";
 import { ToastService } from "../toast/toast.service";
 
 @Injectable({ providedIn: 'root' })
@@ -20,27 +20,13 @@ export class TaskService {
 
   constructor(private http: HttpClient) { }
 
-  setShowBlockTaskModal(show: boolean) {
+  setShowBlockTaskModal(show: boolean): void {
     this.showBlockTaskModalSignal.set(show);
   }
 
   addTask(projectId: string, newTask: TaskCard): void {
     const updateTask: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
       return p.projectId === projectId ? {...p, tasks: [...p.tasks, newTask]} : p
-    })
-    this.tasksForProjectSiganl.set(updateTask)
-  }
-
-  deleteTask(projectId: string, taskId: string) {
-    const updateTask: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
-      return p.projectId === projectId ? {...p, tasks: p.tasks.filter(t => t.id !== taskId)} : p
-    })
-    this.tasksForProjectSiganl.set(updateTask)
-  }
-
-  updateTask(projectId: string, task: TaskCard) {
-    const updateTask: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
-      return p.projectId === projectId ? {...p, tasks: p.tasks.map(t => t.id === task.id ? task : t)} : p
     })
     this.tasksForProjectSiganl.set(updateTask)
   }
@@ -70,21 +56,8 @@ export class TaskService {
     this.http.put<TaskCard>(this.apiBaseUrl + `/api/v1/task/${taskId}/status/${newState}`, {}).pipe(
       catchError(this.handleError)
     ).subscribe({
-      next: () => {
-        //update task in signal
-        const currentTasksForProject = this.tasksForProjectSiganl();
-        const updatedTasksForProject = currentTasksForProject.map(taskForProject => {
-          if (taskForProject.projectId === projectId) {
-            return {
-              ...taskForProject,
-              tasks: taskForProject.tasks.map(task =>
-                task.id === taskId ? { ...task, status: newState as TaskCard['status'] } : task
-              )
-            };
-          }
-          return taskForProject;
-        });
-        this.tasksForProjectSiganl.set(updatedTasksForProject);
+      next: (respose) => {
+        this.updateTaskInSignal(projectId, respose)
         if (newState === 'Completada') {
           this.toastService.success('Tarea marcada como completada');
         } else {
@@ -154,9 +127,41 @@ export class TaskService {
     }
   }
 
+  getAdvance(projectId: string): number{
+    const completedPoints =this.tasksForProject()
+      .find(p => p.projectId === projectId)?.tasks.filter(t => t.status === "Completada").reduce((acc, task) => acc + task.effortPoints, 0) || 0
+    const totalPoints = this.tasksForProject()
+      .find(p => p.projectId === projectId)?.tasks.reduce((acc, task) => acc + task.effortPoints, 0) || 0
+    const advance = completedPoints !== 0 ? Math.round((completedPoints / totalPoints) * 100) : 0
+    return advance 
+  }
+
   getAllTask(): TaskCard[] {
     const AllTask = this.tasksForProject().flatMap(p => p.tasks);
     return AllTask
+  }
+
+  removeSetTasks( ids: string[]): Observable<Object>{
+    return this.http.delete(this.apiBaseUrl + "/api/v1/task/set", { body:ids })
+  }
+
+  deleteTasksInSignal(projectId: string, tasksIds: string[]) {
+    const updateTasks: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
+      return p.projectId === projectId ? {...p, tasks: p.tasks.filter(t => !tasksIds.includes(t.id))} : p
+    })
+    this.tasksForProjectSiganl.set(updateTasks)
+  }
+
+  deleteAllProjectTaskInSignal(projectId: string) {
+    const updateTasks: TaskForProject[] = this.tasksForProjectSiganl().filter(p => p.projectId !== projectId)
+    this.tasksForProjectSiganl.set(updateTasks)
+  }
+
+  updateTaskInSignal(projectId: string, task: TaskCard) {
+    const updateTask: TaskForProject[] = this.tasksForProjectSiganl().map(p => {
+      return p.projectId === projectId ? {...p, tasks: p.tasks.map(t => t.id === task.id ? task : t)} : p
+    })
+    this.tasksForProjectSiganl.set(updateTask)
   }
 
   private handleError(error: HttpErrorResponse) {

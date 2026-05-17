@@ -62,4 +62,8 @@ export class ProjectComponent implements AfterViewInit {
   getPendingTasks(): TaskCard[] {
     return this.projectService.blockedTasks()
   }
+
+  getAdvance(projectId: string) {
+    return this.taskService.getAdvance(projectId)
+  }
 }

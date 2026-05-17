@@ -68,7 +68,7 @@ export class TaskDetailsService {
     })
       .pipe(
         map((res) => {
-          this.taskService.updateTask(res.projectId,res);
+          this.taskService.updateTaskInSignal(res.projectId,res);
           return "Tarea actualizada correctamente";
         }),
         catchError(this.handleError)
@@ -76,19 +76,17 @@ export class TaskDetailsService {
   }
 
   deletedTask(projectId: string, taskId: string): Observable<string> {
-    return this.http.delete(this.apiBase + '/api/v1/task/' + taskId, {
-      withCredentials: true
-    })
-      .pipe(
-        map((res) => {
-          this.taskService.deleteTask(projectId, taskId)
-          return "Tarea eliminada correctamente";
-        }),
-        catchError(this.handleError)
-      );
+    const setTask = this.getSubTasks(taskId).map(t => t.id).concat(taskId)
+    return this.taskService.removeSetTasks(setTask).pipe(
+      map((res) => {
+        this.taskService.deleteTasksInSignal(projectId, setTask)
+        return "Tareas eliminadas exitosamente";
+      }),
+      catchError(this.handleError)
+    )
   }
 
-   private toInputDate(value: string): string {
+  private toInputDate(value: string): string {
     // Si viene como ISO: "2024-03-15T00:00:00.000Z"
     return new Date(value).toISOString().split('T')[0];
   }
