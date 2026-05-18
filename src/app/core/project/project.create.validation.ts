@@ -1,5 +1,5 @@
 import { Injectable, signal } from '@angular/core';
-import { form, required } from '@angular/forms/signals';
+import { form, required, validate } from '@angular/forms/signals';
 import { NewProjectDraft } from './project.interfaces';
 
 @Injectable({ providedIn: 'root' })
@@ -19,11 +19,28 @@ export class CreateProjectFormValidationService {
   private readonly projectModel = signal<NewProjectDraft>(this.initialValues);
 
   private readonly projectForm = form(this.projectModel, (schemaPath) => {
-    required(schemaPath.name, {message: 'Project name is required'});
-    required(schemaPath.client, {message: 'Client is required'});
-    required(schemaPath.role, {message: 'Role is required'});
-    required(schemaPath.summary, {message: 'Summary is required'});
-    required(schemaPath.dueDate, {message: 'Due date is required'});
+    required(schemaPath.name, {message: 'El nombre de proyecto es requerido'});
+    required(schemaPath.client, {message: 'El cliente es requerido'});
+    required(schemaPath.role, {message: 'Asignarse un rol es requerido'});
+    required(schemaPath.summary, {message: 'Resumen del proyecto es requerdio'});
+    required(schemaPath.dueDate, {message: 'Un fecha de entrega es requerida'});
+    validate(schemaPath.dueDate, (ctx) => {
+      const value = ctx.value();
+      if (!value) {
+        return [];
+      }
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const selectedDate = new Date(value);
+      selectedDate.setHours(0, 0, 0, 0);
+      if (selectedDate < today) {
+        return [{
+          kind: 'datePast',
+          message: 'La fecha no puede ser anterior al día de hoy'
+        }];
+      }
+      return [];
+    });
   });
 
   resetForm() {

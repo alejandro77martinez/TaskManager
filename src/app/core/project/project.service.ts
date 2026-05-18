@@ -1,136 +1,55 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { ProjectCard, ProjectHealth, ProjectPriority, ProjectTask, ProjectTaskStatus } from './project.interfaces';
+import { ProjectCard, ProjectHealth, ProjectPriority } from './project.interfaces';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../auth/auth.service';
 import { catchError, throwError } from 'rxjs';
 import { UserSearchEmailResult } from '../users/user.interfaces';
-
-const INITIAL_TASKS: ProjectTask[] = [
-  {
-    id: 201,
-    title: 'Ajustar permisos por tipo de proveedor',
-    projectName: 'Portal de proveedores LATAM',
-    assignee: 'Ana Ruiz',
-    dueDate: '2026-04-04',
-    status: 'En curso',
-    priority: 'Alta',
-    effortPoints: 5,
-    blocked: false,
-  },
-  {
-    id: 202,
-    title: 'Disenar tablero de incidencias de campo',
-    projectName: 'App de inspeccion de campo',
-    assignee: 'Camila Mena',
-    dueDate: '2026-04-06',
-    status: 'En curso',
-    priority: 'Media',
-    effortPoints: 3,
-    blocked: false,
-  },
-  {
-    id: 203,
-    title: 'Validar conciliacion de egresos historicos',
-    projectName: 'Migracion de reportes financieros',
-    assignee: 'Sergio Paz',
-    dueDate: '2026-04-07',
-    status: 'En revision',
-    priority: 'Alta',
-    effortPoints: 8,
-    blocked: true,
-  },
-  {
-    id: 204,
-    title: 'Configurar automatizacion de respuestas frecuentes',
-    projectName: 'Centro de ayuda omnicanal',
-    assignee: 'Paula Rios',
-    dueDate: '2026-04-10',
-    status: 'En curso',
-    priority: 'Media',
-    effortPoints: 5,
-    blocked: false,
-  },
-  {
-    id: 205,
-    title: 'Refinar backlog de inspecciones offline',
-    projectName: 'App de inspeccion de campo',
-    assignee: 'Juan Tapia',
-    dueDate: '2026-04-08',
-    status: 'Pendiente',
-    priority: 'Alta',
-    effortPoints: 5,
-    blocked: false,
-  },
-  {
-    id: 206,
-    title: 'Crear guideline de permisos por rol',
-    projectName: 'Portal de proveedores LATAM',
-    assignee: 'Laura Soto',
-    dueDate: '2026-04-09',
-    status: 'Pendiente',
-    priority: 'Media',
-    effortPoints: 3,
-    blocked: false,
-  },
-  {
-    id: 207,
-    title: 'Preparar demo ejecutiva de avance Q2',
-    projectName: 'Centro de ayuda omnicanal',
-    assignee: 'Miguel Solis',
-    dueDate: '2026-04-11',
-    status: 'Pendiente',
-    priority: 'Baja',
-    effortPoints: 2,
-    blocked: false,
-  },
-  {
-    id: 208,
-    title: 'Cerrar pruebas UAT de facturas recurrentes',
-    projectName: 'Migracion de reportes financieros',
-    assignee: 'Nora Gil',
-    dueDate: '2026-04-01',
-    status: 'Completada',
-    priority: 'Alta',
-    effortPoints: 8,
-    blocked: false,
-  },
-  {
-    id: 209,
-    title: 'Unificar estados de ticket en help center',
-    projectName: 'Centro de ayuda omnicanal',
-    assignee: 'Lina Bravo',
-    dueDate: '2026-03-30',
-    status: 'Completada',
-    priority: 'Media',
-    effortPoints: 5,
-    blocked: false,
-  },
-];
+import { TaskService } from '../task/task.service';
+import { TaskCard } from '../task/task.interfaces';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
 
   private readonly authService = inject(AuthService);
+  private readonly taskService = inject(TaskService);
   private readonly projectsSignal = signal<ProjectCard[]>([]);
   private readonly membersSignal = signal<UserSearchEmailResult[]>([]);
-  private readonly tasksSignal = signal<ProjectTask[]>(INITIAL_TASKS);
+  private readonly currentProjectIdSignal = signal<string>('');
   private readonly loadProjectsFromApi = signal(false);
   private readonly apiBase = environment.authApiBaseUrl;
 
+  readonly currentProjectId = this.currentProjectIdSignal.asReadonly();
   readonly projects = this.projectsSignal.asReadonly();
   readonly loadProjects = this.loadProjectsFromApi.asReadonly();
 
-  constructor(private http: HttpClient) {
-    this.getProjectsFromApi();
+  constructor(private http: HttpClient) {}
+
+  setCurrentProjectId(id: string) {
+    this.currentProjectIdSignal.set(id);
   }
 
-  readonly inProgressTasks = computed(() =>
-    this.tasksSignal().filter((task) => task.status === 'En curso'),
-  );
-  readonly pendingTasks = computed(() =>
-    this.tasksSignal().filter((task) => task.status === 'Pendiente'),
-  );
+  getMembersOfCurrentProject() {
+    const currentProject = this.projectsSignal().find(project => project.id === this.currentProjectIdSignal());
+    if (!currentProject) {
+      return [];
+    }
+    const memberIds = Array.from(new Set(currentProject.teamMembers.concat(currentProject.creator)));
+    return memberIds.map(memberId => this.membersSignal().find(member => member.id === memberId)).filter(Boolean) as UserSearchEmailResult[];
+  }
+
+  getNameCurrentProject() {
+    const currentProject = this.projectsSignal().find(project => project.id === this.currentProjectIdSignal());
+    return currentProject ? currentProject.name : '';
+  }
+
+  inProgressTasks(): TaskCard[] {
+    return this.taskService.getAllTask().filter((task) => task.status === 'En curso')
+  }
+
+  blockedTasks(): TaskCard[] {
+    return this.taskService.getAllTask().filter((task) => task.blocked)
+  }
 
   readonly overviewCards = computed(() => {
     const summary = this.portfolioSummary();
@@ -180,11 +99,11 @@ export class ProjectService {
 
   readonly portfolioSummary = computed(() => {
     const projects = this.projectsSignal();
-    const tasks = this.tasksSignal();
+    const tasks = this.taskService.getAllTask();
 
     const activeProjects = projects.length;
     const avgProgress = activeProjects
-      ? Math.round(projects.reduce((sum, project) => sum + project.progress, 0) / activeProjects)
+      ? Math.round(projects.reduce((sum, project) => sum + this.taskService.getAdvance(project.id), 0) / activeProjects)
       : 0;
     const totalCollaborators = new Set(projects.flatMap((project) => project.teamMembers)).size;
     const nextDeadline = tasks
@@ -214,6 +133,11 @@ export class ProjectService {
   getNameMember(id:string): string {
     return this.membersSignal()
       .find(member => member.id === id)?.name || '';
+  }
+
+  getNameProject(id:string): string {
+    return this.projectsSignal()
+      .find(p => p.id === id)?.name || "";
   }
 
   formatDate(value: string | null, longFormat = false): string {
@@ -249,19 +173,6 @@ export class ProjectService {
     }
   }
 
-  getTaskStatusClasses(status: ProjectTaskStatus): string {
-    switch (status) {
-      case 'En curso':
-        return 'bg-primary-100 text-primary-700 ring-1 ring-primary-200';
-      case 'Pendiente':
-        return 'bg-slate-100 text-slate-700 ring-1 ring-slate-200';
-      case 'En revision':
-        return 'bg-violet-100 text-violet-700 ring-1 ring-violet-200';
-      default:
-        return 'bg-emerald-100 text-emerald-700 ring-1 ring-emerald-200';
-    }
-  }
-
   previewCommaSeparatedValues(value: string): string[] {
     return value
       .split(',')
@@ -274,11 +185,19 @@ export class ProjectService {
     this.http.get<ProjectCard[]>(this.apiBase + '/api/v1/project/ofTheUser/' + this.getUserId()).subscribe({
       next: (projects) => {
         this.projectsSignal.set(projects);
-        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers)));
+        const teamMenbersIds = Array.from(new Set(projects.flatMap(p => p.teamMembers).concat(projects.map(p => p.creator))));
+        const projectsIds = projects.map(p => p.id);
         this.getMembersByIds(teamMenbersIds);
+        this.taskService.getTaskByProjectsIds(projectsIds);
+        this.loadProjectsFromApi.set(true)
       },
       error: (err) => console.error('Error fetching projects:', err),
     });
+  }
+
+  deletedProject(projectId: string) {
+    const updatedProjects = this.projectsSignal().filter(p => p.id !== projectId)
+    this.projectsSignal.set(updatedProjects)
   }
   
   private getMembersByIds(ids: string[]): void {

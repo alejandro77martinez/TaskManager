@@ -1,8 +1,12 @@
-<div class="antialiased bg-gray-50 dark:bg-gray-900">
+<div class="antialiased bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900">
   <app-nav></app-nav>
   <app-side></app-side>
   <main class="md:ml-50 min-h-screen pt-16">
-    <router-outlet></router-outlet>
+    @if (loadProjects()) {
+      <router-outlet></router-outlet>
+    } @else {
+      <app-load></app-load>
+    }
   </main>
   <app-footer />
 </div>

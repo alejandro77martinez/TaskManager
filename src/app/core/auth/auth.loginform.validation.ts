@@ -13,9 +13,9 @@ export class LoginFormValidationService {
   private readonly loginModel = signal<LoginData>(this.initialValues);
 
   private readonly loginForm = form(this.loginModel, (schemaPath) => {
-    required(schemaPath.email, {message: 'Email is required'});
-    email(schemaPath.email, {message: 'Enter a valid email address'});
-    required(schemaPath.password, {message: 'Password is required'});
+    required(schemaPath.email, {message: 'El correo electrónico es requerido'});
+    email(schemaPath.email, {message: 'Ingrese una dirección de correo electrónico válida'});
+    required(schemaPath.password, {message: 'La contraseña es requerida'});
   });
   
   resetForm() {
