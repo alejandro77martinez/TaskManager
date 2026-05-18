@@ -6,6 +6,7 @@ import { LoginFormValidationService } from '../../../../core/auth/auth.loginform
 import { FooterComponent } from '../../../../shared/ui/footer/footer.component';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { FormField, submit } from '@angular/forms/signals';
+import { ProjectService } from '../../../../core/project/project.service';
 
 @Component({
   selector: 'app-login-page',
@@ -16,6 +17,7 @@ import { FormField, submit } from '@angular/forms/signals';
 export class LoginPageComponent {
 
   private readonly authService = inject(AuthService);
+  private readonly projectService = inject(ProjectService)
   private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
   private readonly loginFormValidationService = inject(LoginFormValidationService);
@@ -53,6 +55,7 @@ export class LoginPageComponent {
         this.authService.login(credentials)
           .subscribe({
             next: (user) => { 
+              this.projectService.getProjectsFromApi()
               this.toastService.success('Bienvenid@ de vuelta ' + user.name + '!');
               this.isLoading.set(false);
               this.router.navigateByUrl("/home");

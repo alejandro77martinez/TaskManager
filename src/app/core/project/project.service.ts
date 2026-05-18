@@ -23,9 +23,7 @@ export class ProjectService {
   readonly projects = this.projectsSignal.asReadonly();
   readonly loadProjects = this.loadProjectsFromApi.asReadonly();
 
-  constructor(private http: HttpClient) {
-    this.getProjectsFromApi();
-  }
+  constructor(private http: HttpClient) {}
 
   setCurrentProjectId(id: string) {
     this.currentProjectIdSignal.set(id);
@@ -191,6 +189,7 @@ export class ProjectService {
         const projectsIds = projects.map(p => p.id);
         this.getMembersByIds(teamMenbersIds);
         this.taskService.getTaskByProjectsIds(projectsIds);
+        this.loadProjectsFromApi.set(true)
       },
       error: (err) => console.error('Error fetching projects:', err),
     });

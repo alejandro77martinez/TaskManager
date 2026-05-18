@@ -2,7 +2,11 @@
   <app-nav></app-nav>
   <app-side></app-side>
   <main class="md:ml-50 min-h-screen pt-16">
-    <router-outlet></router-outlet>
+    @if (loadProjects()) {
+      <router-outlet></router-outlet>
+    } @else {
+      <app-load></app-load>
+    }
   </main>
   <app-footer />
 </div>
