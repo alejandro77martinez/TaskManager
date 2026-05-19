@@ -22,6 +22,7 @@ export class ProjectService {
   readonly currentProjectId = this.currentProjectIdSignal.asReadonly();
   readonly projects = this.projectsSignal.asReadonly();
   readonly loadProjects = this.loadProjectsFromApi.asReadonly();
+  readonly members = this.membersSignal.asReadonly()
 
   constructor(private http: HttpClient) {}
 
@@ -205,13 +206,9 @@ export class ProjectService {
       catchError(this.handleError)
     ).subscribe({
       next: (members) => {
-        const currentMembers = this.membersSignal();
-        const updatedMembers = [...currentMembers, ...members.filter(member => !currentMembers.some(m => m.id === member.id))];
-        this.membersSignal.set(updatedMembers);
-        this.loadProjectsFromApi.set(true);
+        this.membersSignal.set(members);
       },
       error: (err) => {
-        this.loadProjectsFromApi.set(true);
         console.error('Error fetching members:', err)
       },
     });
