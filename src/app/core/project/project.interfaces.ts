@@ -1,4 +1,4 @@
-import { UserRole, UserRoleRequest } from "../users/user.interfaces";
+import { UserRoleRequest } from "../users/user.interfaces";
 
 export type ProjectPriority = 'Alta' | 'Media' | 'Baja';
 
@@ -16,6 +16,7 @@ export interface ProjectCard {
   id: string;
   name: string;
   client: string;
+  creator: string;
   role: string;
   summary: string;
   priority: ProjectPriority;
@@ -28,18 +29,6 @@ export interface ProjectCard {
   totalTasks: number;
   teamMembers: string[];
   tags: string[];
-}
-
-export interface ProjectTask {
-  id: number;
-  title: string;
-  projectName: string;
-  assignee: string;
-  dueDate: string;
-  status: ProjectTaskStatus;
-  priority: ProjectPriority;
-  effortPoints: number;
-  blocked: boolean;
 }
 
 export interface ProjectRequest {

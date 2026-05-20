@@ -1,6 +1,6 @@
 import { Injectable, signal } from "@angular/core";
 import { ProjectRequest } from "./project.interfaces";
-import { form, required } from "@angular/forms/signals";
+import { form, required, validate } from "@angular/forms/signals";
 
 @Injectable({ providedIn: 'root' })
 export class ProjectDetailsValidationService {
@@ -24,16 +24,33 @@ export class ProjectDetailsValidationService {
   private readonly projectDetailsModel = signal<ProjectRequest>(this.initialValuesProjectDetails);
 
   private readonly projectDetailsForm = form(this.projectDetailsModel, (schemaPath) => {
-    required(schemaPath.name, {message: 'Project name is required'});
-    required(schemaPath.client, {message: 'Client is required'});
-    required(schemaPath.summary, {message: 'Summary is required'});
-    required(schemaPath.priority, {message: 'Priority is required'});
-    required(schemaPath.health, {message: 'Health is required'});
-    required(schemaPath.methodology, {message: 'Methodology is required'});
+    required(schemaPath.name, {message: 'El nombre de proyecto es requerido'});
+    required(schemaPath.client, {message: 'El cliente es requerido'});
+    required(schemaPath.summary, {message: 'Resumen del proyecto es requerdio'});
+    required(schemaPath.priority, {message: 'La prioridad del proyecto es requerida'});
+    required(schemaPath.health, {message: 'El estado del proyecto es requerida'});
+    required(schemaPath.methodology, {message: 'La metodologia del proyecto es requerida'});
     required(schemaPath.createdDate, {message: 'Created date is required'});
-    required(schemaPath.startDate, {message: 'Start date is required'});
-    required(schemaPath.dueDate, {message: 'Due date is required'});
-    required(schemaPath.userCreated.role, {message: 'User role is required'});
+    required(schemaPath.startDate, {message: 'Una fecha de inicio es requerida'});
+    required(schemaPath.dueDate, {message: 'Un fecha de entrega es requerida'});
+    validate(schemaPath.dueDate, (ctx) => {
+      const value = ctx.value();
+      if (!value) {
+        return [];
+      }
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      const selectedDate = new Date(value);
+      selectedDate.setHours(0, 0, 0, 0);
+      if (selectedDate < today) {
+        return [{
+          kind: 'datePast',
+          message: 'La fecha no puede ser anterior al día de hoy'
+        }];
+      }
+      return [];
+    });
+    required(schemaPath.userCreated.role, {message: 'Asignarse un rol es requerido'});
   });
 
   formDisable(){

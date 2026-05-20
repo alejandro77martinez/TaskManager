@@ -7,6 +7,7 @@ import { environment } from "../../../environments/environment";
 import { ProjectTeamTableService } from "./project.team.table.service";
 import { UserRole } from "../users/user.interfaces";
 import { ProjectService } from "./project.service";
+import { TaskService } from "../task/task.service";
 
 @Injectable({ providedIn: 'root' })
 export class ProjectDetailsService {
@@ -14,6 +15,7 @@ export class ProjectDetailsService {
   readonly detailValidationService = inject(ProjectDetailsValidationService);
   private readonly teamTableService = inject(ProjectTeamTableService)
   private readonly projectService = inject(ProjectService)
+  private readonly taskService = inject(TaskService)
 
   private readonly isDetailsPanelOpenSignal = signal(false);
   private readonly isLoadingSignal = signal(false);
@@ -30,6 +32,9 @@ export class ProjectDetailsService {
 
   constructor(private http: HttpClient) { }
 
+  getNameCreator(id: string): string {
+    return this.projectService.getNameMember(id)
+  }
   setEditMode(editMode: boolean) {
     this.isEditModeSignal.set(editMode);
   }
@@ -60,7 +65,8 @@ export class ProjectDetailsService {
       .pipe(
         map((res) => {
           //Borrar aqui tareas del proyecto eliminado usando TaskService
-          this.projectService.getProjectsFromApi();
+          this.removeTaskOfProject(projectId)
+          this.projectService.deletedProject(projectId)
           return "Project deleted successfully";
         }),
         catchError(this.handleError)
@@ -74,6 +80,18 @@ export class ProjectDetailsService {
       teamMembers: teamMembers.map(member => ({ userId: member.id, role: member.role.trim() }))
     };
     return this.updateProjectRequest(newProject);
+  }
+
+  private removeTaskOfProject(projectId: string) {
+    const tasks: string[] = this.taskService.tasksForProject().find(p => p.projectId === projectId)?.tasks.map(t => t.id) || []
+    this.taskService.removeSetTasks(tasks).subscribe({
+      next: () => {
+        this.taskService.deleteAllProjectTaskInSignal(projectId)
+      },
+      error: (err) => {
+        console.error('Error fetching project details:', err);
+      },
+    })
   }
 
   private updateProjectRequest(projectData: ProjectRequest): Observable<String> {

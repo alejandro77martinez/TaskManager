@@ -1,4 +1,16 @@
-<h1>Kanban component</h1>
-<p>
-  Este es el componente de Kanban. Aquí puedes implementar tu tablero de tareas.
-</p>
+<main class="p-2 md:p-4">
+  <span class="inline-flex items-center rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-primary-100 ring-1 ring-white/10">
+    Workspace de tableros
+  </span>
+  <h1 class="mt-4 text-3xl font-black tracking-tight text-white sm:text-4xl">
+    Tableros de cada proyecto
+  </h1>
+  <p class="mt-2 text-lg text-gray-300">
+    Aquí puedes gestionar los tableros de tareas. Crea, edita y organiza el trabajo de manera eficiente.
+  </p>
+  <div>
+    <app-kanban-board></app-kanban-board>
+  </div>
+</main>
+<app-create-task></app-create-task>
+<app-task-details></app-task-details>

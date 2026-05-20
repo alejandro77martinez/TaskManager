@@ -1,128 +1,128 @@
 <header class="fixed left-0 right-0 top-0 z-50 bg-opacity-50 backdrop-blur-sm">
-  <nav class="px-5 py-5 mx-auto flex items-center justify-end">
-      <a href="/" class="text-2xl font-bold text-gray-800 dark:text-white">
-        <img
-          src="/iconAT.png"
-          class="h-12"
-          alt="TaskManager Logo"
-        />
-        <span class="sr-only">TaskManager</span>
-      </a>
+  <nav class="px-5 py-4 mx-auto flex items-center justify-end">
+    <a routerLink="/">
+      <img src="/iconAT.png" class="h-12" alt="TaskManager Logo" />
+      <span class="sr-only">TaskManager</span>
+    </a>
   </nav>
 </header>
 
 <main>
-  <section class="relative overflow-hidden bg-white dark:bg-gray-900 min-h-screen min-h-[100svh] flex items-center">
-    <div
-      class="absolute inset-0 bg-center bg-cover bg-no-repeat blur-[3px]"
-      style="background-image: url('/img12.jpg');"
-    ></div>
-    <div class="absolute inset-0 bg-slate-900/65"></div>
-      <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 z-40">
-          <div class="mr-auto place-self-center lg:col-span-7 -mt-10 md:mt-0">
-              <h1 class="max-w-2xl mb-4 text-4xl font-extrabold tracking-tight leading-tight md:text-5xl xl:text-6xl dark:text-white">TaskManager tool for software companies</h1>
-              <p class="max-w-2xl mb-6 font-light text-gray-500 lg:mb-8 md:text-lg lg:text-xl dark:text-gray-400">From task creation to completion and validation by the quality team, companies around the world use TaskManager to simplify their task backlog.</p>
-              <a routerLink="/login" class="my-button inline-flex items-center justify-center px-5 py-3 text-base mr-4">
-                  Sign in
-                  <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"></path></svg>
-              </a>
-              <a href="#" class="inline-flex items-center justify-center px-5 py-3 text-base font-medium text-center text-gray-900 border border-gray-300 rounded-xl hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 dark:text-white dark:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-800">
-                  Speak to Sales
-              </a> 
-          </div>              
+  <section class="relative overflow-hidden bg-gray-900 min-h-screen flex items-center">
+    <div class="absolute inset-0 bg-center bg-cover bg-no-repeat blur-[3px]"
+      style="background-image: url('/img12.jpg');">
+    </div>
+    <div class="absolute inset-0 bg-slate-900/65">
+    </div>
+    <div class="grid max-w-screen-xl px-4 py-8 mx-auto lg:gap-8 xl:gap-0 lg:py-16 lg:grid-cols-12 z-40">
+      <div class="mr-auto place-self-center lg:col-span-7 -mt-10 md:mt-0">
+        <h1 class="max-w-2xl mb-4 font-extrabold leading-tight text-4xl lg:text-6xl text-white">
+          TaskManager: eficiencia operativa en desarrollo de software
+        </h1>
+        <p class="max-w-2xl mb-6 text-gray-400 lg:mb-8 text-lg lg:text-xl">
+          Desde la creación de tareas hasta su finalización y validación por parte del equipo de calidad,
+          empresas de todo el mundo utilizan TaskManager para simplificar su lista de tareas.
+        </p>
+        <div class="flex flex-col gap-4 sm:flex-row justify-start w-64 sm:w-full">
+          <a routerLink="/login" class="my-button inline-flex items-center justify-center px-5 py-3 text-base">
+            Iniciar Sesión
+            <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+              <path fill-rule="evenodd"
+                d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+                clip-rule="evenodd"></path>
+            </svg>
+          </a>
+          <a href="#" class="inline-flex items-center justify-center px-5 py-3 font-medium text-base text-center border border-gray-700 rounded-xl hover:bg-gray-700 focus:ring-4 focus:ring-gray-800 text-white">
+            Planes y Precios
+          </a>
+        </div>
       </div>
+    </div>
   </section>
 
   <section class="relative overflow-hidden min-h-screen min-h-[100svh]">
-    <div
-      class="absolute inset-0 bg-center bg-cover bg-no-repeat blur-[3px] scale-105"
-      style="background-image: url('/kanban1.jpg');"
-    ></div>
+    <div class="absolute inset-0 bg-center bg-cover bg-no-repeat blur-[3px] scale-105"
+      style="background-image: url('/kanban1.jpg');"></div>
     <div class="absolute inset-0 bg-slate-900/65"></div>
-    <div class="relative max-w-screen-xl px-4 py-24 mx-auto min-h-[510px] lg:py-32 flex items-center justify-center text-center">
-      <div class="max-w-3xl">
+    <div
+      class="relative max-w-screen-xl px-4 py-24 mx-auto min-h-[510px] lg:py-32 flex items-center justify-center text-center">
+      <div class="flex flex-col gap-8 max-w-3xl justify-center items-center">
         <p class="text-sm font-semibold tracking-[0.2em] text-blue-200 uppercase">
-          Kanban Workflow
+          Flujo de trabajo Kanban
         </p>
-        <h2 class="mt-4 text-3xl font-extrabold leading-tight text-white md:text-4xl">
-          Keep Teams Focused With a Clear Kanban Task Flow
+        <h2 class="text-3xl font-extrabold leading-tight text-white md:text-5xl">
+          Mantén a tus equipos enfocados con un flujo de tareas Kanban claro
         </h2>
-        <p class="mt-5 text-base leading-relaxed text-slate-100 md:text-lg">
-          Visualize every stage of your work, limit work in progress, and move
-          tasks from backlog to done with full transparency. Kanban helps your
-          team prioritize faster, collaborate better, and deliver consistently.
+        <p class="text-lg lg:text-xl leading-relaxed text-gray-400">
+          Visualiza cada etapa de tu trabajo, limita el trabajo en curso y mueve
+          las tareas de la lista de pendientes a la lista de completadas con total transparencia.
+          Kanban ayuda a tu equipo a priorizar más rápido, colaborar mejor y ofrecer resultados consistentes.
         </p>
-        <a 
-          routerLink="/register" 
-          class="my-button inline-flex items-center justify-center mt-5 px-5 py-3 text-base">
-          Start Organizing Tasks
+        <a routerLink="/register" class="my-button inline-flex items-center justify-center px-5 py-3 text-base w-80">
+          Comenzar a organizar tareas
+          <svg class="w-5 h-5 ml-2 -mr-1" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd"
+              d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z"
+              clip-rule="evenodd"></path>
+          </svg>
         </a>
       </div>
     </div>
   </section>
 
-  <section class="bg-gray-50 py-20 dark:bg-gray-900 py-32">
+  <section class="bg-gradient-to-br from-primary-900 via-slate-900 to-slate-950 pt-30 pb-20">
     <div class="max-w-screen-xl px-4 mx-auto">
-      <div class="max-w-3xl mx-auto text-center">
-        <p class="text-sm font-semibold tracking-[0.2em] text-blue-700 uppercase dark:text-blue-400">
-          Testimonials
+      <div class="flex flex-col gap-7 max-w-3xl mx-auto text-center">
+        <p class="text-sm font-semibold tracking-[0.2em] text-blue-200 uppercase">
+          Testimonios
         </p>
-        <h2 class="mt-3 text-3xl font-extrabold text-gray-900 md:text-4xl dark:text-white">
-          Teams that improved delivery with Kanban
+        <h2 class="text-3xl font-extrabold leading-tight text-white md:text-5xl">
+          Equipos que mejoraron sus procesos con Kanban
         </h2>
-        <p class="mt-4 text-gray-600 dark:text-gray-300">
-          Real feedback from teams that now manage priorities and workload with better visibility.
+        <p class="text-lg lg:text-xl leading-relaxed text-gray-400">
+          Opiniones reales de equipos que ahora gestionan prioridades y carga de trabajo con mayor visibilidad.
         </p>
       </div>
 
       <div class="grid gap-6 mt-12 md:grid-cols-2 lg:grid-cols-3">
-        <article class="p-6 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
-          <p class="text-gray-700 dark:text-gray-300">
-            "Our sprint planning is faster and clearer. We reduced blocked tasks by 40% in two months."
+        <article class="p-6 rounded-xl border border-gray-700 shadow-sm bg-gray-800">
+          <p class="text-gray-300">
+            "Nuestra planificación de sprint es más rápida y clara. Redujimos las tareas bloqueadas en un 40% en dos meses."
           </p>
           <div class="flex items-center gap-3 mt-6">
-            <img
-              src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80"
-              alt="Sarah Lee"
-              class="w-11 h-11 rounded-full object-cover"
-            />
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80"
+              alt="Sarah Lee" class="w-11 h-11 rounded-full object-cover" />
             <div>
-            <p class="font-semibold text-gray-900 dark:text-white">Sarah Lee</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Engineering Manager, PixelForge</p>
+              <p class="font-semibold text-white">Sarah Lee</p>
+              <p class="text-sm text-gray-400">Engineering Manager, PixelForge</p>
             </div>
           </div>
         </article>
 
-        <article class="p-6 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
-          <p class="text-gray-700 dark:text-gray-300">
-            "The board gave us full transparency. Product and QA now collaborate without bottlenecks."
+        <article class="p-6 rounded-xl border shadow-sm bg-gray-800 border-gray-700">
+          <p class="text-gray-300">
+            "La tabla nos dio transparencia completa. Producción y QA ahora colaboran sin cuellos de botella."
           </p>
           <div class="flex items-center gap-3 mt-6">
-            <img
-              src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
-              alt="Daniel Brooks"
-              class="w-11 h-11 rounded-full object-cover"
-            />
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"
+              alt="Daniel Brooks" class="w-11 h-11 rounded-full object-cover" />
             <div>
-            <p class="font-semibold text-gray-900 dark:text-white">Daniel Brooks</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">Product Lead, NovaStack</p>
+              <p class="font-semibold text-white">Daniel Brooks</p>
+              <p class="text-sm text-gray-400">Product Lead, NovaStack</p>
             </div>
           </div>
         </article>
 
-        <article class="p-6 bg-white rounded-xl border border-gray-200 shadow-sm dark:bg-gray-800 dark:border-gray-700">
-          <p class="text-gray-700 dark:text-gray-300">
-            "We finally have a reliable flow from backlog to done. Throughput is up and stress is down."
+        <article class="p-6 rounded-xl border shadow-sm bg-gray-800 border-gray-700">
+          <p class="text-gray-300">
+            "Finalmente tenemos un flujo confiable desde el backlog hasta done. El rendimiento está aumentando y el estrés disminuyendo."
           </p>
           <div class="flex items-center gap-3 mt-6">
-            <img
-              src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80"
-              alt="Emily Carter"
-              class="w-11 h-11 rounded-full object-cover"
-            />
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80"
+              alt="Emily Carter" class="w-11 h-11 rounded-full object-cover" />
             <div>
-            <p class="font-semibold text-gray-900 dark:text-white">Emily Carter</p>
-            <p class="text-sm text-gray-500 dark:text-gray-400">QA Coordinator, BrightLayer</p>
+              <p class="font-semibold text-white">Emily Carter</p>
+              <p class="text-sm text-gray-400">QA Coordinator, BrightLayer</p>
             </div>
           </div>
         </article>

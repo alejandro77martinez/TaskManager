@@ -1,4 +1,4 @@
-<main class="relative overflow-hidden bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-4 md:p-6">
+<main class="relative overflow-hidden p-2 md:p-4">
   <section class="border-b border-white/10 pb-6">
     <div class="relative flex flex-col gap-8">
       <div class="flex flex-col gap-6 xl:flex-row xl:items-end xl:justify-between">
@@ -46,7 +46,7 @@
         <h1 class="mt-6 text-3xl font-black tracking-tight text-white sm:text-4xl">
           Creacion y detalles de proyectos.
         </h1>
-        <p class="mt-3 text-sm leading-6 text-slate-300">
+        <p class="mt-3 leading-6 text-slate-300">
           Resumen del estado del proyecto, la metodologia de trabajo, la fecha de
           entrega y el equipo participante para lectura ejecutiva inmediata.
         </p>
@@ -54,7 +54,7 @@
 
       <button
         type="button"
-        class="my-button inline-flex items-center justify-center gap-2 px-5 py-3 text-sm"
+        class="my-button inline-flex items-center justify-center gap-2 px-4 py-2.5"
         (click)="openProjectCreatePanel()"
       >
         <svg class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
@@ -68,9 +68,7 @@
 
     <div class="relative mt-6 grid gap-5 2xl:grid-cols-2">
       @for (project of projects(); track project.id) {
-        <article
-          class="group rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg ring-1 ring-white/10 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-primary-300/40 hover:bg-white/20"
-        >
+        <article class="group rounded-3xl border border-white/10 bg-white/10 p-3 md:p-5 shadow-lg ring-1 ring-white/10 backdrop-blur transition-all duration-200 hover:-translate-y-1 hover:border-primary-300/40 hover:bg-white/20">
           <div class="flex items-start justify-between gap-4">
             <div class="min-w-0 flex-1">
               <div class="flex flex-wrap gap-2">
@@ -91,20 +89,20 @@
               <h3 class="mt-4 text-xl font-black tracking-tight text-white">
                 {{ project.name }}
               </h3>
-              <p class="mt-3 text-sm leading-6 text-slate-300">
+              <p class="mt-3 leading-6 text-slate-300">
                 {{ project.summary }}
               </p>
             </div>
             <div class="flex flex-col items-end gap-3">
               <button
                 type="button"
-                class="my-button px-3 py-1 rounded-2xl"
+                class="my-button px-3 py-1.5 rounded-2xl text-sm"
                 (click)="openProjectDetailsPanel(project.id)"
               >
                 Ver detalles
               </button>
               <div class="rounded-2xl bg-slate-950/40 px-4 py-3 text-right shadow-sm ring-1 ring-white/10">
-                <p class="text-3xl font-black text-white">{{ project.progress }}%</p>
+                <p class="text-3xl font-black text-white">{{ getAdvance(project.id) }}%</p>
                 <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">avance</p>
               </div>
             </div>
@@ -201,42 +199,22 @@
             Tareas relevantes en curso y bloqueos visibles que afectan el flujo de trabajo.
           </p>
         </div>
-
-        <div class="flex flex-wrap gap-3">
-          <div class="rounded-2xl bg-white/10 px-4 py-3 ring-1 ring-white/10 backdrop-blur">
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
-              Trabajo abierto
-            </p>
-            <p class="mt-1 text-2xl font-black text-white">
-              {{ inProgressTasks().length + pendingTasks().length }}
-            </p>
-          </div>
-
-          <div class="rounded-2xl bg-white/10 px-4 py-3 ring-1 ring-white/10 backdrop-blur">
-            <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-300">
-              Bloqueos visibles
-            </p>
-            <p class="mt-1 text-2xl font-black text-white">
-              {{ portfolioSummary().blockedTasks }}
-            </p>
-          </div>
-        </div>
       </div>
 
       <div class="mt-6 grid gap-5 lg:grid-cols-2">
-        <div class="rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg ring-1 ring-white/10 backdrop-blur">
+        <div class="rounded-2xl border border-white/10 bg-white/10 px-2 py-3 md:p-3 shadow-lg ring-1 ring-white/10 backdrop-blur">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-lg font-black text-white">En curso</h3>
+              <h3 class="text-xl font-black text-white">En curso</h3>
               <p class="text-sm text-slate-300">Trabajo ya tomado por el equipo.</p>
             </div>
             <span class="rounded-full bg-slate-950/40 px-3 py-1 text-sm font-semibold text-primary-100 ring-1 ring-white/10">
-              {{ inProgressTasks().length }}
+              {{ getInProgressTasks().length }}
             </span>
           </div>
 
           <div class="mt-4 space-y-3">
-            @for (task of inProgressTasks(); track task.id) {
+            @for (task of getInProgressTasks(); track task.id) {
               <article class="rounded-2xl bg-slate-950/40 p-4 shadow-sm ring-1 ring-white/10">
                 <div class="flex items-start justify-between gap-3">
                   <div class="min-w-0 flex-1">
@@ -247,7 +225,7 @@
                       {{ task.priority }}
                     </span>
                     <h4 class="mt-3 text-base font-bold text-white">{{ task.title }}</h4>
-                    <p class="mt-1 text-sm text-slate-400">{{ task.projectName }}</p>
+                    <p class="mt-1 text-sm text-slate-400">{{ getNameProject(task.projectId) }}</p>
                   </div>
                   <span
                     class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
@@ -259,7 +237,7 @@
 
                 <div class="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
                   <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
-                    {{ task.assignee }}
+                    {{ getNameMember(task.assigneeId) }}
                   </span>
                   <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
                     {{ formatDate(task.dueDate) }}
@@ -283,19 +261,19 @@
           </div>
         </div>
 
-        <div class="rounded-3xl border border-white/10 bg-white/10 p-5 shadow-lg ring-1 ring-white/10 backdrop-blur">
+        <div class="rounded-2xl border border-white/10 bg-white/10 px-2 py-3 md:p-3 shadow-lg ring-1 ring-white/10 backdrop-blur">
           <div class="flex items-center justify-between">
             <div>
-              <h3 class="text-lg font-black text-white">Bloqueos</h3>
+              <h3 class="text-xl font-black text-white">Bloqueos</h3>
               <p class="text-sm text-slate-300">Items que interrumpen el flujo de trabajo.</p>
             </div>
             <span class="rounded-full bg-slate-950/40 px-3 py-1 text-sm font-semibold text-white ring-1 ring-white/10">
-              {{ pendingTasks().length }}
+              {{ getPendingTasks().length }}
             </span>
           </div>
 
           <div class="mt-4 space-y-3">
-            @for (task of pendingTasks(); track task.id) {
+            @for (task of getPendingTasks(); track task.id) {
               <article class="rounded-2xl bg-slate-950/40 p-4 shadow-sm ring-1 ring-white/10">
                 <div class="flex items-start justify-between gap-3">
                   <div class="min-w-0 flex-1">
@@ -306,7 +284,7 @@
                       {{ task.priority }}
                     </span>
                     <h4 class="mt-3 text-base font-bold text-white">{{ task.title }}</h4>
-                    <p class="mt-1 text-sm text-slate-400">{{ task.projectName }}</p>
+                    <p class="mt-1 text-sm text-slate-400">{{ getNameProject(task.projectId) }}</p>
                   </div>
                   <span
                     class="inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold"
@@ -318,7 +296,7 @@
 
                 <div class="mt-4 flex flex-wrap gap-3 text-sm text-slate-300">
                   <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
-                    {{ task.assignee }}
+                    {{ getNameMember(task.assigneeId) }}
                   </span>
                   <span class="rounded-full bg-white/10 px-3 py-1 ring-1 ring-white/10">
                     {{ formatDate(task.dueDate) }}

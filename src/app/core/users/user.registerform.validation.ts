@@ -18,25 +18,25 @@ export class RegisterFormValidationService {
   private readonly registerModel = signal<UserRegisterFormData>(this.initialValues);
 
   private readonly registerForm = form(this.registerModel, (schemaPath) => {
-    required(schemaPath.name, {message: 'Name is required'});
-    required(schemaPath.lastname, {message: 'Lastname is required'});
-    required(schemaPath.email, {message: 'Email is required'});
-    email(schemaPath.email, {message: 'Enter a valid email address'});
-    required(schemaPath.password, {message: 'Password is required'});
-    minLength(schemaPath.password, 8, {message: 'Password must be at least 8 characters long'});
-    required(schemaPath.confirmPassword, {message: 'Confirm Password is required'});
+    required(schemaPath.name, {message: 'Nombre es requerido'});
+    required(schemaPath.lastname, {message: 'Apellido es requerido'});
+    required(schemaPath.email, {message: 'El correo electronico es requerido'});
+    email(schemaPath.email, {message: 'Ingrese una dirección de email válida'});
+    required(schemaPath.password, {message: 'Contraseña es requerida'});
+    minLength(schemaPath.password, 8, {message: 'La contraseña debe tener al menos 8 caracteres'});
+    required(schemaPath.confirmPassword, {message: 'Confirmar contraseña es requerido'});
     validate(schemaPath.confirmPassword, ({value, valueOf}) => {
       const confirmPassword = value();
       const password = valueOf(schemaPath.password);
       if (confirmPassword !== password) {
         return {
           kind: 'passwordMismatch',
-          message: 'Passwords do not match',
+          message: 'Las contraseñas no coinciden',
         };
       }
       return null;
     });
-    required(schemaPath.termsAndConditions, {message: 'You must accept the terms and conditions'});
+    required(schemaPath.termsAndConditions, {message: 'Debe aceptar los términos y condiciones'});
   });
 
   resetForm() {

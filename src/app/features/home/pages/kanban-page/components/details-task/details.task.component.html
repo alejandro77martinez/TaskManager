@@ -1,0 +1,298 @@
+@if (isTaskDetailsPanelOpen()) {
+<div class="fixed inset-0 z-40 bg-slate-950/45 backdrop-blur-sm" (click)="closeTaskDetailsPanel()"></div>
+<aside
+  class="fixed inset-y-0 right-0 z-50 flex w-full sm:max-w-xl max-w-full flex-col overflow-x-hidden bg-slate-100 shadow-2xl"
+  role="dialog" aria-modal="true" aria-labelledby="create-project-title">
+  <div class="bg-gradient-to-br from-slate-950 via-slate-900 to-primary-900 p-4 text-white">
+    <div class="flex items-start justify-between">
+      <div>
+        <p class="text-sm font-semibold uppercase tracking-[0.22em] text-primary-200">
+          Detalles y edicion de tarea
+        </p>
+        <h2 id="create-project-title" class="mt-2 text-2xl font-black tracking-tight text-white">
+          Panel de informacion detallada
+        </h2>
+        <p class="mt-2 text-sm leading-6 text-slate-300">
+          Tambien puedes editar los datos de la tarea agregada al dashboard.
+        </p>
+      </div>
+
+      <button type="button" class="rounded-2xl p-2 text-slate-300 transition hover:bg-white/10 hover:text-white"
+        (click)="closeTaskDetailsPanel()" aria-label="Cerrar panel">
+        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+          <path
+            d="M4.293 4.293a1 1 0 0 1 1.414 0L10 8.586l4.293-4.293a1 1 0 1 1 1.414 1.414L11.414 10l4.293 4.293a1 1 0 0 1-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 0 1-1.414-1.414L8.586 10 4.293 5.707a1 1 0 0 1 0-1.414Z" />
+        </svg>
+      </button>
+    </div>
+  </div>
+  <form class="flex h-full flex-col max-w-full" (submit)="onSubmit($event)">
+    <div class="flex-1 space-y-6 p-4 max-w-full">
+      <div class="grid gap-4 sm:grid-cols-2 max-w-full">
+        <div class="sm:col-span-2">
+          <label for="task-title" class="mb-2 block text-sm font-medium text-slate-900">
+            Titulo de la tarea *
+          </label>
+          @if (!isEditMode()) {
+            <input class="my-input" [value]="taskDetailsModel().title" disabled/>
+          } @else {
+            <input id="task-title" type="text" class="my-input" placeholder="Ej. Desarrollar modulo de autenticacion"
+              [formField]="taskDetailsForm.title" />
+            @if (taskDetailsForm.title().touched() && taskDetailsForm.title().invalid()) {
+            <ul class="list-disc text-xs text-red-600 dark:text-red-500 mt-1 ml-4">
+              @for (error of taskDetailsForm.title().errors(); track $index) {
+              <li>{{ error.message }}</li>
+              }
+            </ul>
+            }
+          }
+        </div>
+
+        <div>
+          <label for="project-name" class="mb-2 block text-sm font-medium text-slate-900">
+            Proyecto a la que pertenece
+          </label>
+          <input id="project-name" class="my-input"
+            placeholder="Describe el problema, el objetivo y el valor esperado del proyecto."
+            [value]="getNameCurrentProject()" disabled />
+        </div>
+
+        <div>
+          <label for="type-task" class="mb-2 block text-sm font-medium text-slate-900">
+            Tipo de tarea
+          </label>
+          @if (!isEditMode()) {
+            <input class="my-input" [value]="taskDetailsModel().type" disabled/>
+          } @else {
+            <select id="type-task" class="my-input" [formField]="taskDetailsForm.type">
+              <option value="Error">Error</option>
+              <option value="Funcionalidad">Funcionalidad</option>
+              <option value="Mejora">Mejora</option>
+              <option value="Documentación">Documentación</option>
+            </select>
+          }
+        </div>
+
+        <div class="sm:col-span-2">
+          <label for="task-description" class="mb-2 block text-sm font-medium text-slate-900">
+            Descripcion *
+          </label>
+          @if (!isEditMode()) {
+            <textarea class="my-input" [value]="taskDetailsModel().description" rows="3" disabled></textarea>
+          } @else {
+            <textarea id="task-description" class="my-input" placeholder="Ej. Se crara una pagina de login con email y contraseña, con validaciones y manejo de errores."
+              [formField]="taskDetailsForm.description" rows="3"></textarea>
+            @if (taskDetailsForm.description().touched() && taskDetailsForm.description().invalid()) {
+            <ul class="list-disc text-xs text-red-600 dark:text-red-500 mt-1 ml-4">
+              @for (error of taskDetailsForm.description().errors(); track $index) {
+              <li>{{ error.message }}</li>
+              }
+            </ul>
+            }
+          }
+        </div>
+
+        <div>
+          <label for="prarent-task" class="mb-2 block text-sm font-medium text-slate-900">
+            Seleciona si es una sub-tarea?
+          </label>
+          @if (!isEditMode()) {
+            <input type="checkbox" class="my-input-checkbox" [checked]="taskDetailsModel().isSubtask" disabled/>
+          } @else {
+            <input type="checkbox"  class="my-input-checkbox" [formField]="taskDetailsForm.isSubtask"/>
+          }
+        </div>
+
+        <div>
+          <label for="prarent-task" class="mb-2 block text-sm font-medium text-slate-900">
+            Elige la tarea principal
+          </label>
+          @if (!isEditMode()) {
+            <select id="parent-task" class="my-input" disabled>
+              <option value="">Ninguna</option>
+              @for (task of getTaskofProject(); track $index) {
+                <option [value]="task.id" [selected]="task.id === taskDetailsModel().parentTaskId">
+                  {{ task.title }}
+                </option>
+              }
+            </select>
+          } @else {
+            @if (taskDetailsForm.isSubtask().value()) {
+              <select id="parent-task" class="my-input" [formField]="taskDetailsForm.parentTaskId">
+                <option value="">Ninguna</option>
+                @for (task of getTaskofProject(); track $index) {
+                  <option [value]="task.id">{{ task.title }}</option>
+                }
+              </select>
+            }@else {
+              <select id="parent-task" class="my-input" disabled>
+                <option value="">Ninguna</option>
+              </select>
+            }
+          }
+        </div>
+
+        <div>
+          <label for="type-task" class="mb-2 block text-sm font-medium text-slate-900">
+            Miembro asignado a la tarea
+          </label>
+          @if (!isEditMode()) {
+            <select id="type-task" class="my-input" disabled>
+              @for (member of getMembersForCurrentProject(); track $index) {
+                <option [value]="member.id" [selected]="member.id === taskDetailsModel().assigneeId">{{ member.name }}</option>
+              }
+            </select>
+          } @else {
+            <select id="type-task" class="my-input" [formField]="taskDetailsForm.assigneeId">
+              @for (member of getMembersForCurrentProject(); track $index) {
+                <option [value]="member.id">{{ member.name }}</option>
+              }
+            </select>
+          }
+        </div>
+
+        <div>
+          <label for="task-due-date" class="mb-2 block text-sm font-medium text-slate-900">
+            Fecha de vencimiento *
+          </label>
+          @if (!isEditMode()) {
+            <input class="my-input" [value]="taskDetailsModel().dueDate" disabled/>
+          } @else {
+            <input id="task-due-date" type="date" class="my-input" [formField]="taskDetailsForm.dueDate" />
+            @if (taskDetailsForm.dueDate().touched() && taskDetailsForm.dueDate().invalid()) {
+            <ul class="list-disc text-xs text-red-600 dark:text-red-500 mt-1 ml-4">
+              @for (error of taskDetailsForm.dueDate().errors(); track $index) {
+              <li>{{ error.message }}</li>
+              }
+            </ul>
+            }
+          }
+        </div>
+
+        <div>
+          <label for="type-task" class="mb-2 block text-sm font-medium text-slate-900">
+            Prioridad
+          </label>
+          @if (!isEditMode()) {
+            <input class="my-input" [value]="taskDetailsModel().priority" disabled/>
+          } @else {  
+            <select id="type-task" class="my-input" [formField]="taskDetailsForm.priority">
+              <option value="Baja">Baja</option>
+              <option value="Media">Media</option>
+              <option value="Alta">Alta</option>
+            </select>
+          }
+        </div>
+
+        <div>
+          <label for="task-points" class="mb-2 block text-sm font-medium text-slate-900">
+            Puntos de tarea
+          </label>
+           @if (!isEditMode()) {
+            <input class="my-input" [value]="taskDetailsModel().effortPoints" disabled/>
+          } @else {  
+            <input id="task-points" type="number" class="my-input" [formField]="taskDetailsForm.effortPoints" />
+            @if (taskDetailsForm.effortPoints().touched() && taskDetailsForm.effortPoints().invalid()) {
+            <ul class="list-disc text-xs text-red-600 dark:text-red-500 mt-1 ml-4">
+              @for (error of taskDetailsForm.effortPoints().errors(); track $index) {
+              <li>{{ error.message }}</li>
+              }
+            </ul>
+            }
+          }
+        </div>
+
+      </div>
+    </div>
+
+    <div class="border-t border-slate-200 p-6">
+      <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+        <button type="button" class="my-button-danger px-4 py-2.5" (click)="openModal()">
+          Eliminar
+        </button>
+
+        @if (isModalOpen()) {
+        <!-- Modal-->
+        <div
+          class="fixed z-70 flex justify-center items-center inset-0 bg-slate-950/45 backdrop-blur-sm" (click)="closeModal()">
+          <div class="relative p-4 w-full max-w-md max-h-full" (click)="$event.stopPropagation()">
+            <div class="relative bg-white border border-default rounded-xl z-80 shadow-sm p-4 md:p-6">
+
+              <button type="button" (click)="closeModal()"
+                class="absolute top-3 end-2.5 text-body bg-transparent hover:bg-neutral-tertiary hover:text-heading rounded-full text-sm w-9 h-9 ms-auto inline-flex justify-center items-center">
+                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                  fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M6 18 17.94 6M18 18 6.06 6" />
+                </svg>
+                <span class="sr-only">Close modal</span>
+              </button>
+
+              <div class="p-3 md:p-4 text-center">
+                <svg class="mx-auto mb-4 text-fg-disabled w-12 h-12" aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+                  <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    d="M12 13V8m0 8h.01M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                </svg>
+                <h3 class="text-body">Estas seguro que quieres eliminar esta tarea?</h3>
+                <div class="my-2">
+                  <span class="font-bold">"{{taskDetailsModel().title}}"</span>
+                  @if (getSubTask(taskDetailsModel().id).length > 0) {
+                    <h3 class="text-body">Y las subTareas relacionadas a ella</h3>
+                    <ul>
+                      @for (item of getSubTask(taskDetailsModel().id); track $index) {
+                        <li>"{{item.title}}"</li>
+                      }
+                    </ul>
+                  }
+                </div>
+                <div class="flex items-center space-x-4 justify-center mt-4">
+                  <button type="button" (click)="confirmarDeletion(taskDetailsModel().projectId, taskDetailsModel().id)"
+                    class="text-white bg-danger box-border border border-transparent hover:bg-danger-strong focus:ring-4 focus:ring-danger-medium shadow-xs font-medium leading-5 rounded-xl text-sm px-4 py-2.5 focus:outline-none">
+                    Si, seguro
+                  </button>
+                  <button type="button" (click)="closeModal()"
+                    class="text-body bg-neutral-secondary-medium box-border border border-default-medium hover:bg-neutral-tertiary-medium hover:text-heading focus:ring-4 focus:ring-neutral-tertiary shadow-xs font-medium leading-5 rounded-xl text-sm px-4 py-2.5 focus:outline-none">
+                    No, cancelar
+                  </button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+        }
+        <div class="flex flex-col-reverse gap-3 sm:flex-row sm:justify-between">
+          <button type="button" class="my-button-cancel px-4 py-2.5" (click)="closeTaskDetailsPanel()">
+            Cancelar
+          </button>
+          @if (isLoading()) {
+          <button disabled type="submit" class="my-button px-4 py-2.5 flex items-center justify-center">
+            <svg aria-hidden="true" role="status" class="w-4 h-4 me-2 text-white animate-spin" viewBox="0 0 100 101"
+              fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z"
+                fill="#E5E7EB" />
+              <path
+                d="M93.9676 39.0409C96.393 38.4038 97.8624 35.9116 97.0079 33.5539C95.2932 28.8227 92.871 24.3692 89.8167 20.348C85.8452 15.1192 80.8826 10.7238 75.2124 7.41289C69.5422 4.10194 63.2754 1.94025 56.7698 1.05124C51.7666 0.367541 46.6976 0.446843 41.7345 1.27873C39.2613 1.69328 37.813 4.19778 38.4501 6.62326C39.0873 9.04874 41.5694 10.4717 44.0505 10.1071C47.8511 9.54855 51.7191 9.52689 55.5402 10.0491C60.8642 10.7766 65.9928 12.5457 70.6331 15.2552C75.2735 17.9648 79.3347 21.5619 82.5849 25.841C84.9175 28.9121 86.7997 32.2913 88.1811 35.8758C89.083 38.2158 91.5421 39.6781 93.9676 39.0409Z"
+                fill="currentColor" />
+            </svg>
+            Actualizando...
+          </button>
+          } @else {
+          @if (isEditMode()){
+          <button type="submit" class="my-button px-4 py-2.5">
+            Guardar tarea
+          </button>
+          }@else {
+          <button type="button" class="my-button px-4 py-2.5" (click)="activateEditMode()">
+            Editar tarea
+          </button>
+          }
+          }
+        </div>
+      </div>
+    </div>
+  </form>
+</aside>
+}

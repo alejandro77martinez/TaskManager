@@ -39,7 +39,7 @@ export class RegisterPage {
     if (this.registerForm().invalid()) {
       this.isLoading.set(false);
       this.formValidationService.markAllFieldsAsTouched()
-      this.toastService.error('Please fix the errors in the form before submitting.');
+      this.toastService.error('Por favor, corrija los errores del formulario antes de registrarse');
       return;
     }
     this.userService.emailExist(this.registerModel().email).subscribe({

@@ -6,17 +6,18 @@ import { LoginFormValidationService } from '../../../../core/auth/auth.loginform
 import { FooterComponent } from '../../../../shared/ui/footer/footer.component';
 import { ToastService } from '../../../../core/toast/toast.service';
 import { FormField, submit } from '@angular/forms/signals';
+import { ProjectService } from '../../../../core/project/project.service';
 
 @Component({
   selector: 'app-login-page',
   imports: [FormsModule, RouterLink, FooterComponent, FormField],
   templateUrl: './login-page.component.html',
-  styleUrl: './login-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoginPageComponent {
 
   private readonly authService = inject(AuthService);
+  private readonly projectService = inject(ProjectService)
   private readonly router = inject(Router);
   private readonly toastService = inject(ToastService);
   private readonly loginFormValidationService = inject(LoginFormValidationService);
@@ -35,7 +36,7 @@ export class LoginPageComponent {
     event.preventDefault();
     this.isLoading.set(true);
     if (this.loginForm().invalid()) {
-      this.toastService.error('Please fix the errors in the form before submitting.');
+      this.toastService.error('Por favor, corrija los errores del formulario antes de iniciar sesión');
       this.loginFormValidationService.markAllFieldsAsTouched();
       this.isLoading.set(false);
       return;
@@ -53,14 +54,15 @@ export class LoginPageComponent {
         const credentials = this.loginModel();
         this.authService.login(credentials)
           .subscribe({
-            next: () => { 
-              this.toastService.success('Welcome back.');
+            next: (user) => { 
+              this.projectService.getProjectsFromApi()
+              this.toastService.success('Bienvenid@ de vuelta ' + user.name + '!');
               this.isLoading.set(false);
               this.router.navigateByUrl("/home");
             },
             error: (err) => { 
               this.isLoading.set(false);
-              this.toastService.error('Enter a valid email and password.');
+              this.toastService.error('Introduce un correo electrónico y una contraseña válidos');
             }}
           )
       },

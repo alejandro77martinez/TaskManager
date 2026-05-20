@@ -72,21 +72,21 @@ export const routes: Routes = [
       {
         path: 'info',
         loadComponent: () =>
-          import('./features/public/pages/about-page/components/info.component').then(
+          import('./features/public/pages/about-page/components/info-page/info.component').then(
             (m) => m.InfoComponent,
           ),
       },
       {
         path: 'privacy',
         loadComponent: () =>
-          import('./features/public/pages/about-page/components/privacy.component').then(
+          import('./features/public/pages/about-page/components/privacy-page/privacy.component').then(
             (m) => m.PrivacyComponent,
           ),
       },
       {
         path: 'terms',
         loadComponent: () =>
-          import('./features/public/pages/about-page/components/terms.component').then(
+          import('./features/public/pages/about-page/components/terms-page/terms.component').then(
             (m) => m.TermsComponent,
           ),
       },

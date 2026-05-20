@@ -2,7 +2,6 @@ import { Component, inject } from "@angular/core";
 import { ToastService } from "../../../../../../core/toast/toast.service";
 import { FormsModule } from "@angular/forms";
 import { FormField, submit } from "@angular/forms/signals";
-import { CommonModule } from "@angular/common";
 import { ProjectTeamTableService } from "../../../../../../core/project/project.team.table.service";
 import { TeamTableComponent } from "../team-table/team.table.component";
 import { ProjectCreateService } from "../../../../../../core/project/project.create.service";
@@ -11,7 +10,7 @@ import { Router } from "@angular/router";
 @Component({
   selector: 'app-new-project-form',
   templateUrl: './form.component.html',
-  imports: [FormsModule, FormField, CommonModule, TeamTableComponent]
+  imports: [FormsModule, FormField, TeamTableComponent]
 })
 export class NewProjectFormComponent {
 
