@@ -1,11 +1,11 @@
-# Diseno de Software - TaskManager
+# Diseño de Software - TaskManager
 
 ## 1. Informacion general
 
 - **Proyecto:** TaskManager Frontend
 - **Fecha:** 2026-06-10
 - **Version del documento:** 0.1
-- **Alcance:** frontend Angular de `AdminTask` integrado con el backend de microservicios
+- **Alcance:** frontend Angular de `TaskManager` integrado con el backend de microservicios con spring
 
 Este documento resume la arquitectura del frontend, su relacion con el backend, los principales flujos de uso, y una primera coleccion de diagramas UML y mockups textuales de pantalla.
 
@@ -494,148 +494,41 @@ Interpretacion:
 - `Authenticated` representa un usuario con cookie `AUTH_TOKEN` valida
 - `Refreshing` modela el refresco automatico que se ejecuta desde `AuthService`
 
-## 12. Mockups textuales de pantallas
+## 12. Mockups de pantallas
 
-Los siguientes mockups son wireframes conceptuales basados en los templates reales del frontend.
+Los siguientes mockups son wireframes conceptuales en los que se baso el frontend del sistema.
 
 ### 12.1 Landing page
 
-```text
- ---------------------------------------------------------------
-| Logo TaskManager                                   Login      |
-|---------------------------------------------------------------|
-|  HERO BG: imagen oscura con overlay                           |
-|                                                               |
-|  TaskManager: eficiencia operativa en desarrollo             |
-|  Texto de marketing y CTA                                     |
-|  [ Iniciar Sesion ]   [ Planes y Precios ]                   |
-|                                                               |
-|---------------------------------------------------------------|
-|  Seccion Kanban                                               |
-|  Explicacion del flujo de trabajo                             |
-|  [ Comenzar a organizar tareas ]                              |
-|---------------------------------------------------------------|
-|  Testimonios                                                 |
-|  Tarjeta 1   Tarjeta 2   Tarjeta 3                            |
-|---------------------------------------------------------------|
-| Footer                                                        |
- ---------------------------------------------------------------
-```
+![wireframe landing page](wireframe_landing.png)
 
 ### 12.2 Login
 
-```text
- ----------------------------------------------------
-| Logo TaskManager                                   |
-|----------------------------------------------------|
-|  Card central                                       |
-|  Inicia sesion en tu cuenta                         |
-|                                                    |
-|  Email                                              |
-|  [ name@company.com                           ]    |
-|                                                    |
-|  Contrasena                                         |
-|  [ *************** ] (icono ver/ocultar)           |
-|  [ ] Recordarme    ¿Olvidaste tu contrasena?       |
-|                                                    |
-|  [ Iniciar sesion ]                                 |
-|  Link: Registrate                                   |
- ----------------------------------------------------
-```
+![wireframe login page](wireframe_login.png)
 
 ### 12.3 Register
 
-```text
- --------------------------------------------------------
-| Logo TaskManager                                       |
-|--------------------------------------------------------|
-|  Card central                                           |
-|  Crear una cuenta                                       |
-|                                                        |
-|  Nombre         Apellido                                |
-|  Email          Contrasena                              |
-|  Confirmar contrasena                                   |
-|  [ ] Acepto terminos y condiciones                      |
-|                                                        |
-|  [ Crear cuenta ]                                       |
-|  Link: Inicia sesion aqui                               |
- --------------------------------------------------------
-```
+![wireframe register page](wireframe_registro.png)
 
-### 12.4 Dashboard de proyectos
+### 12.5 Projects
 
-```text
- ---------------------------------------------------------------
-| Topbar: logo | search | notifications | avatar usuario       |
-|---------------------------------------------------------------|
-| Sidebar: Projects | Kanban | Team                            |
-|---------------------------------------------------------------|
-| KPIs: Proyectos activos | Avance promedio | Colaboradores    |
-|---------------------------------------------------------------|
-| Proyectos donde participas                                    |
-| [Card proyecto] [Card proyecto] [Card proyecto]              |
-|  - prioridad, salud, avance, cliente, rol, entrega, tags     |
-|---------------------------------------------------------------|
-| Tareas en curso                    | Bloqueos                |
-|  tarjetas compactas                | tarjetas compactas      |
-|---------------------------------------------------------------|
-| Footer                                                        |
- ---------------------------------------------------------------
-```
+![wireframe projects page](wireframe_projects.png)
 
-### 12.5 Kanban
+### 12.6 Panel lateral create project
 
-```text
- ---------------------------------------------------------------
-| Workspace de tableros                                         |
-| Tableros de cada proyecto                                     |
-|---------------------------------------------------------------|
-| Proyecto A  [ Crear tarea ]                                   |
-| ------------------------------------------------------------- |
-| Por hacer | En progreso | En pruebas | Completadas           |
-| [task]    | [task]      | [task]     | [task]                |
-| [task]    | [task]      | [task]     | [task]                |
-| acciones: mover, bloquear, ver detalle, editar                |
-|---------------------------------------------------------------|
-| Panel lateral para crear tarea / editar detalle               |
- ---------------------------------------------------------------
-```
+![wireframe new project panel](wireframe_new_project.png)
 
-### 12.6 Panel lateral de proyecto o tarea
+### 12.7 Kanban
 
-```text
- -----------------------------------------------------------
-| Header oscuro con titulo y boton cerrar                  |
-|-----------------------------------------------------------|
-| Formulario en dos columnas                                |
-| Nombre              Cliente                               |
-| Prioridad           Rol del admin                         |
-| Metodologia         Estado / Salud                       |
-| Resumen                                                    |
-| Fecha objetivo      Fecha inicio                          |
-| Tags               Equipo participante                    |
-|-----------------------------------------------------------|
-| [ Cancelar ]  [ Guardar ]  [ Eliminar ]                   |
-| Modal de confirmacion para borrado                        |
- -----------------------------------------------------------
-```
+![wireframe kanban page](wireframe_kanban.png)
 
-### 12.7 Team workspace
+### 12.8 Panel lateral create task
 
-```text
- ---------------------------------------------------------------
-| Comunicacion del equipo de trabajo                            |
-|---------------------------------------------------------------|
-| Columna izquierda: lista de miembros                          |
-|  avatar + nombre + email + proyectos                          |
-|  [ Contactar ]                                                |
-|---------------------------------------------------------------|
-| Columna derecha: chat                                         |
-|  cabecera con usuario                                         |
-|  burbujas de mensajes                                         |
-|  textarea + boton Enviar                                      |
- ---------------------------------------------------------------
-```
+![wireframe new task panel](wireframe_new_task.png)
+
+### 12.9 Team workspace
+
+![wireframe team page](wireframe_team.png)
 
 ## 13. Reglas de diseño
 
