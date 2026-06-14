@@ -44,7 +44,7 @@ export class ProjectCreateService {
     this.projectTeamTableService.cleanInputMember();
   }
 
-  createProject(draft: NewProjectDraft, teamMembers: UserRole[]): Observable<String> {
+  createProject(draft: NewProjectDraft, teamMembers: UserRole[]): Observable<string> {
     const tags = this.splitCommaSeparatedValues(draft.tags);
     const newProject: ProjectRequest = {
       name: draft.name.trim(),
@@ -64,7 +64,7 @@ export class ProjectCreateService {
     return this.CreateProjectRequest(newProject);
   }
 
-  private CreateProjectRequest(projectData: ProjectRequest): Observable<String> {
+  private CreateProjectRequest(projectData: ProjectRequest): Observable<string> {
     return this.http.post<ProjectRequest>(this.apiBase + '/api/v1/project/', projectData, {
       withCredentials: true
     })
