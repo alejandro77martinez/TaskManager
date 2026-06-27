@@ -76,10 +76,13 @@ describe('ProjectTeamTableService', () => {
   });
 
   it('should show toast error when loadTeamMembers fails', () => {
+    const consoleErrorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     userServiceStub.searchTeamById = vi.fn(() => throwError(() => new Error('fail')));
     service.loadTeamMembers(mockTeam);
 
     expect(toastServiceStub.error).toHaveBeenCalledWith('Failed to load team members. Please try again later.');
+    expect(consoleErrorSpy).toHaveBeenCalled();
+    consoleErrorSpy.mockRestore();
   });
 
   it('should update member role from input event', () => {
