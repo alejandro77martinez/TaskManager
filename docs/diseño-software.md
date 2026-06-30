@@ -178,170 +178,21 @@ Tambien se usa una paleta primaria azul y transiciones de vista para navegar ent
 - Los paneles de creacion y detalle se abren desde la derecha y ocupan todo el alto.
 - Los formularios usan disposicion de una o dos columnas segun ancho de pantalla.
 
-## 9. UML - Diagrama de clases
+## 9. UML - Diagrama de Componentes
 
-El siguiente diagrama resume los componentes, servicios e interfaces mas importantes del frontend. Se omitieron algunas clases secundarias para mantenerlo legible.
+El siguiente diagrama resume los componentes mas importantes del frontend, contenidos en sus respectivos paquetes o directorios.
 
-```mermaid
-classDiagram
-direction LR
+![Components diagram](componentes.png)
 
-class App
-class AppConfig
-class AuthInterceptor
-class AuthGuard
-class GuestGuard
+## 10. UML - Diagrama de Despliegue
 
-class AuthService
-class UserService
-class ProjectService
-class ProjectCreateService
-class ProjectDetailsService
-class ProjectTeamTableService
-class TaskService
-class CreateTaskService
-class TaskDetailsService
-class ToastService
-class TeamService
-class SideDrawerService
-class LoginFormValidationService
-class RegisterFormValidationService
-class CreateProjectFormValidationService
-class ProjectDetailsValidationService
-class TaskCreateValidationService
-class TaskDetailsValidationService
+El siguiente driagrama describle como esta deplegado el sistema completo (frontend, backend y base de datos) en una ambiente de produccion.
 
-class LandingPageComponent
-class LoginPageComponent
-class RegisterPage
-class AboutPage
-class HomePageComponent
-class ProjectComponent
-class KanbanComponent
-class TeamComponent
-class NavComponent
-class SideComponent
-class NewProjectFormComponent
-class DetailsProjectComponent
-class TeamTableComponent
-class KanbanBoardComponent
-class CreateTaskComponent
-class TaskDetailsComponent
-class ListOfMemebersComponent
-class ChatComponent
-class FooterComponent
-class ToastComponent
-class LoadPage
+![Deploy diagram](despliegue.png)
 
-class AuthUser
-class LoginData
-class UserRegisterFormData
-class UserRegisterData
-class UserSearchEmailResult
-class UserRole
-class UserRoleRequest
-class ProjectCard
-class ProjectRequest
-class NewProjectDraft
-class TaskCard
-class TaskRequest
-class TaskForProject
-class ToastMessage
+## 11. UML - Diagramas de secuencia
 
-App --> AppConfig
-App --> ToastComponent
-App --> LoadPage
-
-AppConfig --> AuthInterceptor
-AppConfig --> AuthGuard
-AppConfig --> GuestGuard
-
-LandingPageComponent --> FooterComponent
-LoginPageComponent --> AuthService
-LoginPageComponent --> LoginFormValidationService
-LoginPageComponent --> ToastService
-LoginPageComponent --> ProjectService
-RegisterPage --> UserService
-RegisterPage --> RegisterFormValidationService
-RegisterPage --> ToastService
-
-HomePageComponent --> NavComponent
-HomePageComponent --> SideComponent
-HomePageComponent --> ProjectService
-HomePageComponent --> FooterComponent
-ProjectComponent --> ProjectService
-ProjectComponent --> ProjectCreateService
-ProjectComponent --> ProjectDetailsService
-ProjectComponent --> TaskService
-ProjectComponent --> NewProjectFormComponent
-ProjectComponent --> DetailsProjectComponent
-ProjectService --> AuthService
-ProjectService --> TaskService
-ProjectService --> UserService
-ProjectCreateService --> AuthService
-ProjectCreateService --> ProjectService
-ProjectCreateService --> ProjectTeamTableService
-ProjectDetailsService --> ProjectService
-ProjectDetailsService --> TaskService
-ProjectDetailsService --> ProjectTeamTableService
-ProjectTeamTableService --> UserService
-ProjectTeamTableService --> ToastService
-
-NewProjectFormComponent --> ProjectCreateService
-NewProjectFormComponent --> ProjectTeamTableService
-NewProjectFormComponent --> TeamTableComponent
-DetailsProjectComponent --> ProjectDetailsService
-DetailsProjectComponent --> ProjectTeamTableService
-DetailsProjectComponent --> TeamTableComponent
-TeamTableComponent --> ProjectTeamTableService
-
-KanbanComponent --> KanbanBoardComponent
-KanbanComponent --> CreateTaskComponent
-KanbanComponent --> TaskDetailsComponent
-KanbanBoardComponent --> ProjectService
-KanbanBoardComponent --> TaskService
-KanbanBoardComponent --> CreateTaskService
-KanbanBoardComponent --> TaskDetailsService
-CreateTaskComponent --> ProjectService
-TaskDetailsComponent --> ToastService
-TaskDetailsService --> TaskService
-TaskDetailsService --> ToastService
-CreateTaskService --> TaskService
-CreateTaskService --> ProjectService
-TaskService --> ToastService
-CreateTaskComponent --> CreateTaskService
-TaskDetailsComponent --> TaskDetailsService
-TaskDetailsComponent --> ProjectService
-
-TeamComponent --> ListOfMemebersComponent
-TeamComponent --> ChatComponent
-ListOfMemebersComponent --> TeamService
-TeamService --> ProjectService
-NavComponent --> AuthService
-NavComponent --> SideDrawerService
-SideComponent --> SideDrawerService
-
-AuthService --> AuthUser
-AuthService --> LoginData
-UserService --> UserRegisterData
-UserService --> UserRegisterFormData
-UserService --> UserSearchEmailResult
-ProjectService --> ProjectCard
-ProjectCreateService --> NewProjectDraft
-ProjectCreateService --> ProjectRequest
-ProjectDetailsService --> ProjectRequest
-ProjectTeamTableService --> UserRole
-ProjectTeamTableService --> UserRoleRequest
-TaskService --> TaskCard
-TaskService --> TaskForProject
-CreateTaskService --> TaskRequest
-TaskDetailsService --> TaskCard
-ToastService --> ToastMessage
-```
-
-## 10. UML - Diagramas de secuencia
-
-### 10.1 Login y restauracion de sesion
+### 11.1 Login y restauracion de sesion
 
 ```mermaid
 sequenceDiagram
@@ -375,7 +226,7 @@ Task->>GW: POST /api/v1/task/byprojects
 GW-->>Task: tareas agrupadas por proyecto
 ```
 
-### 10.2 Carga del dashboard principal
+### 11.2 Carga del dashboard principal
 
 ```mermaid
 sequenceDiagram
@@ -405,7 +256,7 @@ TaskSvc-->>Proj: tareas por proyecto
 Proj-->>Home: dashboard listo
 ```
 
-### 10.3 Creacion y actualizacion de una tarea
+### 11.3 Creacion y actualizacion de una tarea
 
 ```mermaid
 sequenceDiagram
@@ -441,9 +292,9 @@ GW-->>TaskStore: TaskCard actualizada
 TaskStore-->>Board: tablero refrescado
 ```
 
-## 11. UML - Diagramas de estado
+## 12. UML - Diagramas de estado
 
-### 11.1 Estado de una tarea
+### 12.1 Estado de una tarea
 
 ```mermaid
 stateDiagram-v2
@@ -474,7 +325,7 @@ Interpretacion:
 - mientras esta en `Bloqueada`, no puede avanzar a un estado distinto del previo
 
 
-### 11.2 Estado de sesion autenticada
+### 12.2 Estado de sesion autenticada
 
 ```mermaid
 stateDiagram-v2
@@ -494,65 +345,65 @@ Interpretacion:
 - `Authenticated` representa un usuario con cookie `AUTH_TOKEN` valida
 - `Refreshing` modela el refresco automatico que se ejecuta desde `AuthService`
 
-## 12. Mockups de pantallas
+## 13. Mockups de pantallas
 
 Los siguientes mockups son wireframes conceptuales en los que se baso el frontend del sistema.
 
-### 12.1 Landing page
+### 13.1 Landing page
 
 ![wireframe landing page](wireframe_landing.png)
 
-### 12.2 Login
+### 13.2 Login
 
 ![wireframe login page](wireframe_login.png)
 
-### 12.3 Register
+### 13.3 Register
 
 ![wireframe register page](wireframe_registro.png)
 
-### 12.5 Projects
+### 13.5 Projects
 
 ![wireframe projects page](wireframe_projects.png)
 
-### 12.6 Panel lateral create project
+### 13.6 Panel lateral create project
 
 ![wireframe new project panel](wireframe_new_project.png)
 
-### 12.7 Kanban
+### 13.7 Kanban
 
 ![wireframe kanban page](wireframe_kanban.png)
 
-### 12.8 Panel lateral create task
+### 13.8 Panel lateral create task
 
 ![wireframe new task panel](wireframe_new_task.png)
 
-### 12.9 Team workspace
+### 13.9 Team workspace
 
 ![wireframe team page](wireframe_team.png)
 
-## 13. Reglas de diseño
+## 14. Reglas de diseño
 
-### 13.1 Consistencia UI
+### 14.1 Consistencia UI
 
 - Los formularios comparten la misma familia de controles.
 - Las acciones primarias usan botones azules.
 - Las acciones destructivas usan botones rojos.
 - El estado vacio y los loaders estan resueltos visualmente.
 
-### 13.2 Interaccion
+### 14.2 Interaccion
 
 - Las secciones autenticadas muestran datos en tiempo real desde signals.
 - Los paneles laterales evitan cambiar de pagina para crear o editar.
 - Los toasts confirman exito o error sin romper el flujo.
 - El refresh de sesion se ejecuta automaticamente para no interrumpir el trabajo.
 
-### 13.3 Responsive y accesibilidad
+### 14.3 Responsive y accesibilidad
 
 - El sidebar se adapta a mobile con overlay.
 - Los modales usan `aria-modal` y `role="dialog"`.
 - Los inputs incluyen labels visibles y mensajes de validacion.
 
-## 14. Supuestos y limitaciones
+## 15. Supuestos y limitaciones
 
 1. El frontend no implementa aun un sistema real de roles y permisos por pantalla.
 2. La comunicacion del equipo en la pagina `Team` es por ahora una maqueta visual, no un chat conectado a backend.
@@ -560,7 +411,7 @@ Los siguientes mockups son wireframes conceptuales en los que se baso el fronten
 4. La persistencia y la verdad de negocio siguen viviendo en el backend; el frontend solo orquesta flujos y presenta datos.
 5. Los diagramas UML de este documento modelan la implementacion actual, no una vision futura.
 
-## 15. Recomendaciones para la siguiente version
+## 16. Recomendaciones para la siguiente version
 
 Para una version 0.2 de este documento conviene agregar:
 
@@ -571,6 +422,6 @@ Para una version 0.2 de este documento conviene agregar:
 5. ejemplos de payloads request/response por pantalla
 6. pantallas del modo mobile con variantes de sidebar y paneles
 
-## 16. Cierre
+## 17. Cierre
 
 Esta primera version ya puede servir como base para una documentacion formal del frontend y como puente entre el analisis del backend y la experiencia visual de `TaskManager`.
