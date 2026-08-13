@@ -54,6 +54,20 @@ export const routes: Routes = [
           import('./features/home/pages/kanban-page/kanban.component').then(
             (m) => m.KanbanComponent,
           ),
+      },
+      {
+        path: 'docsapitask',
+        loadComponent: () =>
+          import('./features/home/pages/docsApiTask-page/docsApiTask.component').then(
+            (m) => m.DocsApiTaskPageComponent,
+          ),
+      },
+      {
+        path: 'docsapiproject',
+        loadComponent: () =>
+          import('./features/home/pages/docsApiProject-page/docsApiProject.component').then(
+            (m) => m.DocsApiProjectPageComponent,
+          ),
       }
     ],
   },

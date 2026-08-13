@@ -2,7 +2,8 @@
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
   "version": 1,
   "cli": {
-    "packageManager": "npm"
+    "packageManager": "pnpm",
+    "analytics": "ec66db46-4d4b-49f2-a72b-cb33a66f4e0d"
   },
   "newProjectRoot": "projects",
   "projects": {
@@ -75,7 +76,11 @@
           "builder": "@angular/build:unit-test",
           "options": {
             "coverage": true,
-            "coverageReporters": ["html", "lcov", "text"]
+            "coverageReporters": [
+              "html",
+              "lcov",
+              "text"
+            ]
           }
         }
       }

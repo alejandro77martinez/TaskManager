@@ -10,7 +10,7 @@
     "deploy": "ng build --configuration production && firebase deploy"
   },
   "private": true,
-  "packageManager": "npm@11.11.0",
+  "packageManager": "pnpm",
   "dependencies": {
     "@angular/common": "^21.2.0",
     "@angular/compiler": "^21.2.0",

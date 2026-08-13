@@ -1,22 +1,17 @@
 @if (drawer.isOpen() && !drawer.isDesktop()) {
-  <div class="fixed inset-0 z-20 bg-gray-900/50 md:hidden" aria-hidden="true" (click)="closeDrawer()"></div>
+<div class="fixed inset-0 z-20 bg-gray-900/50 md:hidden" aria-hidden="true" (click)="closeDrawer()"></div>
 }
 
-<aside
-  class="fixed top-0 left-0 z-30 w-50 h-screen pt-14 transition-transform bg-gray-800 border-gray-700"
+<aside class="fixed top-0 left-0 z-30 w-50 h-screen pt-14 transition-transform bg-gray-800 border-gray-700"
   [class.-translate-x-full]="!drawer.isDesktop() && !drawer.isOpen()"
   [class.translate-x-0]="drawer.isDesktop() || drawer.isOpen()"
-  [attr.inert]="drawer.isDesktop() || drawer.isOpen() ? null : ''"
-  aria-label="Sidenav"
-  id="drawer-navigation"
->
+  [attr.inert]="drawer.isDesktop() || drawer.isOpen() ? null : ''" aria-label="Sidenav" id="drawer-navigation">
   <div class="overflow-y-auto py-5 px-3 h-full bg-gray-800">
     <form action="#" method="GET" class="md:hidden mb-2">
       <label for="sidebar-search" class="sr-only">Search</label>
       <div class="relative">
         <div class="flex absolute inset-y-0 left-0 items-center pl-3 pointer-events-none">
-          <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20"
-            xmlns="http://www.w3.org/2000/svg">
+          <svg class="w-5 h-5 text-gray-400" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" clip-rule="evenodd"
               d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z">
             </path>
@@ -69,12 +64,55 @@
           <span class="ml-3">Team</span>
         </a>
       </li>
+      <li>
+        <button type="button"
+          class="flex items-center p-2 text-base font-medium text-white rounded-lg transition duration-75 hover:bg-gray-700 group"
+          aria-controls="dropdown-example" data-collapse-toggle="dropdown-example">
+          <svg class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white"
+            aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor"
+            viewBox="0 0 24 24">
+            <path fill-rule="evenodd"
+              d="M11 4.717c-2.286-.58-4.16-.756-7.045-.71A1.99 1.99 0 0 0 2 6v11c0 1.133.934 2.022 2.044 2.007 2.759-.038 4.5.16 6.956.791V4.717Zm2 15.081c2.456-.631 4.198-.829 6.956-.791A2.013 2.013 0 0 0 22 16.999V6a1.99 1.99 0 0 0-1.955-1.993c-2.885-.046-4.76.13-7.045.71v15.081Z"
+              clip-rule="evenodd" />
+          </svg>
+          <span class="flex-1 mx-3 text-left rtl:text-right whitespace-nowrap">API Docs</span>
+          <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+            viewBox="0 0 24 24">
+            <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="m19 9-7 7-7-7" />
+          </svg>
+        </button>
+        <ul id="dropdown-example" class="hidden py-2 space-y-2">
+          <li class="px-2">
+            <a routerLink="/home/docsapiproject"
+              class="flex items-center p-2 text-base font-medium text-white rounded-lg transition duration-75 hover:bg-gray-700 group">
+              <svg class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white"
+                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m16 10 3-3m0 0-3-3m3 3H5v3m3 4-3 3m0 0 3 3m-3-3h14v-3" />
+              </svg>
+              <span class="ms-3">Api Project</span>
+            </a>
+          </li>
+          <li class="px-2">
+            <a routerLink="/home/docsapitask"
+              class="flex items-center p-2 text-base font-medium text-white rounded-lg transition duration-75 hover:bg-gray-700 group">
+              <svg class="flex-shrink-0 w-6 h-6 text-gray-400 transition duration-75 group-hover:text-white"
+                aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none"
+                viewBox="0 0 24 24">
+                <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="m16 10 3-3m0 0-3-3m3 3H5v3m3 4-3 3m0 0 3 3m-3-3h14v-3" />
+              </svg>
+              <span class="ms-3">Api Task</span>
+            </a>
+          </li>
+        </ul>
+      </li>
     </ul>
   </div>
-  <div
-    class="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex bg-gray-800 z-20">
-    <a
-      class="inline-flex justify-center p-2 text-gray-400 rounded cursor-pointer hover:text-white hover:bg-gray-600">
+  <div class="absolute bottom-0 left-0 justify-center p-4 space-x-4 w-full lg:flex bg-gray-800 z-20">
+    <a class="inline-flex justify-center p-2 text-gray-400 rounded cursor-pointer hover:text-white hover:bg-gray-600">
       <svg aria-hidden="true" class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"
         xmlns="http://www.w3.org/2000/svg">
         <path
@@ -125,13 +163,11 @@
         </g>
       </svg>
     </button>
-    <div class="hidden z-50 my-4 text-base list-none bg-gray-700"
-      id="language-dropdown">
+    <div class="hidden z-50 my-4 text-base list-none bg-gray-700" id="language-dropdown">
       <ul class="py-1" role="none">
         <li>
           <a routerLink="/home" (click)="closeDrawer()"
-            class="block py-2 px-4 text-sm text-gray-300 hover:text-white hover:bg-gray-600"
-            role="menuitem">
+            class="block py-2 px-4 text-sm text-gray-300 hover:text-white hover:bg-gray-600" role="menuitem">
             <div class="inline-flex items-center">
               <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2" xmlns="http://www.w3.org/2000/svg"
                 id="flag-icon-css-us" viewBox="0 0 512 512">
@@ -156,8 +192,7 @@
         </li>
         <li>
           <a routerLink="/home" (click)="closeDrawer()"
-            class="block py-2 px-4 text-sm text-gray-300 hover:text-white hover:bg-gray-600"
-            role="menuitem">
+            class="block py-2 px-4 text-sm text-gray-300 hover:text-white hover:bg-gray-600" role="menuitem">
             <div class="inline-flex items-center">
               <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2" xmlns="http://www.w3.org/2000/svg"
                 id="flag-icon-css-de" viewBox="0 0 512 512">
@@ -171,8 +206,7 @@
         </li>
         <li>
           <a routerLink="/home" (click)="closeDrawer()"
-            class="block py-2 px-4 text-sm text-gray-300 hover:text-white hover:bg-gray-600"
-            role="menuitem">
+            class="block py-2 px-4 text-sm text-gray-300 hover:text-white hover:bg-gray-600" role="menuitem">
             <div class="inline-flex items-center">
               <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2" xmlns="http://www.w3.org/2000/svg"
                 id="flag-icon-css-it" viewBox="0 0 512 512">
@@ -188,8 +222,7 @@
         </li>
         <li>
           <a routerLink="/home" (click)="closeDrawer()"
-            class="block py-2 px-4 text-sm text-gray-300 hover:text-white hover:bg-gray-600"
-            role="menuitem">
+            class="block py-2 px-4 text-sm text-gray-300 hover:text-white hover:bg-gray-600" role="menuitem">
             <div class="inline-flex items-center">
               <svg aria-hidden="true" class="h-3.5 w-3.5 rounded-full mr-2" xmlns="http://www.w3.org/2000/svg"
                 xmlns:xlink="http://www.w3.org/1999/xlink" id="flag-icon-css-cn" viewBox="0 0 512 512">
